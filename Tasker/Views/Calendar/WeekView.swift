@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-//TODO: FIX Colors
 struct WeekView: View {
     @Environment(\.colorScheme) var colorScheme
     
@@ -40,7 +39,7 @@ struct WeekView: View {
                     HStack {
                         ForEach(vm.orderedWeekdaySymbols(), id: \.self) { symbol in
                             Text(symbol)
-                                .foregroundStyle(Color.secondary.opacity(0.8))
+                                .foregroundStyle(Color.labelSecondary.opacity(0.8))
                                 .frame(maxWidth: .infinity)
                         }
                     }
@@ -68,8 +67,8 @@ struct WeekView: View {
                             vm.selectedDateButtonTapped(day)
                         } label: {
                             Text("\(day, format: .dateTime.day())")
-                                .animation(.bouncy)
-                                .foregroundStyle(Color.quaternary.opacity(0.4))
+                                .font(.system(size: 17, weight: vm.calendar.isDateInToday(day) ? .semibold : .regular, design: .default))
+                                .foregroundStyle(!vm.calendar.isDateInToday(day) ? Color.quaternary.opacity(0.4) : Color.primary)
                                 .frame(maxWidth: .infinity)
                         }
                     }
@@ -89,11 +88,11 @@ struct WeekView: View {
             HStack {
                 if vm.selectedDayIsToday() {
                     Image(systemName: "arrow.uturn.backward")
-                        .foregroundStyle(Color.tertiary.opacity(0.8))
+                        .foregroundStyle(Color.labelSecondary.opacity(0.8))
                 }
                 
                 Text(vm.dateToString())
-                    .foregroundStyle(Color.secondary.opacity(0.8))
+                    .foregroundStyle(Color.labelSecondary.opacity(0.8))
             }
             .padding(.vertical, 7)
             .padding(.horizontal, 14)
