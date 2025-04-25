@@ -10,7 +10,7 @@ import Foundation
 protocol PlayerProtocol {
     var isPlaying: Bool { get set }
     
-    func playAudioFromData(_ audioData: Data)
+    func playAudioFromData(_ task: TaskModel)
     func stopToPlay()
     func checkIsPlaying()
 }

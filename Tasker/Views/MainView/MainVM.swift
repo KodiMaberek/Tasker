@@ -18,6 +18,9 @@ final class MainVM {
     var recordPermission: PermissionProtocol
     
     var isRecording = false
+    var showDetailsScreen = false
+    var soundData: Data?
+    
     var alert: Alert?
     
     var currentlyTime: Double {
@@ -77,7 +80,12 @@ final class MainVM {
     }
     
     func stopRecord() async {
-        isRecording = false
-        await recordManager.stopRecording()
+        do {
+            await recordManager.stopRecording()
+            isRecording = false
+            showDetailsScreen = true
+        } catch {
+            print("Couldn't stop recording")
+        }
     }
 }

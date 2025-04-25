@@ -91,4 +91,38 @@ final class DateManager: DateProtocol {
         
         return "\(weekday) - \(dateString)"
     }
+    
+    func getDefaultNotificationTime() -> Date {
+        let calendar = Calendar.current
+        let now = Date()
+        
+        var morningComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        morningComponents.hour = 9
+        morningComponents.minute = 0
+        morningComponents.second = 0
+        let morningTime = calendar.date(from: morningComponents)!
+        
+        var eveningComponents = calendar.dateComponents([.year, .month, .day], from: now)
+        eveningComponents.hour = 21
+        eveningComponents.minute = 0
+        eveningComponents.second = 0
+        let eveningTime = calendar.date(from: eveningComponents)!
+        
+        let currentHour = calendar.component(.hour, from: now)
+        
+        if currentHour >= 21 {
+            return calendar.date(byAdding: .day, value: 1, to: morningTime)!
+        } else if currentHour >= 9 {
+            let diffToMorning = abs(now.timeIntervalSince(morningTime))
+            let diffToEvening = abs(now.timeIntervalSince(eveningTime))
+            
+            if diffToMorning <= diffToEvening {
+                return morningTime
+            } else {
+                return eveningTime
+            }
+        } else {
+            return morningTime
+        }
+    }
 }

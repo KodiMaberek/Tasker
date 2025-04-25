@@ -52,7 +52,16 @@ struct MainView: View {
                     }
                 }
             }
+            .onChange(of: vm.currentlyTime) { newValue, oldValue in
+                Task {
+                    await vm.stopAfterCheck(newValue)
+                }
+            }
+            .sheet(isPresented: $vm.showDetailsScreen) {
+                
+            }
         }
+        .animation(.default, value: vm.isRecording)
     }
 }
 

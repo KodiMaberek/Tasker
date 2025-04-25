@@ -7,7 +7,10 @@
 
 import SwiftUI
 
+//TODO: FIX Colors
 struct WeekView: View {
+    @Environment(\.colorScheme) var colorScheme
+    
     @State private var vm = WeekVM()
     
     let shape = UnevenRoundedRectangle(
@@ -25,7 +28,7 @@ struct WeekView: View {
                     ForEach(1..<8) { index in
                         if vm.isSelectedDayOfWeek(index) {
                             shape
-                                .fill(Color.tertiary.opacity(0.04))
+                                .fill(Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04))
                                 .frame(maxWidth: .infinity)
                         } else {
                             Color.clear.frame(maxWidth: .infinity)
@@ -37,7 +40,7 @@ struct WeekView: View {
                     HStack {
                         ForEach(vm.orderedWeekdaySymbols(), id: \.self) { symbol in
                             Text(symbol)
-                                .foregroundStyle(.tertiary.opacity(0.8))
+                                .foregroundStyle(Color.secondary.opacity(0.8))
                                 .frame(maxWidth: .infinity)
                         }
                     }
@@ -51,6 +54,8 @@ struct WeekView: View {
         }
         .animation(.default, value: vm.indexForWeek)
         .animation(.default, value: vm.selectedDate)
+        .sensoryFeedback(.impact, trigger: vm.selectedDate)
+        .sensoryFeedback(.levelChange, trigger: vm.indexForWeek)
     }
     
     @ViewBuilder
@@ -62,8 +67,9 @@ struct WeekView: View {
                         Button {
                             vm.selectedDateButtonTapped(day)
                         } label: {
-                            Text("\(day, format: .dateTime.day())").animation(.bouncy)
-                                .foregroundStyle(.black)
+                            Text("\(day, format: .dateTime.day())")
+                                .animation(.bouncy)
+                                .foregroundStyle(Color.quaternary.opacity(0.4))
                                 .frame(maxWidth: .infinity)
                         }
                     }
@@ -87,14 +93,14 @@ struct WeekView: View {
                 }
                 
                 Text(vm.dateToString())
-                    .foregroundStyle(Color.tertiary.opacity(0.8))
+                    .foregroundStyle(Color.secondary.opacity(0.8))
             }
             .padding(.vertical, 7)
             .padding(.horizontal, 14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
                     .fill(
-                        Color.tertiary.opacity(0.04)
+                        Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                     )
             )
         }

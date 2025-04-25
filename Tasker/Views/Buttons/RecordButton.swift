@@ -6,10 +6,8 @@
 //
 
 import SwiftUI
-import CoreHaptics
 
 struct RecordButton: View {
-    @State private var engine: CHHapticEngine?
     
     @Binding var isRecording: Bool
     
@@ -22,11 +20,10 @@ struct RecordButton: View {
     var body: some View {
         Button {
             action()
-            prepareHaptics()
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
         } label: {
             if isRecording {
                 StopRecording()
-                    .sensoryFeedback(.impact(flexibility: .soft, intensity: 0.5), trigger: animationAmount)
             } else {
                 StartRecording()
             }
@@ -54,7 +51,7 @@ struct RecordButton: View {
         Image(systemName: "pause.fill")
             .font(.system(size: 42))
             .foregroundStyle(elementColor.hexColor())
-            .frame(width: 54, height: 54)
+            .frame(width: 64, height: 64)
             .padding(13)
             .background(
                 ZStack {
@@ -96,17 +93,6 @@ struct RecordButton: View {
                 .scaleEffect(CGFloat(animationAmount) + 0.3)
                 .animation(.easeOut(duration: 0.3).delay(0.1), value: animationAmount)
                 .shadow(color: elementColor.hexColor(), radius: 1)
-        }
-    }
-    
-    func prepareHaptics() {
-        guard CHHapticEngine.capabilitiesForHardware().supportsHaptics else { return }
-        
-        do {
-            engine = try CHHapticEngine()
-            try engine?.start()
-        } catch {
-            print("There was an error creating the engine: \(error.localizedDescription)")
         }
     }
 }

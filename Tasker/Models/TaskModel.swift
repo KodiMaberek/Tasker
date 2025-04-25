@@ -7,23 +7,30 @@
 
 import Foundation
 import SwiftData
+import SwiftUICore
 
 @Model
-class TaskModel {
-    var title: String = "New Task"
-    var info: String = ""
+class TaskModel: Identifiable {
+    var uniqueID = UUID().uuidString
+    
+    var title = "New Task"
+    var info = ""
+    var audio: URL?
     
     var createDate: Double = Date.now.timeIntervalSince1970
     var endDate: Double?
     var notificationDate: Double?
     var seconNotificationDate: Double?
+    var voiceMode = true
     
-    @Attribute(.externalStorage) var audio: Data?
+    var repeatTask = RepeatTask.never
     
-    var done: [CompleteRecord]?
-    var deleted: [DeleteRecord]?
+    @Relationship(inverse: \CompleteRecord.self) var done: CompleteRecord?
+    @Relationship(inverse: \DeleteRecord.self) var deleted: DeleteRecord?
     
-    init(title: String, info: String, createDate: Double, done: Bool) {
+    var taskColor = TaskColor.yellow
+    
+    init(title: String, info: String, createDate: Double) {
         self.title = title
         self.info = info
         self.createDate = createDate
@@ -36,7 +43,7 @@ class CompleteRecord {
     var completedFor: [Double]?
     var timeMark: [Double]?
     
-    init(done: Bool, completedFor: [Double]? = nil, timeMark: [Double]? = nil) {
+    init(done: Bool = false, completedFor: [Double]? = nil, timeMark: [Double]? = nil) {
         self.done = done
         self.completedFor = completedFor
         self.timeMark = timeMark
@@ -49,9 +56,35 @@ class DeleteRecord {
     var deletedFor: [Double]?
     var timeMark: [Double]?
     
-    init(deleted: Bool, deletedFor: [Double]? = nil, timeMark: [Double]? = nil) {
+    init(deleted: Bool = false, deletedFor: [Double]? = nil, timeMark: [Double]? = nil) {
         self.deleted = deleted
         self.deletedFor = deletedFor
         self.timeMark = timeMark
+    }
+}
+
+func mockModel() -> TaskModel {
+    TaskModel(title: "", info: "", createDate: Date.now.timeIntervalSince1970)
+}
+
+enum RepeatTask: CaseIterable, Codable, Identifiable {
+    case never
+    case daily
+    case weekly
+    case monthly
+    case yearly
+    case dayOfWeek
+    
+    var id: Self { self }
+    
+    var description: Text {
+        switch self {
+        case .never: return Text("Never")
+        case .daily: return Text("Every day")
+        case .weekly: return Text("Every week")
+        case .monthly: return Text("Every month")
+        case .yearly: return Text("Every year")
+        case .dayOfWeek: return Text("Day of week")
+        }
     }
 }

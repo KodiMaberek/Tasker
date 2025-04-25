@@ -10,7 +10,8 @@ import Foundation
 
 @Observable
 final class RecordManager: RecordingProtocol, @unchecked Sendable {
-    var avAudioRecorder: AVAudioRecorder?
+    private var avAudioRecorder: AVAudioRecorder?
+    
     var timer: Timer?
     var currentlyTime = 0.0
     var progress = 0.00
@@ -79,9 +80,8 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
         return soundDirectory
     }
     
-    //TODO: NEED to ReternData and delete audio
     //MARK: Stop recording
-    func stopRecording() async {
+    func stopRecording() async  {
         timer?.invalidate()
         timer = nil
         avAudioRecorder?.stop()
@@ -89,7 +89,6 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
         progress = 0.0
         currentlyTime = 0.0
     }
-    
     
     //MARK: Check and update recording time
     private func updateTime() async {
@@ -108,6 +107,7 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
         guard let recorder = avAudioRecorder else {
             return
         }
+        
         recorder.updateMeters()
         let decibelLevel = recorder.averagePower(forChannel: 0)
         

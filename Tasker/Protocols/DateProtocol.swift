@@ -19,4 +19,5 @@ protocol DateProtocol {
     func appendWeeksForward()
     func prependWeeksBackward()
     func dateToString(date: Date, format: String?) -> String
+    func getDefaultNotificationTime() -> Date
 }

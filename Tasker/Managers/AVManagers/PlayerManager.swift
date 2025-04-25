@@ -13,7 +13,7 @@ final class PlayerManager: PlayerProtocol {
     var isPlaying = false
     private var player: AVAudioPlayer?
     
-    func playAudioFromData(_ audioData: Data)  {
+    func playAudioFromData(_ task: TaskModel) {
         let audioSession = AVAudioSession.sharedInstance()
         
         do {
@@ -21,7 +21,7 @@ final class PlayerManager: PlayerProtocol {
             try audioSession.overrideOutputAudioPort(.speaker)
             
             
-            player = try AVAudioPlayer(data: audioData)
+            player = try AVAudioPlayer(contentsOf: task.audio!)
             player?.prepareToPlay()
             player?.play()
             isPlaying = player!.isPlaying
