@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class WeekVM {
-    var dateManager: DateProtocol
+    var dateManager: DateManagerProtocol
     
     var calendar: Calendar {
         dateManager.calendar
@@ -33,7 +33,7 @@ final class WeekVM {
     
     
     init() {
-        dateManager = DateManager()
+        dateManager = DateManager.shared
     }
     
     @ObservationIgnored

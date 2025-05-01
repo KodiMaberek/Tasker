@@ -16,6 +16,9 @@ struct MainView: View {
             VStack {
                 WeekView()
                 
+                ListView()
+                    .padding(.horizontal, 16)
+                
                 Spacer()
                 
                 RecordButton(isRecording: $vm.isRecording, progress: vm.progress, countOfSec: vm.currentlyTime, animationAmount: vm.decibelLvl) {
@@ -23,8 +26,9 @@ struct MainView: View {
                         try? await vm.startAfterChek()
                     }
                 }
-                .padding(.bottom, 45)
+                .padding(.bottom, 15)
             }
+            .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea(.keyboard)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -58,9 +62,10 @@ struct MainView: View {
                 }
             }
             .sheet(isPresented: $vm.showDetailsScreen) {
-                
+                TaskView(task: mockModel())
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
         .animation(.default, value: vm.isRecording)
     }
 }

@@ -10,11 +10,12 @@ import SwiftData
 
 @MainActor
 protocol SwiftDataProtocol {
-    associatedtype Model
+    var modelContext: ModelContext { get set }
+    var modelContainer: ModelContainer { get set }
     
-    func saveTask(_ task: Model)
-    var modelContext: ModelContext { get }
-    var modelContainer: ModelContainer { get }
+    var update: Bool { get set }
     
-    init()
+    func saveTask(_ task: TaskModel)
+    func fetchAllActiveTask() -> [TaskModel]
+    func fetchTodayActiveTasks(date: Double) -> [TaskModel]
 }

@@ -1,5 +1,5 @@
 //
-//  DateProtocol.swift
+//  DateManagerProtocol.swift
 //  Tasker
 //
 //  Created by Rodion Akhmedov on 4/11/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DateProtocol {
+protocol DateManagerProtocol {
     var calendar: Calendar { get }
     var today: Date { get set }
     var selectedDate: Date { get set }

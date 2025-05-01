@@ -44,27 +44,26 @@ final class NotificationManager {
             notificationContent.sound = UNNotificationSound(named: UNNotificationSoundName(rawValue: String("\(task.audio)")))
         }
         
-        var date = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+        var date = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
         var trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: false)
-        
         
         switch task.repeatTask {
         case .never:
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: false)
         case .daily:
-            date = calendar.dateComponents([.hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+            date = calendar.dateComponents([.hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         case .weekly:
-            date = calendar.dateComponents([.weekday, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+            date = calendar.dateComponents([.weekday, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         case .monthly:
-            date = calendar.dateComponents([.day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+            date = calendar.dateComponents([.day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         case .yearly:
-            date = calendar.dateComponents([.month, .day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+            date = calendar.dateComponents([.month, .day, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         case .dayOfWeek:
-            date = calendar.dateComponents([.weekday, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate ?? 0))
+            date = calendar.dateComponents([.weekday, .hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         }
         

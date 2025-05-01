@@ -11,22 +11,25 @@ struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
     @State private var vm = TaskRowVM()
     
-    @Binding var model: TaskModel
+    var task: TaskModel
     
     var body: some View {
         HStack(spacing: 0) {
             HStack(spacing: 12) {
                 CheckMark()
                 
-                Text(model.title)
+                Text(task.title)
                     .multilineTextAlignment(.leading)
                     .font(.callout)
+                    .onTapGesture {
+                        print(vm.selectedDate)
+                    }
             }
             
             Spacer()
             
             HStack(spacing: 12) {
-                Text("\(Date.now, format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
+                Text("\(Date(timeIntervalSince1970: task.notificationDate), format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
                     .font(.subheadline)
                     .foregroundStyle(.tertiary.opacity(0.6))
                     .padding(.leading, 16)
@@ -38,10 +41,10 @@ struct TaskRow: View {
         .padding(.vertical, 12)
         .padding(.horizontal, 11)
         .background(
-            model.taskColor.color(for: colorTheme)
+            task.taskColor.color(for: colorTheme)
         )
-        .padding(.horizontal, 16)
-        .animation(.default, value: model.done)
+        .sensoryFeedback(.success, trigger: vm.taskDone)
+        .animation(.default, value: task.done)
     }
     
     @ViewBuilder
@@ -56,7 +59,7 @@ struct TaskRow: View {
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(.black.opacity(0.20), lineWidth: 1)
                 )
-            if ((model.done?.done) != nil) {
+            if vm.checkCompletedTaskForToday(task: task) {
                 Image(systemName: "checkmark")
                     .foregroundStyle(.tertiary.opacity(0.8))
                     .bold()
@@ -64,14 +67,14 @@ struct TaskRow: View {
         }
         .frame(width: 24, height: 24)
         .onTapGesture {
-            vm.checkMarkTapped(model: model)
+            vm.checkMarkTapped(task: task)
         }
     }
     
     @ViewBuilder
     private func PlayButton() -> some View {
         Button {
-            vm.playButtonTapped(task: model)
+            vm.playButtonTapped(task: task)
         } label: {
             ZStack {
                 Circle()
@@ -88,5 +91,5 @@ struct TaskRow: View {
 }
 
 #Preview {
-    TaskRow(model: .constant(mockModel()))
+    TaskRow(task: mockModel())
 }

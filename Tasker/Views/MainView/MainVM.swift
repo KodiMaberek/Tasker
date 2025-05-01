@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@MainActor
 @Observable
 final class MainVM {
     @ObservationIgnored
@@ -80,12 +81,8 @@ final class MainVM {
     }
     
     func stopRecord() async {
-        do {
-            await recordManager.stopRecording()
-            isRecording = false
-            showDetailsScreen = true
-        } catch {
-            print("Couldn't stop recording")
-        }
+        await recordManager.stopRecording()
+        isRecording = false
+        showDetailsScreen = true
     }
 }

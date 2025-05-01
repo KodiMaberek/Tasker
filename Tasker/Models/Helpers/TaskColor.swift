@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUICore
 
-enum TaskColor: Codable {
+enum TaskColor: Codable, CaseIterable, Equatable, Identifiable {
     case yellow
     case purple
     case red
@@ -23,6 +23,25 @@ enum TaskColor: Codable {
     case brown
     case sand
     case custom(String)
+    
+    var id: String {
+        switch self {
+        case .yellow: return "yellow"
+        case .purple: return "purple"
+        case .red: return "red"
+        case .teal: return "teal"
+        case .orange: return "orange"
+        case .blue: return "blue"
+        case .green: return "green"
+        case .pink: return "pink"
+        case .peach: return "peach"
+        case .lime: return "lime"
+        case .steelBlue: return "steelBlue"
+        case .brown: return "brown"
+        case .sand: return "sand"
+        case .custom(let color): return "custom-\(color)"
+        }
+    }
     
     func color(for colorScheme: ColorScheme) -> Color {
         switch self {
@@ -56,4 +75,9 @@ enum TaskColor: Codable {
             return color.hexColor()
         }
     }
+    
+    static var allCases: [TaskColor] {
+         return [.yellow, .purple, .red, .teal, .orange, .blue,
+                 .green, .pink, .peach, .lime, .steelBlue, .brown, .sand]
+     }
 }

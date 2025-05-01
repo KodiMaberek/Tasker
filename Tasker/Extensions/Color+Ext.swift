@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension UIColor {
-    func toHex() -> String? {
+    func toHex() -> String {
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0
@@ -41,7 +41,7 @@ extension UIColor {
 }
 
 extension Color {
-    func toHex() -> String? {
+    func toHex() -> String {
         let uiColor = UIColor(self)
         return uiColor.toHex()
     }

@@ -9,9 +9,11 @@ import Foundation
 import SwiftUI
 
 @Observable
-final class DateManager: DateProtocol {
+final class DateManager: DateManagerProtocol {
     @ObservationIgnored
     @AppStorage("calendar", store: .standard) var firstDay = 1
+    
+    static var shared = DateManager()
     
     var calendar = Calendar.current
     
@@ -124,5 +126,4 @@ final class DateManager: DateProtocol {
         } else {
             return morningTime
         }
-    }
-}
+    }}

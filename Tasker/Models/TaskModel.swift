@@ -10,8 +10,9 @@ import SwiftData
 import SwiftUICore
 
 @Model
-class TaskModel: Identifiable {
+class TaskModel: Identifiable, Equatable {
     var uniqueID = UUID().uuidString
+    var previousUniqueID: String?
     
     var title = "New Task"
     var info = ""
@@ -19,14 +20,23 @@ class TaskModel: Identifiable {
     
     var createDate: Double = Date.now.timeIntervalSince1970
     var endDate: Double?
-    var notificationDate: Double?
-    var seconNotificationDate: Double?
+    var notificationDate: Double = 00
+    var secondNotificationDate: Double?
     var voiceMode = true
     
     var repeatTask = RepeatTask.never
+    var dayOfWeek: [DayOfWeek] = [
+        DayOfWeek(name: "Sun", value: false),
+        DayOfWeek(name: "Mon", value: false),
+        DayOfWeek(name: "Tue", value: false),
+        DayOfWeek(name: "Wed", value: false),
+        DayOfWeek(name: "Thu", value: false),
+        DayOfWeek(name: "Fri", value: false),
+        DayOfWeek(name: "Sat", value: false)
+    ]
     
-    @Relationship(inverse: \CompleteRecord.self) var done: CompleteRecord?
-    @Relationship(inverse: \DeleteRecord.self) var deleted: DeleteRecord?
+    @Relationship(deleteRule: .cascade) var done: [CompleteRecord]?
+    @Relationship(deleteRule: .cascade) var deleted: DeleteRecord?
     
     var taskColor = TaskColor.yellow
     
@@ -39,11 +49,14 @@ class TaskModel: Identifiable {
 
 @Model
 class CompleteRecord {
-    var done: Bool
-    var completedFor: [Double]?
-    var timeMark: [Double]?
+    @Relationship var task: TaskModel?
     
-    init(done: Bool = false, completedFor: [Double]? = nil, timeMark: [Double]? = nil) {
+    var done: Bool = false
+    var completedFor: Double? = nil
+    var timeMark: Double? = nil
+    
+    init(task: TaskModel, done: Bool = false, completedFor: Double, timeMark: Double? = nil) {
+        self.task = task
         self.done = done
         self.completedFor = completedFor
         self.timeMark = timeMark
@@ -52,11 +65,14 @@ class CompleteRecord {
 
 @Model
 class DeleteRecord {
-    var deleted: Bool
-    var deletedFor: [Double]?
-    var timeMark: [Double]?
+    @Relationship var task: TaskModel?
     
-    init(deleted: Bool = false, deletedFor: [Double]? = nil, timeMark: [Double]? = nil) {
+    var deleted: Bool = false
+    var deletedFor: [Double]? = nil
+    var timeMark: [Double]? = nil
+    
+    init(task: TaskModel, deleted: Bool = false, deletedFor: [Double]? = nil, timeMark: [Double]? = nil) {
+        self.task = task
         self.deleted = deleted
         self.deletedFor = deletedFor
         self.timeMark = timeMark
@@ -88,3 +104,12 @@ enum RepeatTask: CaseIterable, Codable, Identifiable {
         }
     }
 }
+
+struct DayOfWeek: Codable, Hashable, Identifiable {
+    var id = UUID()
+    var name: String
+    var value: Bool
+}
+
+
+
