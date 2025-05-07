@@ -13,7 +13,7 @@ final class TaskRowVM {
     //MARK: Dependecies
     var playerManager: PlayerProtocol
     var dateManager: DateManagerProtocol
-    var swiftData: SwiftDataProtocol
+    var cas: CASManagerProtocol
     
     var playingTask: TaskModel?
     var taskDone = false
@@ -36,14 +36,13 @@ final class TaskRowVM {
     init() {
         playerManager = PlayerManager()
         dateManager = DateManager.shared
-        swiftData = SwiftDataManager.shared
+        cas = CASManager()
     }
     
     //MARK: - Check Mark Function
     func checkMarkTapped(task: TaskModel) {
         // Task's clone
-        let newTask = TaskModel(title: task.title, info: task.info, createDate: task.createDate)
-        newTask.previousUniqueID = task.uniqueID
+        var newTask = TaskModel(id: task.id, title: task.title, info: task.info, createDate: task.createDate)
         newTask.audio = task.audio
         newTask.endDate = task.endDate
         newTask.notificationDate = task.notificationDate
@@ -53,68 +52,45 @@ final class TaskRowVM {
         newTask.dayOfWeek = task.dayOfWeek
         
         // Update completion record
-        newTask.done = updateCompleteTask(task: task)
+        newTask.done 
         newTask.deleted = task.deleted
         
         newTask.taskColor = task.taskColor
         
-        swiftData.saveTask(newTask)
+        
         taskDone.toggle()
     }
-    //MARK: Update Completion Property
-    private func updateCompleteTask(task: TaskModel) -> [CompleteRecord] {
-        guard task.done != nil else {
-            return createNewTaskCompletion(task: task)
-        }
-        
-        return updateExistingTaskCompletion(task: task)
-    }
     
-    private func createNewTaskCompletion(task: TaskModel) -> [CompleteRecord] {
-        var newCompletedRecords: [CompleteRecord] = []
-        
-        newCompletedRecords.append(
-            CompleteRecord(
-                task: task,
-                done: (task.done != nil),
-                completedFor: selectedDate,
-                timeMark: Date.now.timeIntervalSince1970
-            )
-        )
-        
-        return newCompletedRecords
-    }
-    
-    private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {
-        print("update existing")
-        var newCompleteRecords: [CompleteRecord] = []
-        
-        if let existingRecords = task.done {
-            
-            for record in existingRecords {
-                let newRecord = CompleteRecord(
-                    task: task,
-                    done: record.done,
-                    completedFor: record.completedFor ?? 0,
-                    timeMark: record.timeMark
-                )
-                newCompleteRecords.append(newRecord)
-            }
-            
-            
-            if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
-                newCompleteRecords.remove(at: indexToRemove)
-            } else {
-                newCompleteRecords = createNewTaskCompletion(task: task)
-            }
-        }
-        
-        return newCompleteRecords
-    }
-    
-    func checkCompletedTaskForToday(task: TaskModel) -> Bool {
-        return task.done?.contains(where: { $0.completedFor == selectedDate }) ?? false
-    }
+//    private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {
+//        print("update existing")
+//        var newCompleteRecords: [CompleteRecord] = []
+//        
+//        if let existingRecords = task.done {
+//            
+//            for record in existingRecords {
+//                let newRecord = CompleteRecord(
+//                    task: task,
+//                    done: record.done,
+//                    completedFor: record.completedFor ?? 0,
+//                    timeMark: record.timeMark
+//                )
+//                newCompleteRecords.append(newRecord)
+//            }
+//            
+//            
+//            if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
+//                newCompleteRecords.remove(at: indexToRemove)
+//            } else {
+//                newCompleteRecords = createNewTaskCompletion(task: task)
+//            }
+//        }
+//        
+//        return newCompleteRecords
+//    }
+//    
+//    func checkCompletedTaskForToday(task: TaskModel) -> Bool {
+//        return task.done?.contains(where: { $0.completedFor == selectedDate }) ?? false
+//    }
     
     //MARK: Play sound function
     func playButtonTapped(task: TaskModel) {

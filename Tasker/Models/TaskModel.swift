@@ -1,5 +1,5 @@
 //
-//  TaskModel.swift
+//  MainModel.swift
 //  Tasker
 //
 //  Created by Rodion Akhmedov on 4/10/25.
@@ -9,16 +9,20 @@ import Foundation
 import SwiftData
 import SwiftUICore
 
-@Model
-class TaskModel: Identifiable, Equatable {
-    var uniqueID = UUID().uuidString
+///Model for CAS
+typealias MainModel = Model<TaskModel>
+
+struct TaskModel: Identifiable, Codable {
+    var id: String
     var previousUniqueID: String?
     
     var title = "New Task"
     var info = ""
     var audio: URL?
+    var repeatModel: Bool? = false
+    var newStorage: Bool? = false
     
-    var createDate: Double = Date.now.timeIntervalSince1970
+    var createDate = Date.now.timeIntervalSince1970
     var endDate: Double?
     var notificationDate: Double = 00
     var secondNotificationDate: Double?
@@ -35,52 +39,26 @@ class TaskModel: Identifiable, Equatable {
         DayOfWeek(name: "Sat", value: false)
     ]
     
-    @Relationship(deleteRule: .cascade) var done: [CompleteRecord]?
-    @Relationship(deleteRule: .cascade) var deleted: DeleteRecord?
+    var done: [CompleteRecord]?
+    var deleted: DeleteRecord?
     
     var taskColor = TaskColor.yellow
-    
-    init(title: String, info: String, createDate: Double) {
-        self.title = title
-        self.info = info
-        self.createDate = createDate
-    }
 }
 
-@Model
-class CompleteRecord {
-    @Relationship var task: TaskModel?
-    
-    var done: Bool = false
-    var completedFor: Double? = nil
-    var timeMark: Double? = nil
-    
-    init(task: TaskModel, done: Bool = false, completedFor: Double, timeMark: Double? = nil) {
-        self.task = task
-        self.done = done
-        self.completedFor = completedFor
-        self.timeMark = timeMark
-    }
+struct CompleteRecord: Codable {
+    var done = false
+    var completedFor: [Double]?
+    var timeMark: [Double]?
 }
 
-@Model
-class DeleteRecord {
-    @Relationship var task: TaskModel?
-    
-    var deleted: Bool = false
-    var deletedFor: [Double]? = nil
-    var timeMark: [Double]? = nil
-    
-    init(task: TaskModel, deleted: Bool = false, deletedFor: [Double]? = nil, timeMark: [Double]? = nil) {
-        self.task = task
-        self.deleted = deleted
-        self.deletedFor = deletedFor
-        self.timeMark = timeMark
-    }
+struct DeleteRecord: Codable {
+    var deleted = false
+    var deletedFor: [Double]?
+    var timeMark: [Double]?
 }
 
 func mockModel() -> TaskModel {
-    TaskModel(title: "", info: "", createDate: Date.now.timeIntervalSince1970)
+    TaskModel(id: "asdasjkhfgu1672546751", title: "", info: "", createDate: Date.now.timeIntervalSince1970)
 }
 
 enum RepeatTask: CaseIterable, Codable, Identifiable {

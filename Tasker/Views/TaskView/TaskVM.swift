@@ -13,7 +13,7 @@ import SwiftUICore
 final class TaskVM {
     var dateManager: DateManagerProtocol
     var playerManager: PlayerProtocol
-    var swiftData: SwiftDataProtocol
+    var casManager: CASManagerProtocol
     
     var task: TaskModel
     
@@ -46,9 +46,8 @@ final class TaskVM {
     init(task: TaskModel) {
         dateManager = DateManager()
         playerManager = PlayerManager()
-        swiftData = SwiftDataManager.shared
+        casManager = CASManager()
         self.task = task
-        print(notificationDate)
     }
     
     func onAppear() {
@@ -73,16 +72,15 @@ final class TaskVM {
     
     func doneButtonTapped() {
         let task = preparedTask()
-        swiftData.saveTask(task)
+        casManager.saveModel(task)
     }
     
     private func preparedTask() -> TaskModel {
-        let filledTask = TaskModel(title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: Date.now.timeIntervalSince1970)
+        var filledTask = TaskModel(id: "sdvsg1414", title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: Date.now.timeIntervalSince1970)
         filledTask.notificationDate = notificationDate.timeIntervalSince1970
         filledTask.done = task.done
         filledTask.taskColor = task.taskColor
         filledTask.repeatTask = task.repeatTask
-        filledTask.uniqueID = task.uniqueID
         filledTask.audio = task.audio
         filledTask.voiceMode = task.voiceMode
         filledTask.deleted = task.deleted

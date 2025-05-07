@@ -48,16 +48,6 @@ struct ListView: View {
         .sheet(item: $vm.selectedTask) { task in
             TaskView(task: task)
         }
-        .onChange(of: vm.swiftData.update) { _, _ in
-            vm.update.toggle()
-        }
-        .onAppear {
-            let tasks = vm.swiftData.fetchAllActiveTask()
-            
-            for task in tasks {
-                print(Date(timeIntervalSince1970: task.notificationDate))
-            }
-        }
     }
 }
 

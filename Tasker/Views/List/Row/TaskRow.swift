@@ -44,7 +44,6 @@ struct TaskRow: View {
             task.taskColor.color(for: colorTheme)
         )
         .sensoryFeedback(.success, trigger: vm.taskDone)
-        .animation(.default, value: task.done)
     }
     
     @ViewBuilder
@@ -59,11 +58,11 @@ struct TaskRow: View {
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(.black.opacity(0.20), lineWidth: 1)
                 )
-            if vm.checkCompletedTaskForToday(task: task) {
-                Image(systemName: "checkmark")
-                    .foregroundStyle(.tertiary.opacity(0.8))
-                    .bold()
-            }
+//            if vm.checkCompletedTaskForToday(task: task) {
+//                Image(systemName: "checkmark")
+//                    .foregroundStyle(.tertiary.opacity(0.8))
+//                    .bold()
+//            }
         }
         .frame(width: 24, height: 24)
         .onTapGesture {

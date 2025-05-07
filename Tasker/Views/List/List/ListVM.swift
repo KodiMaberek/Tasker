@@ -11,14 +11,14 @@ import SwiftData
 @MainActor
 @Observable
 final class ListVM {
-    var swiftData: SwiftDataProtocol
     var dateManager: DateManagerProtocol
+    var cas: CASManagerProtocol
     
     var selectedTask: TaskModel?
     var update = false
     
     var latestTasks: [TaskModel] {
-        swiftData.fetchTodayActiveTasks(date: selectedDate)
+        cas.models.filter { $0.notificationDate >= selectedDate && $0.notificationDate < selectedDate.advanced(by: 86400) }
     }
     
     private var calendar: Calendar {
@@ -30,8 +30,8 @@ final class ListVM {
     }
     
     init() {
-        swiftData = SwiftDataManager.shared
         dateManager = DateManager.shared
+        cas = CASManager()
     }
     
     func selectedTaskButtonTapped(_ task: TaskModel) {

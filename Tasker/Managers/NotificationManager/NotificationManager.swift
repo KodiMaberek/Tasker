@@ -67,18 +67,18 @@ final class NotificationManager {
             trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
         }
         
-        let request = UNNotificationRequest(identifier: task.uniqueID , content: notificationContent, trigger: trigger)
+        let request = UNNotificationRequest(identifier: task.id , content: notificationContent, trigger: trigger)
         notificationCenter.add(request)
         print(request)
     }
     
     func removeEvent(for task: TaskModel) async {
-        await deleteNotification(for: task.uniqueID)
+        await deleteNotification(for: task.id)
     }
     
     func removeEvents(for tasks: [TaskModel]) async {
         for task in tasks {
-            await deleteNotification(for: task.uniqueID)
+            await deleteNotification(for: task.id)
         }
     }
     
