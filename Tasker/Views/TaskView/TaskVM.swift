@@ -76,7 +76,7 @@ final class TaskVM {
     }
     
     private func preparedTask() -> TaskModel {
-        var filledTask = TaskModel(id: "sdvsg1414", title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: Date.now.timeIntervalSince1970)
+        var filledTask = TaskModel(id: UUID().uuidString, title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: Date.now.timeIntervalSince1970)
         filledTask.notificationDate = notificationDate.timeIntervalSince1970
         filledTask.done = task.done
         filledTask.taskColor = task.taskColor

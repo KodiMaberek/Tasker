@@ -20,7 +20,6 @@ struct TaskModel: Identifiable, Codable {
     var info = ""
     var audio: URL?
     var repeatModel: Bool? = false
-    var newStorage: Bool? = false
     
     var createDate = Date.now.timeIntervalSince1970
     var endDate: Double?
