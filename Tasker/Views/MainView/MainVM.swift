@@ -19,8 +19,6 @@ final class MainVM {
     var recordPermission: PermissionProtocol
     var casManager: CASManagerProtocol
     
-    var listVM = ListVM()
-    
     var isRecording = false
     var showDetailsScreen = false
     var soundData: Data?

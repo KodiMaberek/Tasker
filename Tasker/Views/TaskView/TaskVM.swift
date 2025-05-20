@@ -44,10 +44,10 @@ final class TaskVM {
     var shareViewIsShowing = false
     
     
-    init(task: TaskModel, mainModel: MainModel) {
+    init(task: TaskModel, mainModel: MainModel, casManager: CASManagerProtocol) {
         dateManager = DateManager()
         playerManager = PlayerManager()
-        casManager = CASManager.shared
+        self.casManager = casManager
         self.task = task
         self.mainModel = mainModel
     }

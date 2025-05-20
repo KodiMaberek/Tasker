@@ -10,8 +10,6 @@ import Foundation
 @Observable
 final class CASManager: CASManagerProtocol {
     
-    static let shared = CASManager()
-    
     let cas: MultiCas
     let remoteDirectory = "iCloud.com.KodiMaberek.Tasker"
     

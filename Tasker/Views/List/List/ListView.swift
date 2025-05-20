@@ -9,7 +9,11 @@ import SwiftUI
 
 struct ListView: View {
     
-    @State var vm = ListVM()
+    @State var vm: ListVM
+    
+    init(casManager: CASManagerProtocol) {
+        self.vm = ListVM(casManager: casManager)
+    }
     
     var listRowHeight = CGFloat(52)
     
@@ -20,7 +24,7 @@ struct ListView: View {
             CompletedTaskList()
         }
         .sheet(item: $vm.selectedTask) { task in
-            TaskView(task: task)
+            TaskView(casManager: vm.casManager, task: task)
         }
         .sensoryFeedback(.selection, trigger: vm.selectedTask)
     }
@@ -43,7 +47,7 @@ struct ListView: View {
                         Button {
                             vm.selectedTaskButtonTapped(task)
                         } label: {
-                            TaskRow(task: task)
+                            TaskRow(casManager: vm.casManager, task: task)
                         }
                         .foregroundStyle(.primary)
                         .swipeActions(edge: .trailing) {
@@ -83,7 +87,7 @@ struct ListView: View {
                         Button {
                             vm.selectedTaskButtonTapped(task)
                         } label: {
-                            TaskRow(task: task)
+                            TaskRow(casManager: vm.casManager, task: task)
                         }
                         .foregroundStyle(.primary)
                         .swipeActions(edge: .trailing) {
@@ -107,5 +111,5 @@ struct ListView: View {
 }
 
 #Preview {
-    ListView()
+    ListView(casManager: CASManager())
 }

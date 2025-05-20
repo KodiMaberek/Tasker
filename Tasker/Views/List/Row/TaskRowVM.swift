@@ -13,7 +13,7 @@ final class TaskRowVM {
     //MARK: Dependecies
     var playerManager: PlayerProtocol
     var dateManager: DateManagerProtocol
-    var cas: CASManagerProtocol
+    var casManager: CASManagerProtocol
     
     var playingTask: TaskModel?
     
@@ -34,10 +34,10 @@ final class TaskRowVM {
     }
     
     //MARK: - Init
-    init() {
+    init(casManager: CASManagerProtocol) {
         playerManager = PlayerManager()
         dateManager = DateManager.shared
-        cas = CASManager.shared
+        self.casManager = casManager
     }
     
     //MARK: - Check Mark Function
@@ -45,7 +45,7 @@ final class TaskRowVM {
         let newTask = task
         newTask.value.done = updateExistingTaskCompletion(task: newTask.value)
         
-        cas.saveModel(newTask)
+        casManager.saveModel(newTask)
         
         taskDone.toggle()
     }

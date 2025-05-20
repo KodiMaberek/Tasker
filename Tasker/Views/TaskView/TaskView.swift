@@ -13,8 +13,8 @@ struct TaskView: View {
     
     @State private var vm: TaskVM
     
-    init(task: MainModel) {
-        self.vm = TaskVM(task: task.value, mainModel: task)
+    init(casManager: CASManagerProtocol, task: MainModel) {
+        self.vm = TaskVM(task: task.value, mainModel: task, casManager: casManager)
     }
     
     var body: some View {
@@ -376,5 +376,5 @@ struct TaskView: View {
 }
 
 #Preview {
-    TaskView(task: mockModel())
+    TaskView(casManager: CASManager(), task: mockModel())
 }

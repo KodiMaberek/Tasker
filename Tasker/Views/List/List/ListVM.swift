@@ -42,10 +42,9 @@ final class ListVM {
         calendar.startOfDay(for: dateManager.selectedDate).timeIntervalSince1970
     }
     
-    init() {
+    init(casManager: CASManagerProtocol) {
         dateManager = DateManager.shared
-        casManager = CASManager.shared
-        print("init list VM")
+        self.casManager = casManager
     }
     
     func selectedTaskButtonTapped(_ task: MainModel) {

@@ -16,7 +16,7 @@ struct MainView: View {
             VStack {
                 WeekView()
                 
-                ListView()
+                ListView(casManager: vm.casManager)
                     .padding(.horizontal, 16)
                 
                 Spacer()
@@ -62,7 +62,7 @@ struct MainView: View {
                 }
             }
             .sheet(isPresented: $vm.showDetailsScreen) {
-                TaskView(task: mockModel())
+                TaskView(casManager: vm.casManager, task: mockModel())
             }
         }
         .navigationBarTitleDisplayMode(.inline)

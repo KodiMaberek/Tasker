@@ -9,9 +9,14 @@ import SwiftUI
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
-    @State private var vm = TaskRowVM()
+    @State var vm: TaskRowVM
     
     var task: MainModel
+    
+    init(casManager: CASManagerProtocol, task: MainModel) {
+        self.vm = TaskRowVM(casManager: casManager)
+        self.task = task
+    }
     
     //MARK: - Body
     var body: some View {
@@ -95,5 +100,5 @@ struct TaskRow: View {
 }
 
 #Preview {
-    TaskRow(task: mockModel())
+    TaskRow(casManager: CASManager(), task: mockModel())
 }
