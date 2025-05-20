@@ -17,10 +17,15 @@ final class MainVM {
     var recordManager: RecordingProtocol
     var playerManager: PlayerProtocol
     var recordPermission: PermissionProtocol
+    var casManager: CASManagerProtocol
+    
+    var listVM = ListVM()
     
     var isRecording = false
     var showDetailsScreen = false
     var soundData: Data?
+    
+    var updateView = false
     
     var alert: Alert?
     
@@ -40,6 +45,7 @@ final class MainVM {
         recordManager = RecordManager()
         playerManager = PlayerManager()
         recordPermission = PermissionManager()
+        casManager = CASManager()
     }
     
     func startAfterChek() async throws {
@@ -66,6 +72,7 @@ final class MainVM {
                 }
             }
         }
+        updateView.toggle()
     }
     
     func stopAfterCheck(_ newValue: Double?) async {

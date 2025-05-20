@@ -9,56 +9,50 @@ import Foundation
 
 @Observable
 final class CASManager: CASManagerProtocol {
-    @ObservationIgnored
-    var cas: MultiCas
-    @ObservationIgnored
-    var remoteDirectory = "iCloud.com.KodiMaberek.Tasker"
-    @ObservationIgnored
+    
+    static let shared = CASManager()
+    
+    let cas: MultiCas
+    let remoteDirectory = "iCloud.com.KodiMaberek.Tasker"
+    
     var localDirectory: URL
     
-    @ObservationTracked
-    var models: [TaskModel] {
-        fetchModels()
-    }
+    var models: [MainModel] = []
     
     init() {
-        localDirectory = CASManager.createMainDirectory()!
+        let localDirectory = CASManager.createMainDirectory()!
+        self.localDirectory = localDirectory
         
         let localCas = FileCas(localDirectory)
         let iCas = FileCas(FileManager.default.url(forUbiquityContainerIdentifier: remoteDirectory) ?? localDirectory)
         
         cas = MultiCas(local: localCas, remote: iCas)
+        models = fetchModels()
     }
     
     //MARK: Actions for work with CAS
-    func saveModel(_ task: TaskModel) {
-        let model = Model.initial(task)
+    func saveModel(_ task: MainModel) {
         
         do {
-            try cas.saveJsonModel(model)
+            try cas.saveJsonModel(task)
+            models = fetchModels()
         } catch {
             print("Couldn't save daat inside CAS")
         }
     }
     
-    func fetchModels() -> [TaskModel] {
-        var models = [TaskModel]()
+    func fetchModels() -> [MainModel] {
+        let list = try! cas.listMutable()
         
-        do {
-            let list = try cas.listMutable()
-            for mutable in list {
-                if let model: MainModel = try cas.loadJsonModel(mutable) {
-                    models.append(model.value)
-                    print(list.count)
-                }
+        return list.compactMap { mutable in
+            do {
+                return try cas.loadJsonModel(mutable)
+            } catch {
+                print("Error while loading model: \(error)")
+                return nil
             }
-        } catch {
-            print("Couldn't fetch models")
         }
-        
-        return models
     }
-    
     
     //MARK: Create directory for CAS
     private static func createMainDirectory() -> URL? {

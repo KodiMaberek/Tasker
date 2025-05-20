@@ -13,8 +13,8 @@ struct TaskView: View {
     
     @State private var vm: TaskVM
     
-    init(task: TaskModel) {
-        self.vm = TaskVM(task: task)
+    init(task: MainModel) {
+        self.vm = TaskVM(task: task.value, mainModel: task)
     }
     
     var body: some View {

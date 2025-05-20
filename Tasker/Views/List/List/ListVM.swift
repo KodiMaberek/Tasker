@@ -8,17 +8,30 @@
 import Foundation
 import SwiftData
 
-@MainActor
 @Observable
 final class ListVM {
-    var dateManager: DateManagerProtocol
-    var cas: CASManagerProtocol
     
-    var selectedTask: TaskModel?
+    let dateManager: DateManagerProtocol
+    let casManager: CASManagerProtocol
+    
+    var selectedTask: MainModel?
+    
     var update = false
     
-    var latestTasks: [TaskModel] {
-        cas.models.filter { $0.notificationDate >= selectedDate && $0.notificationDate < selectedDate.advanced(by: 86400) }
+    var tasks: [MainModel] {
+        casManager.models.filter { model in
+            model.value.notificationDate >= selectedDate &&
+            model.value.notificationDate < selectedDate.advanced(by: 86400) &&
+            (model.value.done == nil || !model.value.done!.contains { $0.completedFor == selectedDate })
+        }
+    }
+    
+    var completedTasks: [MainModel] {
+        casManager.models.filter {
+            $0.value.notificationDate >= selectedDate &&
+            $0.value.notificationDate < selectedDate.advanced(by: 86400) &&
+            $0.value.done?.contains { $0.completedFor == selectedDate } == true
+        }
     }
     
     private var calendar: Calendar {
@@ -31,10 +44,11 @@ final class ListVM {
     
     init() {
         dateManager = DateManager.shared
-        cas = CASManager()
+        casManager = CASManager.shared
+        print("init list VM")
     }
     
-    func selectedTaskButtonTapped(_ task: TaskModel) {
+    func selectedTaskButtonTapped(_ task: MainModel) {
         selectedTask = task
     }
 }

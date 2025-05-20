@@ -9,11 +9,27 @@ import SwiftUI
 
 struct ListView: View {
     
-    @State private var vm = ListVM()
+    @State var vm = ListVM()
+    
+    var listRowHeight = CGFloat(52)
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 12) {
+        VStack(spacing: 28) {
+            TaskList()
+            
+            CompletedTaskList()
+        }
+        .sheet(item: $vm.selectedTask) { task in
+            TaskView(task: task)
+        }
+        .sensoryFeedback(.selection, trigger: vm.selectedTask)
+    }
+    
+    //MARK: - Task List
+    @ViewBuilder
+    private func TaskList() -> some View {
+        VStack(spacing: 12) {
+            if !vm.tasks.isEmpty {
                 HStack {
                     Text("Tasks")
                         .foregroundStyle(.tertiary.opacity(0.6))
@@ -22,8 +38,8 @@ struct ListView: View {
                     Spacer()
                 }
                 
-                VStack(spacing: 0) {
-                    ForEach(vm.latestTasks) { task in
+                List {
+                    ForEach(vm.tasks) { task in
                         Button {
                             vm.selectedTaskButtonTapped(task)
                         } label: {
@@ -34,19 +50,58 @@ struct ListView: View {
                             Button {
                                 
                             } label: {
-                                Text("Delete")
+                                Image(systemName: "trash")
+                                    .foregroundStyle(.labelSecondary)
+                                    .tint(.red)
                             }
                         }
                     }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 12))
+                .listStyle(.inset)
             }
-            .padding(.top, 28)
         }
-        .frame(maxHeight: .infinity)
-        .scrollIndicators(.hidden)
-        .sheet(item: $vm.selectedTask) { task in
-            TaskView(task: task)
+    }
+    
+    //MARK: Completed Tasks
+    @ViewBuilder
+    private func CompletedTaskList() -> some View {
+        VStack(spacing: 12) {
+            if !vm.completedTasks.isEmpty {
+                HStack {
+                    Text("Completed task")
+                        .foregroundStyle(.tertiary.opacity(0.6))
+                        .bold()
+                    
+                    Spacer()
+                }
+                
+                List {
+                    ForEach(vm.completedTasks) { task in
+                        Button {
+                            vm.selectedTaskButtonTapped(task)
+                        } label: {
+                            TaskRow(task: task)
+                        }
+                        .foregroundStyle(.primary)
+                        .swipeActions(edge: .trailing) {
+                            Button {
+                                
+                            } label: {
+                                Image(systemName: "trash")
+                                    .foregroundStyle(.labelSecondary)
+                                    .tint(.red)
+                            }
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets())
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .listStyle(.inset)
+            }
         }
     }
 }

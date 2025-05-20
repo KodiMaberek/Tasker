@@ -27,6 +27,8 @@ struct TaskModel: Identifiable, Codable {
     var secondNotificationDate: Double?
     var voiceMode = true
     
+    var markAsDeleted = false
+    
     var repeatTask = RepeatTask.never
     var dayOfWeek: [DayOfWeek] = [
         DayOfWeek(name: "Sun", value: false),
@@ -39,25 +41,23 @@ struct TaskModel: Identifiable, Codable {
     ]
     
     var done: [CompleteRecord]?
-    var deleted: DeleteRecord?
+    var deleted: [DeleteRecord]?
     
     var taskColor = TaskColor.yellow
 }
 
-struct CompleteRecord: Codable {
-    var done = false
-    var completedFor: [Double]?
-    var timeMark: [Double]?
+struct CompleteRecord: Codable, Equatable {
+    var completedFor: Double?
+    var timeMark: Double?
 }
 
 struct DeleteRecord: Codable {
-    var deleted = false
-    var deletedFor: [Double]?
-    var timeMark: [Double]?
+    var deletedFor: Double?
+    var timeMark: Double?
 }
 
-func mockModel() -> TaskModel {
-    TaskModel(id: "asdasjkhfgu1672546751", title: "", info: "", createDate: Date.now.timeIntervalSince1970)
+func mockModel() -> MainModel {
+    MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", createDate: Date.now.timeIntervalSince1970))
 }
 
 enum RepeatTask: CaseIterable, Codable, Identifiable {
@@ -87,6 +87,3 @@ struct DayOfWeek: Codable, Hashable, Identifiable {
     var name: String
     var value: Bool
 }
-
-
-

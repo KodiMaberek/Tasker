@@ -16,6 +16,7 @@ final class TaskRowVM {
     var cas: CASManagerProtocol
     
     var playingTask: TaskModel?
+    
     var taskDone = false
     
     //MARK: Computed Properties
@@ -36,61 +37,58 @@ final class TaskRowVM {
     init() {
         playerManager = PlayerManager()
         dateManager = DateManager.shared
-        cas = CASManager()
+        cas = CASManager.shared
     }
     
     //MARK: - Check Mark Function
-    func checkMarkTapped(task: TaskModel) {
-        // Task's clone
-        var newTask = TaskModel(id: task.id, title: task.title, info: task.info, createDate: task.createDate)
-        newTask.audio = task.audio
-        newTask.endDate = task.endDate
-        newTask.notificationDate = task.notificationDate
-        newTask.secondNotificationDate = task.secondNotificationDate
-        newTask.voiceMode = task.voiceMode
-        newTask.repeatTask = task.repeatTask
-        newTask.dayOfWeek = task.dayOfWeek
+    func checkMarkTapped(task: MainModel) {
+        let newTask = task
+        newTask.value.done = updateExistingTaskCompletion(task: newTask.value)
         
-        // Update completion record
-        newTask.done 
-        newTask.deleted = task.deleted
-        
-        newTask.taskColor = task.taskColor
-        
+        cas.saveModel(newTask)
         
         taskDone.toggle()
     }
     
-//    private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {
-//        print("update existing")
-//        var newCompleteRecords: [CompleteRecord] = []
-//        
-//        if let existingRecords = task.done {
-//            
-//            for record in existingRecords {
-//                let newRecord = CompleteRecord(
-//                    task: task,
-//                    done: record.done,
-//                    completedFor: record.completedFor ?? 0,
-//                    timeMark: record.timeMark
-//                )
-//                newCompleteRecords.append(newRecord)
-//            }
-//            
-//            
-//            if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
-//                newCompleteRecords.remove(at: indexToRemove)
-//            } else {
-//                newCompleteRecords = createNewTaskCompletion(task: task)
-//            }
-//        }
-//        
-//        return newCompleteRecords
-//    }
-//    
-//    func checkCompletedTaskForToday(task: TaskModel) -> Bool {
-//        return task.done?.contains(where: { $0.completedFor == selectedDate }) ?? false
-//    }
+    private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {
+        var newCompleteRecords: [CompleteRecord] = []
+        
+        if let existingRecords = task.done {
+            
+            for record in existingRecords {
+                let newRecord = CompleteRecord(
+                    completedFor: record.completedFor ?? 0,
+                    timeMark: record.timeMark
+                )
+                newCompleteRecords.append(newRecord)
+            }
+            
+            
+            if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
+                newCompleteRecords.remove(at: indexToRemove)
+            } else {
+                newCompleteRecords = createNewTaskCompletion(task: task)
+            }
+        }
+        
+        return newCompleteRecords
+    }
+    
+    func checkCompletedTaskForToday(task: TaskModel) -> Bool {
+        return task.done?.contains(where: { $0.completedFor == selectedDate }) ?? false
+    }
+    
+    func createNewTaskCompletion(task: TaskModel) -> [CompleteRecord] {
+        var newCompleteRecords: [CompleteRecord] = []
+        
+        let newRecord = CompleteRecord(
+            completedFor: selectedDate,
+            timeMark: Date.now.timeIntervalSince1970
+        )
+        newCompleteRecords.append(newRecord)
+        
+        return newCompleteRecords
+    }
     
     //MARK: Play sound function
     func playButtonTapped(task: TaskModel) {

@@ -16,6 +16,7 @@ final class TaskVM {
     var casManager: CASManagerProtocol
     
     var task: TaskModel
+    var mainModel: MainModel
     
     var calendar: Calendar {
         dateManager.calendar
@@ -43,11 +44,12 @@ final class TaskVM {
     var shareViewIsShowing = false
     
     
-    init(task: TaskModel) {
+    init(task: TaskModel, mainModel: MainModel) {
         dateManager = DateManager()
         playerManager = PlayerManager()
-        casManager = CASManager()
+        casManager = CASManager.shared
         self.task = task
+        self.mainModel = mainModel
     }
     
     func onAppear() {
@@ -71,8 +73,9 @@ final class TaskVM {
     }
     
     func doneButtonTapped() {
-        let task = preparedTask()
-        casManager.saveModel(task)
+        let mainModel = self.mainModel
+        mainModel.value = preparedTask()
+        casManager.saveModel(mainModel)
     }
     
     private func preparedTask() -> TaskModel {

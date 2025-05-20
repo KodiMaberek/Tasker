@@ -51,7 +51,7 @@ struct ModelStruct<T> {
     var value: T
 }
 
-public class Model<T>: Hashable {
+public class Model<T>: Hashable, Identifiable {
     // internal:
     var s: ModelStruct<T>
     init(_ s: ModelStruct<T>) {

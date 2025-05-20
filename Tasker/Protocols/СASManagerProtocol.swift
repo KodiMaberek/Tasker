@@ -8,10 +8,8 @@
 import Foundation
 
 protocol CASManagerProtocol {
+    var models: [MainModel] { get }
     
-    var models: [TaskModel] { get}
-    
-    func saveModel(_ task: TaskModel)
-    
-    func fetchModels() -> [TaskModel]
+    func saveModel(_ task: MainModel)
+    func fetchModels() -> [MainModel]
 }
