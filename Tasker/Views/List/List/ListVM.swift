@@ -6,17 +6,13 @@
 //
 
 import Foundation
-import SwiftData
+import SwiftUI
 
 @Observable
 final class ListVM {
     
     let dateManager: DateManagerProtocol
     let casManager: CASManagerProtocol
-    
-    var selectedTask: MainModel?
-    
-    var update = false
     
     var tasks: [MainModel] {
         casManager.models.filter { model in
@@ -47,7 +43,7 @@ final class ListVM {
         self.casManager = casManager
     }
     
-    func selectedTaskButtonTapped(_ task: MainModel) {
-        selectedTask = task
+    func hiddenCompletedTasksButtonTapped() {
+//        completedTasksHidden.toggle()
     }
 }

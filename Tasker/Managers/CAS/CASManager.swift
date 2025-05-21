@@ -52,6 +52,15 @@ final class CASManager: CASManagerProtocol {
         }
     }
     
+    //MARK: Delete model
+    func deleteModel(_ model: MainModel) {
+        do {
+            try cas.deleteModel(model)
+        } catch {
+            print("Couldn't delete data: \(error)")
+        }
+    }
+    
     //MARK: Create directory for CAS
     private static func createMainDirectory() -> URL? {
         guard let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .allDomainsMask).first else {

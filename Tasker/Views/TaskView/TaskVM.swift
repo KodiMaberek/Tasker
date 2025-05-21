@@ -73,9 +73,12 @@ final class TaskVM {
     }
     
     func doneButtonTapped() {
-        let mainModel = self.mainModel
-        mainModel.value = preparedTask()
-        casManager.saveModel(mainModel)
+        Task {
+            let mainModel = self.mainModel
+            mainModel.value = preparedTask()
+            try await Task.sleep(nanoseconds: 300_000_000)
+            casManager.saveModel(mainModel)
+        }
     }
     
     private func preparedTask() -> TaskModel {

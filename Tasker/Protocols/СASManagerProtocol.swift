@@ -12,4 +12,5 @@ protocol CASManagerProtocol {
     
     func saveModel(_ task: MainModel)
     func fetchModels() -> [MainModel]
+    func deleteModel(_ model: MainModel)
 }

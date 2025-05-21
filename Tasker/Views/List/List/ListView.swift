@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ListView: View {
+    @AppStorage("completedTasksHidden") var completedTasksHidden = false
     
     @State var vm: ListVM
     
@@ -15,96 +16,84 @@ struct ListView: View {
         self.vm = ListVM(casManager: casManager)
     }
     
-    var listRowHeight = CGFloat(52)
-    
     var body: some View {
-        VStack(spacing: 28) {
-            TaskList()
+        ScrollView {
+            TasksList()
             
-            CompletedTaskList()
+            CompletedTasksList()
         }
-        .sheet(item: $vm.selectedTask) { task in
-            TaskView(casManager: vm.casManager, task: task)
-        }
-        .sensoryFeedback(.selection, trigger: vm.selectedTask)
+        .animation(.default, value: vm.casManager.models)
+        .animation(.default, value: completedTasksHidden)
     }
     
-    //MARK: - Task List
     @ViewBuilder
-    private func TaskList() -> some View {
-        VStack(spacing: 12) {
-            if !vm.tasks.isEmpty {
-                HStack {
-                    Text("Tasks")
-                        .foregroundStyle(.tertiary.opacity(0.6))
-                        .bold()
-                    
-                    Spacer()
-                }
+    private func TasksList() -> some View {
+        if !vm.tasks.isEmpty {
+            HStack {
+                Text("Tasks")
+                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .bold()
                 
-                List {
-                    ForEach(vm.tasks) { task in
-                        Button {
-                            vm.selectedTaskButtonTapped(task)
-                        } label: {
-                            TaskRow(casManager: vm.casManager, task: task)
-                        }
-                        .foregroundStyle(.primary)
-                        .swipeActions(edge: .trailing) {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "trash")
-                                    .foregroundStyle(.labelSecondary)
-                                    .tint(.red)
-                            }
-                        }
-                    }
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets())
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .listStyle(.inset)
+                Spacer()
             }
+            
+            VStack(spacing: 0) {
+                ForEach(Array(vm.tasks.enumerated()), id: \.element) { index, task in
+                    TaskRow(casManager: vm.casManager, task: task)
+                        .foregroundStyle(.primary)
+                    
+                    if index != vm.tasks.count - 1 {
+                        RoundedRectangle(cornerRadius: 0.5)
+                            .fill(
+                                Color.separatorSecondary.opacity(0.14)
+                            )
+                            .frame(height: 0.5)
+                    }
+                }
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets())
+            }
+            .clipShape(RoundedRectangle(cornerRadius: 16))
         }
     }
     
-    //MARK: Completed Tasks
     @ViewBuilder
-    private func CompletedTaskList() -> some View {
-        VStack(spacing: 12) {
-            if !vm.completedTasks.isEmpty {
-                HStack {
-                    Text("Completed task")
-                        .foregroundStyle(.tertiary.opacity(0.6))
-                        .bold()
-                    
-                    Spacer()
-                }
+    private func CompletedTasksList() -> some View {
+        if !vm.completedTasks.isEmpty {
+            HStack {
+                Text("Completed task")
+                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .bold()
                 
-                List {
-                    ForEach(vm.completedTasks) { task in
-                        Button {
-                            vm.selectedTaskButtonTapped(task)
-                        } label: {
-                            TaskRow(casManager: vm.casManager, task: task)
-                        }
-                        .foregroundStyle(.primary)
-                        .swipeActions(edge: .trailing) {
-                            Button {
-                                
-                            } label: {
-                                Image(systemName: "trash")
-                                    .foregroundStyle(.labelSecondary)
-                                    .tint(.red)
-                            }
+                Spacer()
+                
+                Image(systemName: completedTasksHidden ? "chevron.up" : "chevron.down")
+                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .bold()
+                    .onTapGesture {
+                        completedTasksHidden.toggle()
+                    }
+            }
+            .listRowSeparator(.hidden)
+            
+            if completedTasksHidden {
+                VStack(spacing: 0) {
+                    ForEach(Array(vm.completedTasks.enumerated()), id: \.element) { index, task in
+                        TaskRow(casManager: vm.casManager, task: task)
+                            .foregroundStyle(.primary)
+                        
+                        if index != vm.completedTasks.count - 1 {
+                            RoundedRectangle(cornerRadius: 0.5)
+                                .fill(
+                                    Color.separatorSecondary.opacity(0.14)
+                                )
+                                .frame(height: 0.5)
                         }
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets())
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .listStyle(.inset)
+                .clipShape(RoundedRectangle(cornerRadius: 16))
             }
         }
     }

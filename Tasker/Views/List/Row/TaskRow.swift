@@ -6,12 +6,15 @@
 //
 
 import SwiftUI
+import SwipeActions
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
     @State var vm: TaskRowVM
     
     var task: MainModel
+    
+    var listRowHeight = CGFloat(52)
     
     init(casManager: CASManagerProtocol, task: MainModel) {
         self.vm = TaskRowVM(casManager: casManager)
@@ -20,38 +23,70 @@ struct TaskRow: View {
     
     //MARK: - Body
     var body: some View {
-        HStack(spacing: 0) {
-            HStack(spacing: 12) {
-                CheckMark()
-                
-                Text(task.value.title)
-                    .multilineTextAlignment(.leading)
-                    .foregroundStyle(.labelPrimary)
-                    .font(.callout)
-                    .onTapGesture {
-                        print(vm.selectedDate)
-                    }
+        FinalTaskRow()
+            .sheet(item: $vm.selectedTask) { task in
+                TaskView(casManager: vm.casManager, task: task)
             }
-            
-            Spacer()
-            
-            HStack(spacing: 12) {
-                Text("\(Date(timeIntervalSince1970: task.value.notificationDate), format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary.opacity(0.6))
-                    .padding(.leading, 16)
-                    .lineLimit(1)
-                
-                PlayButton()
+            .sensoryFeedback(.selection, trigger: vm.selectedTask)
+    }
+    
+    @ViewBuilder
+    private func FinalTaskRow() -> some View {
+        List {
+            ForEach(0..<1) { _ in
+                HStack(spacing: 0) {
+                    HStack(spacing: 12) {
+                        CheckMark()
+                        
+                        Text(task.value.title)
+                            .multilineTextAlignment(.leading)
+                            .foregroundStyle(.labelPrimary)
+                            .font(.callout)
+                            .onTapGesture {
+                                print(vm.selectedDate)
+                            }
+                    }
+                    
+                    Spacer()
+                    
+                    HStack(spacing: 12) {
+                        Text("\(Date(timeIntervalSince1970: task.value.notificationDate), format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
+                            .font(.subheadline)
+                            .foregroundStyle(.tertiary.opacity(0.6))
+                            .padding(.leading, 16)
+                            .lineLimit(1)
+                        
+                        PlayButton()
+                    }
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    vm.selectedTaskButtonTapped(task)
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 11)
+                .background(
+                    task.value.taskColor.color(for: colorTheme)
+                )
+                .frame(maxWidth: .infinity)
+                .sensoryFeedback(.success, trigger: vm.taskDone)
+            }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets())
+            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                Button {
+                    vm.deleteTaskButtonTapped(task: task)
+                } label: {
+                    Image(systemName: "trash")
+                        .foregroundStyle(.labelSecondary)
+                        .tint(.red)
+                }
             }
         }
-        .padding(.vertical, 12)
-        .padding(.horizontal, 11)
-        .background(
-            task.value.taskColor.color(for: colorTheme)
-        )
-        .frame(maxWidth: .infinity)
-        .sensoryFeedback(.success, trigger: vm.taskDone)
+        .listStyle(PlainListStyle())
+        .listRowSeparator(.hidden)
+        .frame(height: listRowHeight)
+        .scrollDisabled(true)
     }
     
     //MARK: - Check Mark
@@ -82,19 +117,18 @@ struct TaskRow: View {
     //MARK: - Play Button
     @ViewBuilder
     private func PlayButton() -> some View {
-        Button {
+        ZStack {
+            Circle()
+                .fill(
+                    .tertiary.opacity(0.2)
+                )
+            
+            Image(systemName: vm.playing ? "pause.fill" : "play.fill")
+                .foregroundStyle(.white)
+        }
+        .frame(width: 28, height: 28)
+        .onTapGesture {
             vm.playButtonTapped(task: task.value)
-        } label: {
-            ZStack {
-                Circle()
-                    .fill(
-                        .tertiary.opacity(0.2)
-                    )
-                
-                Image(systemName: vm.playing ? "pause.fill" : "play.fill")
-                    .foregroundStyle(.white)
-            }
-            .frame(width: 28, height: 28)
         }
     }
 }

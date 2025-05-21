@@ -16,6 +16,8 @@ final class TaskRowVM {
     var casManager: CASManagerProtocol
     
     var playingTask: TaskModel?
+    var selectedTask: MainModel?
+    
     
     var taskDone = false
     
@@ -40,6 +42,11 @@ final class TaskRowVM {
         self.casManager = casManager
     }
     
+    //MARK: Selected task
+    func selectedTaskButtonTapped(_ task: MainModel) {
+        selectedTask = task
+    }
+    
     //MARK: - Check Mark Function
     func checkMarkTapped(task: MainModel) {
         let newTask = task
@@ -48,6 +55,10 @@ final class TaskRowVM {
         casManager.saveModel(newTask)
         
         taskDone.toggle()
+    }
+    
+    func deleteTaskButtonTapped(task: MainModel) {
+        casManager.deleteModel(task)
     }
     
     private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {

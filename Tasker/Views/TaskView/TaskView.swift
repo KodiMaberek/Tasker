@@ -346,8 +346,8 @@ struct TaskView: View {
     @ViewBuilder
     private func SaveButton() -> some View {
         Button {
-            vm.doneButtonTapped()
             dismissButton()
+            vm.doneButtonTapped()
         } label: {
             Text("Done")
                 .foregroundStyle(.white)
