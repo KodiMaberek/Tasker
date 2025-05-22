@@ -6,15 +6,12 @@
 //
 
 import SwiftUI
-import SwipeActions
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
     @State var vm: TaskRowVM
     
     var task: MainModel
-    
-    var listRowHeight = CGFloat(52)
     
     init(casManager: CASManagerProtocol, task: MainModel) {
         self.vm = TaskRowVM(casManager: casManager)
@@ -26,6 +23,29 @@ struct TaskRow: View {
         FinalTaskRow()
             .sheet(item: $vm.selectedTask) { task in
                 TaskView(casManager: vm.casManager, task: task)
+            }
+            .confirmationDialog("", isPresented: $vm.confirmationDialogIsPresented) {
+                if vm.singleTask {
+                    Button(role: .destructive) {
+                        vm.deleteButtonTapped(task: task, deleteCompletely: true)
+                    } label: {
+                        Text("Delete this task")
+                    }
+                } else {
+                    Button(role: .destructive) {
+                        vm.deleteButtonTapped(task: task)
+                    } label: {
+                        Text("Delete only this task")
+                    }
+                    
+                    Button {
+                        vm.deleteButtonTapped(task: task, deleteCompletely: true)
+                    } label: {
+                        Text("Delete all of these tasks")
+                    }
+                }
+            } message: {
+                Text(vm.messageForDelete)
             }
             .sensoryFeedback(.selection, trigger: vm.selectedTask)
     }
@@ -42,9 +62,6 @@ struct TaskRow: View {
                             .multilineTextAlignment(.leading)
                             .foregroundStyle(.labelPrimary)
                             .font(.callout)
-                            .onTapGesture {
-                                print(vm.selectedDate)
-                            }
                     }
                     
                     Spacer()
@@ -75,7 +92,7 @@ struct TaskRow: View {
             .listRowInsets(EdgeInsets())
             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                 Button {
-                    vm.deleteTaskButtonTapped(task: task)
+                    vm.deleteTaskButtonSwiped(task: task)
                 } label: {
                     Image(systemName: "trash")
                         .foregroundStyle(.labelSecondary)
@@ -85,7 +102,7 @@ struct TaskRow: View {
         }
         .listStyle(PlainListStyle())
         .listRowSeparator(.hidden)
-        .frame(height: listRowHeight)
+        .frame(height: vm.listRowHeight)
         .scrollDisabled(true)
     }
     

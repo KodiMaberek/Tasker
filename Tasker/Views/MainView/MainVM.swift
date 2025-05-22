@@ -14,10 +14,10 @@ final class MainVM {
     @ObservationIgnored
     @AppStorage("textForYourSelf", store: .standard) var textForYourSelf = "Write your title 🎯"
     
+    var casManager: CASManagerProtocol
+    var recordPermission: PermissionProtocol
     var recordManager: RecordingProtocol
     var playerManager: PlayerProtocol
-    var recordPermission: PermissionProtocol
-    var casManager: CASManagerProtocol
     
     var isRecording = false
     var showDetailsScreen = false
@@ -40,10 +40,10 @@ final class MainVM {
     }
     
     init() {
+        casManager = CASManager()
+        recordPermission = PermissionManager()
         recordManager = RecordManager()
         playerManager = PlayerManager()
-        recordPermission = PermissionManager()
-        casManager = CASManager()
     }
     
     func startAfterChek() async throws {

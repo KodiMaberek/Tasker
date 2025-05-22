@@ -49,7 +49,7 @@ final class CASManager: CASManagerProtocol {
                 print("Error while loading model: \(error)")
                 return nil
             }
-        }
+        }.filter { $0.value.markAsDeleted == false }
     }
     
     //MARK: Delete model
