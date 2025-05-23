@@ -13,20 +13,27 @@ struct MainView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
-                WeekView()
-                
-                ListView(casManager: vm.casManager)
-                    .padding(.horizontal, 16)
-                
-                Spacer()
-                
-                RecordButton(isRecording: $vm.isRecording, progress: vm.progress, countOfSec: vm.currentlyTime, animationAmount: vm.decibelLvl) {
-                    Task {
-                        try? await vm.startAfterChek()
-                    }
+            ZStack {
+                VStack {
+                    WeekView()
+                    
+                    ListView(casManager: vm.casManager)
+                        .padding(.horizontal, 16)
+                    
+                    Spacer()
                 }
-                .padding(.bottom, 15)
+                .ignoresSafeArea(edges: .bottom)
+                
+                VStack {
+                    Spacer()
+                    
+                    RecordButton(isRecording: $vm.isRecording, progress: vm.progress, countOfSec: vm.currentlyTime, animationAmount: vm.decibelLvl) {
+                        Task {
+                            try? await vm.startAfterChek()
+                        }
+                    }
+                    .padding(.bottom, 15)
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea(.keyboard)

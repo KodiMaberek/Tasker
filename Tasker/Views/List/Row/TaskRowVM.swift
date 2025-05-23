@@ -74,7 +74,6 @@ final class TaskRowVM {
         var newCompleteRecords: [CompleteRecord] = []
         
         if let existingRecords = task.done {
-            
             for record in existingRecords {
                 let newRecord = CompleteRecord(
                     completedFor: record.completedFor ?? 0,
@@ -87,23 +86,18 @@ final class TaskRowVM {
             if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
                 newCompleteRecords.remove(at: indexToRemove)
             } else {
-                newCompleteRecords = createNewTaskCompletion(task: task)
+                newCompleteRecords.append(createNewTaskCompletion(task: task))
             }
+        }
+        else {
+            newCompleteRecords.append(createNewTaskCompletion(task: task))
         }
         
         return newCompleteRecords
     }
     
-    private func createNewTaskCompletion(task: TaskModel) -> [CompleteRecord] {
-        var newCompleteRecords: [CompleteRecord] = []
-        
-        let newRecord = CompleteRecord(
-            completedFor: selectedDate,
-            timeMark: Date.now.timeIntervalSince1970
-        )
-        newCompleteRecords.append(newRecord)
-        
-        return newCompleteRecords
+    private func createNewTaskCompletion(task: TaskModel) -> CompleteRecord {
+        CompleteRecord(completedFor: selectedDate,timeMark: nowDate)
     }
     
     //MARK: - Delete functions
