@@ -8,13 +8,17 @@
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = MainVM()
     
     var body: some View {
         NavigationStack {
             ZStack {
-                VStack {
+                Color(colorScheme.backgroundColor.hexColor())
+                    .ignoresSafeArea()
+                
+                VStack(spacing: 0) {
                     WeekView()
                     
                     ListView(casManager: vm.casManager)
@@ -43,7 +47,7 @@ struct MainView: View {
                         
                     } label: {
                         Image(systemName: "calendar")
-                            .foregroundStyle(elementColor.hexColor())
+                            .foregroundStyle(colorScheme.elementColor.hexColor())
                     }
                 }
                 
@@ -59,7 +63,7 @@ struct MainView: View {
                         
                     } label: {
                         Image(systemName: "person.circle")
-                            .foregroundStyle(elementColor.hexColor())
+                            .foregroundStyle(colorScheme.elementColor.hexColor())
                     }
                 }
             }

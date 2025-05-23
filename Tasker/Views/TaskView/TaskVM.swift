@@ -11,20 +11,24 @@ import SwiftUICore
 @MainActor
 @Observable
 final class TaskVM {
-    var dateManager: DateManagerProtocol
-    var playerManager: PlayerProtocol
-    var casManager: CASManagerProtocol
+    //MARK: - Dependencies
+    let dateManager: DateManagerProtocol
+    let playerManager: PlayerProtocol
+    let casManager: CASManagerProtocol
     
-    var task: TaskModel
+    //MARK: Model
     var mainModel: MainModel
+    var task: TaskModel
     
+    //MARK: UI States
+    var showDatePicker = false
+    var showTimePicker = false
+    var shareViewIsShowing = false
+    
+    //MARK: - Computed properties
     var calendar: Calendar {
         dateManager.calendar
     }
-    
-    private var lastChangeTime = Date()
-    private var debounceTimer: Timer?
-    private var lastNotificationDate = Date()
     
     var notificationDate: Date = Date() {
         didSet {
@@ -39,17 +43,19 @@ final class TaskVM {
         }
     }
     
-    var showDatePicker = false
-    var showTimePicker = false
-    var shareViewIsShowing = false
+  //MARK: - Private properties
+    private var lastChangeTime = Date()
+    private var debounceTimer: Timer?
+    private var lastNotificationDate = Date()
     
     
-    init(task: TaskModel, mainModel: MainModel, casManager: CASManagerProtocol) {
+    //MARK: - Init
+    init(mainModel: MainModel, casManager: CASManagerProtocol) {
         dateManager = DateManager()
         playerManager = PlayerManager()
         self.casManager = casManager
-        self.task = task
         self.mainModel = mainModel
+        self.task = mainModel.value
     }
     
     func onAppear() {
@@ -141,8 +147,10 @@ final class TaskVM {
         lastNotificationDate = notificationDate
         
         debounceTimer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] _ in
-            if let self = self, Date().timeIntervalSince(self.lastChangeTime) >= timeInterval {
-                self.dateHasBeenSelected()
+            Task { @MainActor in
+                if let self = self, Date().timeIntervalSince(self.lastChangeTime) >= timeInterval {
+                    self.dateHasBeenSelected()
+                }
             }
         }
     }

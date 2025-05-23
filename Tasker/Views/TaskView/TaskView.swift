@@ -14,7 +14,7 @@ struct TaskView: View {
     @State private var vm: TaskVM
     
     init(casManager: CASManagerProtocol, task: MainModel) {
-        self.vm = TaskVM(task: task.value, mainModel: task, casManager: casManager)
+        self.vm = TaskVM(mainModel: task, casManager: casManager)
     }
     
     var body: some View {
@@ -95,7 +95,7 @@ struct TaskView: View {
             }
             .padding(.vertical, 11)
         }
-        .tint(elementColor.hexColor())
+        .tint(colorScheme.elementColor.hexColor())
         .padding(.top, 14)
         .padding(.bottom, 3)
     }
@@ -105,7 +105,7 @@ struct TaskView: View {
     private func VoiceModeToogle() -> some View {
         HStack(spacing: 12) {
             Image(systemName: "bell")
-                .foregroundStyle(elementColor.hexColor())
+                .foregroundStyle(colorScheme.elementColor.hexColor())
             
             Toggle(isOn: $vm.task.voiceMode) {
                 Text("Play your voice in notification")
@@ -164,7 +164,7 @@ struct TaskView: View {
             } label: {
                 HStack(spacing: 13) {
                     Image(systemName: "calendar")
-                        .tint(elementColor.hexColor())
+                        .foregroundStyle(colorScheme.elementColor.hexColor())
                     
                     Text("Date")
                         .foregroundStyle(Color.primary)
@@ -187,7 +187,7 @@ struct TaskView: View {
                     .datePickerStyle(.graphical)
                     .scrollDismissesKeyboard(.immediately)
                     .id(vm.notificationDate)
-                    .tint(elementColor.hexColor())
+                    .tint(colorScheme.elementColor.hexColor())
             }
         }
         .sensoryFeedback(.impact, trigger: vm.showDatePicker)
@@ -204,7 +204,7 @@ struct TaskView: View {
             } label: {
                 HStack(spacing: 13) {
                     Image(systemName: "clock")
-                        .tint(elementColor.hexColor())
+                        .foregroundStyle(colorScheme.elementColor.hexColor())
                     
                     Text("Time")
                         .foregroundStyle(Color.primary)
@@ -226,7 +226,7 @@ struct TaskView: View {
             if vm.showTimePicker {
                 DatePicker("", selection: $vm.notificationDate, displayedComponents: .hourAndMinute)
                     .datePickerStyle(.wheel)
-                    .tint(elementColor.hexColor())
+                    .tint(colorScheme.elementColor.hexColor())
             }
         }
         .sensoryFeedback(.impact, trigger: vm.showTimePicker)
@@ -238,7 +238,7 @@ struct TaskView: View {
         VStack(spacing: 0) {
             HStack {
                 Image(systemName: "clock.arrow.trianglehead.2.counterclockwise.rotate.90")
-                    .foregroundStyle(elementColor.hexColor())
+                    .foregroundStyle(colorScheme.elementColor.hexColor())
                 
                 Text("Repeat")
                     .foregroundStyle(Color.primary)
@@ -281,7 +281,7 @@ struct TaskView: View {
                     } label: {
                         Text(day.name)
                             .font(.system(size: 17, weight: .regular, design: .default))
-                            .foregroundStyle(day.value ? elementColor.hexColor() : .labelSecondary.opacity(0.8))
+                            .foregroundStyle(day.value ? colorScheme.elementColor.hexColor() : .labelSecondary.opacity(0.8))
                             .padding(.vertical, 13)
                     }
                 }
@@ -339,7 +339,6 @@ struct TaskView: View {
             .sensoryFeedback(.selection, trigger: vm.task.taskColor)
         }
         .padding(.vertical, 13)
-        
     }
     
     //MARK: Save button
@@ -357,7 +356,7 @@ struct TaskView: View {
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(
-                            elementColor.hexColor()
+                            colorScheme.elementColor.hexColor()
                         )
                 )
         }

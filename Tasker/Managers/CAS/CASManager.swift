@@ -33,7 +33,8 @@ final class CASManager: CASManagerProtocol {
         
         do {
             try cas.saveJsonModel(task)
-            models = fetchModels()
+            indexForDelete(task)
+            models.append(task)
         } catch {
             print("Couldn't save daat inside CAS")
         }
@@ -53,9 +54,10 @@ final class CASManager: CASManagerProtocol {
     }
     
     //MARK: Delete model
-    func deleteModel(_ model: MainModel) {
+    func deleteModel(_ task: MainModel) {
         do {
-            try cas.deleteModel(model)
+            try cas.deleteModel(task)
+            indexForDelete(task)
         } catch {
             print("Couldn't delete data: \(error)")
         }
@@ -76,6 +78,13 @@ final class CASManager: CASManagerProtocol {
         } catch {
             print("Couldn't create directory")
             return nil
+        }
+    }
+    
+    //MARK: Predicate
+    private func indexForDelete(_ task: MainModel) {
+        if let index = models.firstIndex(where: { $0.hashValue == task.hashValue }) {
+            models.remove(at: index)
         }
     }
 }

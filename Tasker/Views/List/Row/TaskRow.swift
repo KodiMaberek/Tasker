@@ -48,6 +48,7 @@ struct TaskRow: View {
                 Text(vm.messageForDelete)
             }
             .sensoryFeedback(.selection, trigger: vm.selectedTask)
+            .sensoryFeedback(.success, trigger: vm.taskDone)
     }
     
     @ViewBuilder

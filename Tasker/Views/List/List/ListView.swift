@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ListView: View {
+    @Environment(\.colorScheme) var colorScheme
     @AppStorage("completedTasksHidden") var completedTasksHidden = false
     
     @State var vm: ListVM
@@ -22,8 +23,10 @@ struct ListView: View {
             
             CompletedTasksList()
         }
-        .animation(.default, value: vm.casManager.models)
-        .animation(.default, value: completedTasksHidden)
+        .customBlurForContainer(colorScheme: colorScheme)
+        .scrollIndicators(.hidden)
+        .animation(.linear, value: completedTasksHidden)
+        .sensoryFeedback(.impact, trigger: completedTasksHidden)
     }
     
     @ViewBuilder
@@ -36,11 +39,17 @@ struct ListView: View {
                 
                 Spacer()
             }
+            .padding(.top, 20)
+            .padding(.bottom, 12)
             
             VStack(spacing: 0) {
                 ForEach(Array(vm.tasks.enumerated()), id: \.element) { index, task in
                     TaskRow(casManager: vm.casManager, task: task)
                         .foregroundStyle(.primary)
+                        .transition(.asymmetric(
+                            insertion: .move(edge: .top).combined(with: .opacity),
+                            removal: .move(edge: .leading).combined(with: .opacity)
+                        ))
                     
                     if index != vm.tasks.count - 1 {
                         RoundedRectangle(cornerRadius: 0.5)
@@ -74,7 +83,9 @@ struct ListView: View {
                         completedTasksHidden.toggle()
                     }
             }
-            .listRowSeparator(.hidden)
+            .padding(.top, 18)
+            .padding(.bottom, 12)
+            
             
             if completedTasksHidden {
                 VStack(spacing: 0) {

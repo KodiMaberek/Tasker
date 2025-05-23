@@ -35,7 +35,7 @@ struct WeekView: View {
                     }
                 }
                 
-                VStack(spacing: 8) {
+                VStack {
                     HStack {
                         ForEach(vm.orderedWeekdaySymbols(), id: \.self) { symbol in
                             Text(symbol)
@@ -49,8 +49,9 @@ struct WeekView: View {
             .frame(height: 84)
             
             TodayButton()
-                .padding(.top, 10)
+                .padding(.top, 8)
         }
+        .padding(.bottom, 2)
         .animation(.default, value: vm.indexForWeek)
         .animation(.default, value: vm.selectedDate)
         .sensoryFeedback(.impact, trigger: vm.selectedDate)

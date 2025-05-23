@@ -15,6 +15,7 @@ final class ListVM {
     
     var tasks: [MainModel] {
         casManager.models.filter { model in
+            model.value.markAsDeleted == false &&
             model.value.deleted?.contains { $0.deletedFor == selectedDate } != true &&
             isTaskScheduledForDate(model.value, date: selectedDate) &&
             (model.value.done == nil || !model.value.done!.contains { $0.completedFor == selectedDate })
@@ -23,6 +24,7 @@ final class ListVM {
     
     var completedTasks: [MainModel] {
         casManager.models.filter { model in
+            model.value.markAsDeleted == false &&
             isTaskScheduledForDate(model.value, date: selectedDate) &&
             model.value.done?.contains { $0.completedFor == selectedDate } == true
         }

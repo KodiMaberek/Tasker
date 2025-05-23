@@ -101,7 +101,6 @@ final class TaskRowVM {
     }
     
     //MARK: - Delete functions
-    
     func deleteTaskButtonSwiped(task: MainModel) {
         guard task.value.repeatTask == .never else {
             messageForDelete = "This's a recurring task."
@@ -116,12 +115,15 @@ final class TaskRowVM {
     }
     
     func deleteButtonTapped(task: MainModel, deleteCompletely: Bool = false) {
+        print("here")
         guard task.value.markAsDeleted == false else { return }
         
+        print("there")
         let newTask = task
         
         if deleteCompletely == true {
             newTask.value.markAsDeleted = true
+            print("lol")
         } else {
             newTask.value.deleted = updateExistingTaskDeleted(task: newTask.value)
         }
