@@ -14,19 +14,23 @@ final class MainVM {
     @ObservationIgnored
     @AppStorage("textForYourSelf", store: .standard) var textForYourSelf = "Write your title 🎯"
     
-    var casManager: CASManagerProtocol
-    var recordPermission: PermissionProtocol
-    var recordManager: RecordingProtocol
-    var playerManager: PlayerProtocol
+    //MARK: - Depencies
+    let casManager: CASManagerProtocol
+    let recordPermission: PermissionProtocol
+    let recordManager: RecordingProtocol
+    let playerManager: PlayerProtocol
+    let dateManager: DateManagerProtocol
     
+    //MARK: - Model
+    
+    var model: MainModel?
+    
+    //MARK: - UI States
     var isRecording = false
     var showDetailsScreen = false
-    var soundData: Data?
-    
-    var updateView = false
-    
     var alert: Alert?
     
+    //MARK: Copmputed properties
     var currentlyTime: Double {
         recordManager.currentlyTime
     }
@@ -44,6 +48,7 @@ final class MainVM {
         recordPermission = PermissionManager()
         recordManager = RecordManager()
         playerManager = PlayerManager()
+        dateManager = DateManager()
     }
     
     func startAfterChek() async throws {
@@ -70,7 +75,7 @@ final class MainVM {
                 }
             }
         }
-        updateView.toggle()
+//        updateView.toggle()
     }
     
     func stopAfterCheck(_ newValue: Double?) async {
@@ -88,6 +93,10 @@ final class MainVM {
     func stopRecord() async {
         await recordManager.stopRecording()
         isRecording = false
-        showDetailsScreen = true
+        stopButtonTapped()
+    }
+    
+    func stopButtonTapped() {
+        model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
     }
 }

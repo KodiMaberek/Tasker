@@ -49,10 +49,9 @@ final class ListVM {
         let taskCreateDate = task.createDate
         
         let dateAsDate = Date(timeIntervalSince1970: date)
-        let taskCreateDateAsDate = Date(timeIntervalSince1970: taskCreateDate)
         let taskNotificationDateAsDate = Date(timeIntervalSince1970: taskNotificationDate)
         
-        guard dateAsDate >= calendar.startOfDay(for: taskCreateDateAsDate) else {
+        guard dateAsDate >= calendar.startOfDay(for: taskNotificationDateAsDate) else {
             return false
         }
         

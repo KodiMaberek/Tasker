@@ -39,7 +39,7 @@ struct ListView: View {
                 
                 Spacer()
             }
-            .padding(.top, 20)
+            .padding(.top, 18)
             .padding(.bottom, 12)
             
             VStack(spacing: 0) {

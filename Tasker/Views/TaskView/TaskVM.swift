@@ -30,7 +30,7 @@ final class TaskVM {
         dateManager.calendar
     }
     
-    var notificationDate: Date = Date() {
+    var notificationDate = Date() {
         didSet {
             checkTimeAfterSelected()
         }
@@ -43,7 +43,7 @@ final class TaskVM {
         }
     }
     
-  //MARK: - Private properties
+    //MARK: - Private properties
     private var lastChangeTime = Date()
     private var debounceTimer: Timer?
     private var lastNotificationDate = Date()
@@ -51,11 +51,13 @@ final class TaskVM {
     
     //MARK: - Init
     init(mainModel: MainModel, casManager: CASManagerProtocol) {
-        dateManager = DateManager()
+        dateManager = DateManager.shared
         playerManager = PlayerManager()
         self.casManager = casManager
         self.mainModel = mainModel
         self.task = mainModel.value
+        
+        notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
     }
     
     func onAppear() {
@@ -79,16 +81,14 @@ final class TaskVM {
     }
     
     func doneButtonTapped() {
-        Task {
-            let mainModel = self.mainModel
-            mainModel.value = preparedTask()
-            try await Task.sleep(nanoseconds: 300_000_000)
-            casManager.saveModel(mainModel)
-        }
+        let mainModel = self.mainModel
+        mainModel.value = preparedTask()
+        casManager.saveModel(mainModel)
+        print(Date(timeIntervalSince1970: mainModel.value.notificationDate))
     }
     
     private func preparedTask() -> TaskModel {
-        var filledTask = TaskModel(id: UUID().uuidString, title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: Date.now.timeIntervalSince1970)
+        var filledTask = TaskModel(id: UUID().uuidString, title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: task.createDate)
         filledTask.notificationDate = notificationDate.timeIntervalSince1970
         filledTask.done = task.done
         filledTask.taskColor = task.taskColor
@@ -104,14 +104,14 @@ final class TaskVM {
     }
     
     func dateToString() -> String {
-        if calendar.isDateInToday(notificationDate) {
+        if calendar.isDateInToday(dateManager.selectedDate) {
             return "Today"
-        } else if calendar.isDateInTomorrow(notificationDate) {
+        } else if calendar.isDateInTomorrow(dateManager.selectedDate) {
             return "Tomorrow"
-        } else if calendar.isDateInYesterday(notificationDate) {
+        } else if calendar.isDateInYesterday(dateManager.selectedDate) {
             return "Yesterday"
         } else {
-            return dateManager.dateToString(date: notificationDate, format: "MMMM d")
+            return dateManager.dateToString(date: dateManager.selectedDate, format: "MMMM d")
         }
     }
     

@@ -72,8 +72,8 @@ struct MainView: View {
                     await vm.stopAfterCheck(newValue)
                 }
             }
-            .sheet(isPresented: $vm.showDetailsScreen) {
-                TaskView(casManager: vm.casManager, task: mockModel())
+            .sheet(item: $vm.model) { model in
+                TaskView(casManager: vm.casManager, task: model)
             }
         }
         .navigationBarTitleDisplayMode(.inline)

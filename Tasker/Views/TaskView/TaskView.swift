@@ -19,9 +19,10 @@ struct TaskView: View {
     
     var body: some View {
         ZStack {
-            LinearGradient(colors: [vm.task.taskColor.color(for: colorScheme), colorScheme == .dark ? .black : .white], startPoint: .bottom, endPoint: .top)
+            LinearGradient(colors: [vm.task.taskColor.color(for: colorScheme), colorScheme.backgroundColor.hexColor()], startPoint: .bottom, endPoint: .top)
                 .opacity(0.7)
                 .ignoresSafeArea()
+            
             VStack(spacing: 0) {
                 CustomTabBar()
                 
@@ -352,13 +353,13 @@ struct TaskView: View {
                 .foregroundStyle(.white)
                 .padding(.vertical, 15)
                 .frame(maxWidth: .infinity)
-            
                 .background(
                     RoundedRectangle(cornerRadius: 10)
                         .fill(
                             colorScheme.elementColor.hexColor()
                         )
                 )
+                .padding(.bottom)
         }
     }
     

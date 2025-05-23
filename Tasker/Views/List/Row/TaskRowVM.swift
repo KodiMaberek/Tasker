@@ -115,15 +115,12 @@ final class TaskRowVM {
     }
     
     func deleteButtonTapped(task: MainModel, deleteCompletely: Bool = false) {
-        print("here")
         guard task.value.markAsDeleted == false else { return }
         
-        print("there")
         let newTask = task
         
         if deleteCompletely == true {
             newTask.value.markAsDeleted = true
-            print("lol")
         } else {
             newTask.value.deleted = updateExistingTaskDeleted(task: newTask.value)
         }
