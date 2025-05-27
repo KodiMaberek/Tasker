@@ -132,8 +132,6 @@ struct TaskView: View {
             TextField("New task", text: $vm.task.title)
                 .font(.title2)
                 .fontWeight(.semibold)
-                .textInputAutocapitalization(.words)
-                .foregroundStyle(!vm.task.title.isEmpty ? .primary : Color.gray2)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
             
@@ -141,8 +139,7 @@ struct TaskView: View {
             
             TextField("Add more information", text: $vm.task.info, axis: .vertical)
                 .font(.system(size: 17, weight: .regular, design: .default))
-                .foregroundStyle(!vm.task.title.isEmpty ? .primary : Color.gray2)
-                .frame(minHeight: 150, alignment: .top)
+                .frame(minHeight: 120, alignment: .top)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
         }
@@ -359,6 +356,7 @@ struct TaskView: View {
                             colorScheme.elementColor.hexColor()
                         )
                 )
+                .padding(.top, 8)
                 .padding(.bottom)
         }
     }

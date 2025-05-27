@@ -13,8 +13,8 @@ struct TaskRow: View {
     
     var task: MainModel
     
-    init(casManager: CASManagerProtocol, task: MainModel) {
-        self.vm = TaskRowVM(casManager: casManager)
+    init(casManager: CASManagerProtocol, playerManager: PlayerProtocol, task: MainModel) {
+        self.vm = TaskRowVM(casManager: casManager, playerManager: playerManager)
         self.task = task
     }
     
@@ -143,14 +143,18 @@ struct TaskRow: View {
             
             Image(systemName: vm.playing ? "pause.fill" : "play.fill")
                 .foregroundStyle(.white)
+                .animation(.default, value: vm.playing)
         }
         .frame(width: 28, height: 28)
         .onTapGesture {
-            vm.playButtonTapped(task: task.value)
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            Task {
+                await vm.playButtonTapped(task: task.value)
+            }
         }
     }
 }
 
 #Preview {
-    TaskRow(casManager: CASManager(), task: mockModel())
+    TaskRow(casManager: CASManager(), playerManager: PlayerManager(), task: mockModel())
 }

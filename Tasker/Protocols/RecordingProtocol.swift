@@ -8,15 +8,14 @@
 import Foundation
 
 protocol RecordingProtocol {
-    var timer: Timer? { get set }
-    var currentlyTime: Double { get set }
-    var progress: Double { get set }
-    var maxDuration: Double { get set }
-    var decibelLevel: Float { get set }
-    var relativePath: String { get set }
-    var uniqId: String { get set }
+    var timer: Timer? { get }
+    var currentlyTime: Double { get }
+    var progress: Double { get }
+    var maxDuration: Double { get }
+    var decibelLevel: Float { get }
+    var fileName: URL? { get }
     
     func startRecording() async
-    func stopRecording() async
-    func createDirectory() -> URL?
+    func stopRecording() -> URL?
+    func clearFileFromDirectory()
 }

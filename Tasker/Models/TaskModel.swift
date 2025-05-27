@@ -16,9 +16,9 @@ struct TaskModel: Identifiable, Codable {
     var id: String
     var previousUniqueID: String?
     
-    var title = "New Task"
+    var title = ""
     var info = ""
-    var audio: URL?
+    var audio: String? = nil
     var repeatModel: Bool? = false
     
     var createDate = Date.now.timeIntervalSince1970
@@ -57,7 +57,7 @@ struct DeleteRecord: Codable {
 }
 
 func mockModel() -> MainModel {
-    MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", createDate: Date.now.timeIntervalSince1970))
+    MainModel.initial(TaskModel(id: UUID().uuidString, title: "New task", info: "", createDate: Date.now.timeIntervalSince1970))
 }
 
 enum RepeatTask: CaseIterable, Codable, Identifiable {

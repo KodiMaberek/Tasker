@@ -40,6 +40,30 @@ final class CASManager: CASManagerProtocol {
         }
     }
     
+    func saveAudio(url: URL) -> String? {
+        
+        do {
+            let data = try Data(contentsOf: url)
+            return try cas.add(data)
+        } catch {
+            print("Something went wrong while adding audio: \(error)")
+            return nil
+        }
+    }
+    
+    func getData(_ hash: String) -> Data? {
+        do {
+            if let data = try cas.get(hash) {
+                return data
+            } else {
+                return nil
+            }
+        } catch {
+            print("error")
+            return nil
+        }
+    }
+    
     func fetchModels() -> [MainModel] {
         let list = try! cas.listMutable()
         

@@ -12,6 +12,7 @@ import SwiftUI
 final class ListVM {
     let dateManager: DateManagerProtocol
     let casManager: CASManagerProtocol
+    let playerManager: PlayerProtocol
     
     var tasks: [MainModel] {
         casManager.models.filter { model in
@@ -40,13 +41,13 @@ final class ListVM {
     
     init(casManager: CASManagerProtocol) {
         dateManager = DateManager.shared
+        playerManager = PlayerManager()
         self.casManager = casManager
     }
     
     //MARK: - Check for visible
     private func isTaskScheduledForDate(_ task: TaskModel, date: Double) -> Bool {
         let taskNotificationDate = task.notificationDate
-        let taskCreateDate = task.createDate
         
         let dateAsDate = Date(timeIntervalSince1970: date)
         let taskNotificationDateAsDate = Date(timeIntervalSince1970: taskNotificationDate)

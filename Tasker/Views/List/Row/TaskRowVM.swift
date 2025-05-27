@@ -10,16 +10,20 @@ import Foundation
 @MainActor
 @Observable
 final class TaskRowVM {
+    
     //MARK: Dependecies
     var playerManager: PlayerProtocol
     var dateManager: DateManagerProtocol
     var casManager: CASManagerProtocol
     
+    //MARK: - Properties
     var playingTask: TaskModel?
     var selectedTask: MainModel?
     
+    //MARK: - UI States
     var taskDone = false
     var listRowHeight = CGFloat(52)
+    var startPlay = false
     
     //MARK: Confirmation dialog
     var confirmationDialogIsPresented = false
@@ -28,7 +32,7 @@ final class TaskRowVM {
     
     //MARK: Computed Properties
     var playing: Bool {
-        playerManager.isPlaying
+        playerManager.isPlaying && playerManager.task?.id == playingTask?.id
     }
     
     //MARK: Private Properties
@@ -45,10 +49,10 @@ final class TaskRowVM {
     }
     
     //MARK: - Init
-    init(casManager: CASManagerProtocol) {
-        playerManager = PlayerManager()
+    init(casManager: CASManagerProtocol, playerManager: PlayerProtocol) {
         dateManager = DateManager.shared
         self.casManager = casManager
+        self.playerManager = playerManager
     }
     
     //MARK: Selected task
@@ -142,13 +146,21 @@ final class TaskRowVM {
     }
     
     //MARK: Play sound function
-    func playButtonTapped(task: TaskModel) {
-        if !playing {
-            playerManager.playAudioFromData(task)
-            playingTask = task
-        } else {
-            playerManager.stopToPlay()
-            playingTask = nil
+    func playButtonTapped(task: TaskModel) async {
+        var data: Data?
+        
+        if let audio = task.audio {
+            data = casManager.getData(audio)
+            
+            if !playing {
+                if let data = data {
+                    playingTask = task
+                    await playerManager.playAudioFromData(data, task: task)
+                }
+            } else {
+                playerManager.stopToPlay()
+                playingTask = nil
+            }
         }
     }
 }

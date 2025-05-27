@@ -9,8 +9,9 @@ import Foundation
 
 protocol PlayerProtocol {
     var isPlaying: Bool { get set }
+    var task: TaskModel? { get set }
     
-    func playAudioFromData(_ task: TaskModel)
+    func playAudioFromData(_ audio: Data, task: TaskModel) async
     func stopToPlay()
     func checkIsPlaying()
 }

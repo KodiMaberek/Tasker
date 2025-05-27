@@ -68,8 +68,8 @@ struct MainView: View {
                 }
             }
             .onChange(of: vm.currentlyTime) { newValue, oldValue in
-                Task {
-                    await vm.stopAfterCheck(newValue)
+                if newValue > 15.0 {
+                    vm.stopRecord()
                 }
             }
             .sheet(item: $vm.model) { model in

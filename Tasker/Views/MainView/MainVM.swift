@@ -53,7 +53,7 @@ final class MainVM {
     
     func startAfterChek() async throws {
         if isRecording {
-            await stopRecord()
+            stopRecord()
         } else {
             playerManager.stopToPlay()
             
@@ -75,14 +75,13 @@ final class MainVM {
                 }
             }
         }
-//        updateView.toggle()
     }
     
     func stopAfterCheck(_ newValue: Double?) async {
-        guard newValue ?? 0 >= 15 else {
+        guard newValue ?? 0 >= 15.0 else {
             return
         }
-        await stopRecord()
+        stopRecord()
     }
     
     func startRecord() async {
@@ -90,13 +89,14 @@ final class MainVM {
         await recordManager.startRecording()
     }
     
-    func stopRecord() async {
-        await recordManager.stopRecording()
+    func stopRecord() {
         isRecording = false
-        stopButtonTapped()
-    }
-    
-    func stopButtonTapped() {
-        model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
+        var hashOfAudio: String?
+        
+        if let audioURLString = recordManager.stopRecording() {
+            hashOfAudio = casManager.saveAudio(url: audioURLString)
+            model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", audio: hashOfAudio, notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
+        }
+        recordManager.clearFileFromDirectory()
     }
 }

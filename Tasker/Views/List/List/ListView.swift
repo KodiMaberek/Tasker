@@ -44,7 +44,7 @@ struct ListView: View {
             
             VStack(spacing: 0) {
                 ForEach(Array(vm.tasks.enumerated()), id: \.element) { index, task in
-                    TaskRow(casManager: vm.casManager, task: task)
+                    TaskRow(casManager: vm.casManager, playerManager: vm.playerManager, task: task)
                         .foregroundStyle(.primary)
                         .transition(.asymmetric(
                             insertion: .move(edge: .top).combined(with: .opacity),
@@ -90,7 +90,7 @@ struct ListView: View {
             if completedTasksHidden {
                 VStack(spacing: 0) {
                     ForEach(Array(vm.completedTasks.enumerated()), id: \.element) { index, task in
-                        TaskRow(casManager: vm.casManager, task: task)
+                        TaskRow(casManager: vm.casManager, playerManager: vm.playerManager, task: task)
                             .foregroundStyle(.primary)
                         
                         if index != vm.completedTasks.count - 1 {

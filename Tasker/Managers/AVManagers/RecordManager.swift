@@ -10,6 +10,7 @@ import Foundation
 
 @Observable
 final class RecordManager: RecordingProtocol, @unchecked Sendable {
+    
     private var avAudioRecorder: AVAudioRecorder?
     
     var timer: Timer?
@@ -20,41 +21,22 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
     
     private var previousDecibelLevel: Float = 0.0
     
-    private var tempFileURL: URL {
-        let libraryDirrectory = FileManager.default.urls(for: .libraryDirectory, in: .allDomainsMask).first!
-        return libraryDirrectory.appending(path: "Sounds")
-    }
+    let setting: [String: Any] = [
+        AVFormatIDKey: Int(kAudioFormatLinearPCM),
+        AVSampleRateKey: 44100,
+        AVNumberOfChannelsKey: 1,
+        AVLinearPCMBitDepthKey: 16,
+        AVLinearPCMIsFloatKey: false,
+        AVLinearPCMIsBigEndianKey: false,
+        AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue,
+    ]
+    
+    var fileName: URL?
     
     //MARK: Start recording
-    var relativePath = ""
-    var uniqId: String = ""
-    
-    var baseDirectoryURL: URL {
-        let libraryDirrectory = FileManager.default.urls(for: .libraryDirectory, in: .allDomainsMask).first!
-        return libraryDirrectory.appending(path: "Sounds")
-    }
-    
-    //MARK: Fix trouble with leaks
     func startRecording() async {
-        guard let dirrectoryURL = createDirectory() else {
-            print("Invalide path to dirrectory")
-            return
-        }
+        let fileName = baseDirectoryURL.appending(path: "\(UUID().uuidString).wav")
         
-        uniqId = UUID().uuidString
-        relativePath = "New_recorder_\(uniqId).wav"
-        
-        let fileName = dirrectoryURL.appending(path: relativePath)
-        
-        let setting: [String: Any] = [
-            AVFormatIDKey: Int(kAudioFormatLinearPCM),
-            AVSampleRateKey: 44100,
-            AVNumberOfChannelsKey: 1,
-            AVLinearPCMBitDepthKey: 16,
-            AVLinearPCMIsFloatKey: false,
-            AVLinearPCMIsBigEndianKey: false,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue,
-        ]
         do {
             avAudioRecorder = try AVAudioRecorder(url: fileName, settings: setting)
             avAudioRecorder?.prepareToRecord()
@@ -62,32 +44,48 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
             avAudioRecorder?.record()
             
             await updateTime()
+            self.fileName = fileName
+            
         } catch {
-            fatalError()
+            print("Couldn't create AVAudioRecorder: \(error)")
         }
     }
     
-    func createDirectory() -> URL? {
-        let soundDirectory = baseDirectoryURL
+    var baseDirectoryURL: URL {
+        FileManager.default.temporaryDirectory
+    }
+    
+    func clearFileFromDirectory() {
+        guard let file = fileName else {
+            return
+        }
         
         do {
-            try FileManager.default.createDirectory(at: soundDirectory, withIntermediateDirectories: true, attributes: nil)
-            
-        } catch let error as NSError {
-            print("Can't create a directory, \(error)")
-            return nil
+            if FileManager.default.fileExists(atPath: file.path) {
+                try FileManager.default.removeItem(at: file)
+            }
+        } catch {
+            print("Error while clearing temporary directory: \(error)")
         }
-        return soundDirectory
     }
     
     //MARK: Stop recording
-    func stopRecording() async  {
+    func stopRecording() -> URL? {
         timer?.invalidate()
         timer = nil
         avAudioRecorder?.stop()
         avAudioRecorder?.isMeteringEnabled = false
+        
+        avAudioRecorder = nil
+        
         progress = 0.0
         currentlyTime = 0.0
+        
+        if let fileName = fileName {
+            return fileName
+        } else {
+            return nil
+        }
     }
     
     //MARK: Check and update recording time
@@ -100,7 +98,6 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
             }
         }
     }
-    
     
     //MARK: Functions for get and showing decibel LVL
     private func updateDecibelLvl() {
