@@ -22,7 +22,6 @@ final class MainVM {
     let dateManager: DateManagerProtocol
     
     //MARK: - Model
-    
     var model: MainModel?
     
     //MARK: - UI States
@@ -52,29 +51,29 @@ final class MainVM {
     }
     
     func startAfterChek() async throws {
-        if isRecording {
-            stopRecord()
-        } else {
-            playerManager.stopToPlay()
-            
-            do {
-                try recordPermission.peremissionSessionForRecording()
-                await startRecord()
-            } catch let error as MicrophonePermission {
-                switch error {
-                case .silentError: return
-                case .microphoneIsNotAvalible:
-                    alert = error.showingAlert()
-                }
-            } catch let error as ErrorRecorder {
-                switch error {
-                case .cannotInterruptOthers, .cannotStartRecording, .insufficientPriority, .isBusy, .siriIsRecordign, .timeIsLimited:
-                    alert = error.showingAlert()
-                case .none:
-                    return
-                }
+        guard !isRecording else { return }
+        
+        playerManager.stopToPlay()
+        
+        do {
+            try recordPermission.peremissionSessionForRecording()
+            await startRecord()
+        } catch let error as MicrophonePermission {
+            switch error {
+            case .silentError: return
+            case .microphoneIsNotAvalible:
+                alert = error.showingAlert()
+            }
+        } catch let error as ErrorRecorder {
+            switch error {
+            case .cannotInterruptOthers, .cannotStartRecording, .insufficientPriority, .isBusy, .siriIsRecordign, .timeIsLimited:
+                alert = error.showingAlert()
+            case .none:
+                return
             }
         }
+        
+        
     }
     
     func stopAfterCheck(_ newValue: Double?) async {
@@ -90,13 +89,16 @@ final class MainVM {
     }
     
     func stopRecord() {
-        isRecording = false
-        var hashOfAudio: String?
-        
-        if let audioURLString = recordManager.stopRecording() {
-            hashOfAudio = casManager.saveAudio(url: audioURLString)
+        if isRecording {
+            isRecording = false
+            var hashOfAudio: String?
+            
+            if let audioURLString = recordManager.stopRecording() {
+                hashOfAudio = casManager.saveAudio(url: audioURLString)
+            }
+            
             model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", audio: hashOfAudio, notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
+            recordManager.clearFileFromDirectory()
         }
-        recordManager.clearFileFromDirectory()
     }
 }

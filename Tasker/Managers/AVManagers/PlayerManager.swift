@@ -10,6 +10,7 @@ import Foundation
 
 @Observable
 final class PlayerManager: PlayerProtocol, Sendable {
+    
     //MARK: Properties
     var isPlaying = false
     var task: TaskModel?
@@ -48,40 +49,40 @@ final class PlayerManager: PlayerProtocol, Sendable {
     }
     
     private func createTempAudioFileAsync(from data: Data) async -> URL {
-       let tempDirectory = FileManager.default.temporaryDirectory
-       var name: String
-       
-       if let task = task, let audio = task.audio {
-           name = audio
-       } else {
-           name = UUID().uuidString
-       }
-       
-       let fileName = "\(name).wav"
-       let tempURL = tempDirectory.appendingPathComponent(fileName)
-       
-       if FileManager.default.fileExists(atPath: tempURL.path) {
-           print("File already exists: \(tempURL.path)")
-           return tempURL
-       }
-       
-       await MainActor.run {
-           do {
-               try data.write(to: tempURL)
-               print("Created temp file: \(tempURL.path)")
-           } catch {
-               print("Error creating temp file: \(error)")
-           }
-       }
-       
-       return tempURL
+        let tempDirectory = FileManager.default.temporaryDirectory
+        var name: String
+        
+        if let task = task, let audio = task.audio {
+            name = audio
+        } else {
+            name = UUID().uuidString
+        }
+        
+        let fileName = "\(name).wav"
+        let tempURL = tempDirectory.appendingPathComponent(fileName)
+        
+        if FileManager.default.fileExists(atPath: tempURL.path) {
+            print("File already exists: \(tempURL.path)")
+            return tempURL
+        }
+        
+        await MainActor.run {
+            do {
+                try data.write(to: tempURL)
+                print("Created temp file: \(tempURL.path)")
+            } catch {
+                print("Error creating temp file: \(error)")
+            }
+        }
+        
+        return tempURL
     }
     
     func checkIsPlaying() {
-        Task { @MainActor in
-            playbackTimer?.invalidate()
-            
-            playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+        playbackTimer?.invalidate()
+        
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+            Task { @MainActor in
                 if self.player?.isPlaying == false {
                     self.isPlaying = false
                     self.playbackTimer?.invalidate()

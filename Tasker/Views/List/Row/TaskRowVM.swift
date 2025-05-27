@@ -68,6 +68,7 @@ final class TaskRowVM {
         casManager.saveModel(newTask)
         
         taskDone.toggle()
+        stopToPlay()
     }
     
     func checkCompletedTaskForToday(task: TaskModel) -> Bool {
@@ -158,9 +159,13 @@ final class TaskRowVM {
                     await playerManager.playAudioFromData(data, task: task)
                 }
             } else {
-                playerManager.stopToPlay()
-                playingTask = nil
+                stopToPlay()
             }
         }
+    }
+    
+    private func stopToPlay() {
+        playerManager.stopToPlay()
+        playingTask = nil
     }
 }

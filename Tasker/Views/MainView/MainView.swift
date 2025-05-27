@@ -12,6 +12,9 @@ struct MainView: View {
     
     @State private var vm = MainVM()
     
+    @State private var isPressed: Bool = false
+    @State private var isRecording = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -29,13 +32,20 @@ struct MainView: View {
                 .ignoresSafeArea(edges: .bottom)
                 
                 VStack {
+                    
                     Spacer()
                     
                     RecordButton(isRecording: $vm.isRecording, progress: vm.progress, countOfSec: vm.currentlyTime, animationAmount: vm.decibelLvl) {
-                        Task {
-                            try? await vm.startAfterChek()
-                        }
+                        vm.stopRecord()
                     }
+                    .buttonStyle(.plain)
+                    .simultaneousGesture(
+                        LongPressGesture(minimumDuration: 0.2).onEnded({ _ in
+                            Task {
+                                try await vm.startAfterChek()
+                            }
+                        })
+                    )
                     .padding(.bottom, 15)
                 }
             }

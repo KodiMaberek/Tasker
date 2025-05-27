@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "22AC4D9C2DA840A300C756C1"
-               BuildableName = "Tasker.app"
-               BlueprintName = "Tasker"
-               ReferencedContainer = "container:Tasker.xcodeproj">
+               BuildableName = "Mi.do&#x304;.app"
+               BlueprintName = "Mi.do&#x304;"
+               ReferencedContainer = "container:Mi.do&#x304;.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "22AC4D9C2DA840A300C756C1"
-            BuildableName = "Tasker.app"
-            BlueprintName = "Tasker"
-            ReferencedContainer = "container:Tasker.xcodeproj">
+            BuildableName = "Mi.do&#x304;.app"
+            BlueprintName = "Mi.do&#x304;"
+            ReferencedContainer = "container:Mi.do&#x304;.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,9 +62,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "22AC4D9C2DA840A300C756C1"
-            BuildableName = "Tasker.app"
-            BlueprintName = "Tasker"
-            ReferencedContainer = "container:Tasker.xcodeproj">
+            BuildableName = "Mi.do&#x304;.app"
+            BlueprintName = "Mi.do&#x304;"
+            ReferencedContainer = "container:Mi.do&#x304;.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
