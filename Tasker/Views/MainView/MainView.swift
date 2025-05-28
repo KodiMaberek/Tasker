@@ -46,6 +46,9 @@ struct MainView: View {
                             }
                         })
                     )
+                    .onTapGesture {
+                        vm.stopRecord()
+                    }
                     .padding(.bottom, 15)
                 }
             }

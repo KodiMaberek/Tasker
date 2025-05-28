@@ -89,16 +89,16 @@ final class MainVM {
     }
     
     func stopRecord() {
+        var hashOfAudio: String?
+        
         if isRecording {
             isRecording = false
-            var hashOfAudio: String?
             
             if let audioURLString = recordManager.stopRecording() {
                 hashOfAudio = casManager.saveAudio(url: audioURLString)
             }
-            
-            model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", audio: hashOfAudio, notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
-            recordManager.clearFileFromDirectory()
         }
+        model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", audio: hashOfAudio, notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
+        recordManager.clearFileFromDirectory()
     }
 }

@@ -30,11 +30,7 @@ final class TaskVM {
         dateManager.calendar
     }
     
-    var notificationDate = Date() {
-        didSet {
-            checkTimeAfterSelected()
-        }
-    }
+    var notificationDate = Date()
     
     @ObservationIgnored
     var color = Color.black {
