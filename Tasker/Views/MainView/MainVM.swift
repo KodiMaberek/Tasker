@@ -72,8 +72,6 @@ final class MainVM {
                 return
             }
         }
-        
-        
     }
     
     func stopAfterCheck(_ newValue: Double?) async {

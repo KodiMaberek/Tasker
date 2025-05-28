@@ -53,7 +53,9 @@ final class TaskVM {
         self.mainModel = mainModel
         self.task = mainModel.value
         
-        notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
+        Task { @MainActor in
+            self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
+        }
     }
     
     func onAppear() {

@@ -92,7 +92,7 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
     private func updateTime() async {
         Task { @MainActor in
             timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
-                self.currentlyTime = self.avAudioRecorder!.currentTime
+                self.currentlyTime = self.avAudioRecorder?.currentTime ?? 00
                 self.progress = (self.currentlyTime / self.maxDuration)
                 self.updateDecibelLvl()
             }

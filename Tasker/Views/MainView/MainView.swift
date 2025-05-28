@@ -12,9 +12,6 @@ struct MainView: View {
     
     @State private var vm = MainVM()
     
-    @State private var isPressed: Bool = false
-    @State private var isRecording = false
-    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -40,7 +37,8 @@ struct MainView: View {
                     }
                     .buttonStyle(.plain)
                     .simultaneousGesture(
-                        LongPressGesture(minimumDuration: 0.2).onEnded({ _ in
+                        LongPressGesture().onEnded({ _ in
+                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                             Task {
                                 try await vm.startAfterChek()
                             }
