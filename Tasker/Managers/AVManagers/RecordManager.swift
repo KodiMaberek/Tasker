@@ -18,6 +18,7 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
     var progress = 0.00
     var maxDuration = 15.00
     var decibelLevel: Float = 0.0
+    var isRecording = false
     
     private var previousDecibelLevel: Float = 0.0
     
@@ -36,12 +37,14 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
     //MARK: Start recording
     func startRecording() async {
         let fileName = baseDirectoryURL.appending(path: "\(UUID().uuidString).wav")
+        isRecording = false
         
         do {
             avAudioRecorder = try AVAudioRecorder(url: fileName, settings: setting)
             avAudioRecorder?.prepareToRecord()
             avAudioRecorder?.isMeteringEnabled = true
             avAudioRecorder?.record()
+            isRecording = avAudioRecorder?.isRecording ?? false
             
             await updateTime()
             self.fileName = fileName
@@ -80,6 +83,7 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
         
         progress = 0.0
         currentlyTime = 0.0
+        isRecording = avAudioRecorder?.isRecording ?? false
         
         if let fileName = fileName {
             return fileName

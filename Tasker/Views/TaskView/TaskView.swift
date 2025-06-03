@@ -32,10 +32,16 @@ struct TaskView: View {
                 ScrollView {
                     VStack(spacing: 28) {
                         
-                        VoicePlaying()
-                            .padding(.top, 12)
-                        
-                        VoiceModeToogle()
+                        VStack(spacing: 28) {
+                            if vm.task.audio != nil {
+                                VoicePlaying()
+                                
+                                VoiceModeToogle()
+                            } else {
+                                AddVoice()
+                            }
+                        }
+                        .padding(.top, 12)
                         
                         MainSection()
                         
@@ -74,8 +80,9 @@ struct TaskView: View {
                 vm.onAppear()
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
-            .sensoryFeedback(.selection, trigger: vm.playButtonTrigger)
-            
+            .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)
+            .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.isRecording)
+            .animation(.default, value: vm.task.audio)
             .sheet(isPresented: $vm.shareViewIsShowing) {
                 ShareView(activityItems: [vm.task])
                     .presentationDetents([.medium])
@@ -146,7 +153,7 @@ struct TaskView: View {
             
             Text(vm.currentTimeString())
                 .font(.system(size: 17, weight: .regular, design: .default))
-                .foregroundStyle(.primary)
+                .foregroundStyle(.labelPrimary)
         }
         .padding(.vertical, 11)
         .padding(.horizontal, 16)
@@ -169,7 +176,7 @@ struct TaskView: View {
             Toggle(isOn: $vm.task.voiceMode) {
                 Text("Play your voice in notification")
                     .font(.system(size: 17, weight: .regular, design: .default))
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.labelPrimary)
             }
         }
         .padding(.vertical, 11)
@@ -181,6 +188,48 @@ struct TaskView: View {
                 )
         )
     }
+    
+    //MARK: - Add Voice
+    @ViewBuilder
+    private func AddVoice() -> some View {
+        HStack(spacing: 12) {
+            if vm.isRecording {
+                EqualizerView(decibelLevel: vm.decibelLVL)
+            } else {
+                Text("Add voice recording")
+                    .font(.system(size: 17, weight: .regular, design: .default))
+                    .foregroundStyle(.labelPrimary)
+            }
+            
+            Spacer()
+            
+            Button {
+                Task {
+                    await vm.recordButtonTapped()
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(
+                            colorScheme.elementColor.hexColor()
+                        )
+                        .frame(width: 34, height: 34)
+                    
+                    Image(systemName: vm.isRecording ? "pause.fill" : "microphone.fill")
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+        .padding(.vertical, 12)
+        .padding(.horizontal, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(
+                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                )
+        )
+    }
+    
     
     //MARK: - Title, Info
     @ViewBuilder

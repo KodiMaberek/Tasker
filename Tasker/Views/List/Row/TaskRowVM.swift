@@ -58,6 +58,7 @@ final class TaskRowVM {
     //MARK: Selected task
     func selectedTaskButtonTapped(_ task: MainModel) {
         selectedTask = task
+        stopToPlay()
     }
     
     //MARK: - Check Mark Function
@@ -147,20 +148,22 @@ final class TaskRowVM {
     }
     
     //MARK: Play sound function
-    func playButtonTapped(task: TaskModel) async {
+    func playButtonTapped(task: MainModel) async {
         var data: Data?
         
-        if let audio = task.audio {
+        if let audio = task.value.audio {
             data = casManager.getData(audio)
             
             if !playing {
                 if let data = data {
-                    playingTask = task
-                    await playerManager.playAudioFromData(data, task: task)
+                    playingTask = task.value
+                    await playerManager.playAudioFromData(data, task: task.value)
                 }
             } else {
                 stopToPlay()
             }
+        } else {
+            selectedTask = task
         }
     }
     

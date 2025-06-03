@@ -12,9 +12,11 @@ import SwiftUICore
 @Observable
 final class TaskVM {
     //MARK: - Dependencies
+    let casManager: CASManagerProtocol
     let dateManager: DateManagerProtocol
     var playerManager: PlayerProtocol
-    let casManager: CASManagerProtocol
+    var recordManager: RecordingProtocol
+    
     
     //MARK: Model
     var mainModel: MainModel
@@ -29,13 +31,7 @@ final class TaskVM {
     var sliderValue = 0.0
     var isDragging = false
     
-    var currentProgressTime: TimeInterval {
-        playerManager.currentTime
-    }
     
-    var totalProgressTime: TimeInterval {
-        playerManager.totalTime
-    }
     
     //MARK: - Computed properties
     var calendar: Calendar {
@@ -46,6 +42,24 @@ final class TaskVM {
         didSet {
             checkTimeAfterSelected()
         }
+    }
+    
+    // Playing
+    var currentProgressTime: TimeInterval {
+        playerManager.currentTime
+    }
+    
+    var totalProgressTime: TimeInterval {
+        playerManager.totalTime
+    }
+    
+    // Recording
+    var isRecording: Bool {
+        recordManager.isRecording
+    }
+    
+    var decibelLVL: Float {
+        recordManager.decibelLevel
     }
     
     @ObservationIgnored
@@ -65,6 +79,7 @@ final class TaskVM {
     init(mainModel: MainModel, casManager: CASManagerProtocol) {
         dateManager = DateManager.shared
         playerManager = PlayerManager()
+        recordManager = RecordManager()
         self.casManager = casManager
         self.mainModel = mainModel
         self.task = mainModel.value
@@ -74,6 +89,7 @@ final class TaskVM {
         }
     }
     
+    //MARK: OnAppear
     func onAppear() {
         updateActuallyTime()
     }
@@ -98,7 +114,6 @@ final class TaskVM {
         let mainModel = self.mainModel
         mainModel.value = preparedTask()
         casManager.saveModel(mainModel)
-        print(Date(timeIntervalSince1970: mainModel.value.notificationDate))
     }
     
     private func preparedTask() -> TaskModel {
@@ -207,4 +222,27 @@ final class TaskVM {
         playerManager.isPlaying
     }
     
+    func recordButtonTapped() async {
+        if isRecording {
+            stopRecord()
+        } else {
+            await startRecord()
+        }
+    }
+    
+    private func startRecord() async {
+        await recordManager.startRecording()
+    }
+    
+    private func stopRecord() {
+        var hashOfAudio: String?
+        
+        if let audioURLString = recordManager.stopRecording() {
+            hashOfAudio = casManager.saveAudio(url: audioURLString)
+        }
+        
+        task.audio = hashOfAudio
+        
+        doneButtonTapped()
+    }
 }

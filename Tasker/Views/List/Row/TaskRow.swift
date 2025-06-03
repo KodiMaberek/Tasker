@@ -141,15 +141,21 @@ struct TaskRow: View {
                     .tertiary.opacity(0.2)
                 )
             
-            Image(systemName: vm.playing ? "pause.fill" : "play.fill")
-                .foregroundStyle(.white)
-                .animation(.default, value: vm.playing)
+            if task.value.audio != nil {
+                Image(systemName: vm.playing ? "pause.fill" : "play.fill")
+                    .foregroundStyle(.white)
+                    .animation(.default, value: vm.playing)
+            } else {
+                Image(systemName: "plus").bold()
+                    .foregroundStyle(.white)
+                    .animation(.default, value: vm.playing)
+            }
         }
         .frame(width: 28, height: 28)
         .onTapGesture {
             UIImpactFeedbackGenerator(style: .soft).impactOccurred()
             Task {
-                await vm.playButtonTapped(task: task.value)
+                await vm.playButtonTapped(task: task)
             }
         }
     }

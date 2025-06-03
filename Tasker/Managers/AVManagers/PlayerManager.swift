@@ -28,38 +28,38 @@ final class PlayerManager: PlayerProtocol, Sendable {
         let audioSession = AVAudioSession.sharedInstance()
         self.task = task
         
-        guard player != nil else {
-            do {
-                try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .duckOthers])
-                try audioSession.overrideOutputAudioPort(.speaker)
-                
-                let audioURL = await createTempAudioFileAsync(from: audio)
-                
-                await MainActor.run {
-                    do {
-                        player = try AVAudioPlayer(contentsOf: audioURL)
-                        player?.prepareToPlay()
-                        player?.play()
-                        totalTime = player?.duration ?? 0.0
-                        isPlaying = player?.isPlaying ?? false
-                        startPlaybackTimer()
-                    } catch {
-                        print("Couldn't create player: \(error)")
-                    }
+        //        guard player != nil else {
+        do {
+            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .duckOthers])
+            try audioSession.overrideOutputAudioPort(.speaker)
+            
+            let audioURL = await createTempAudioFileAsync(from: audio)
+            
+            await MainActor.run {
+                do {
+                    player = try AVAudioPlayer(contentsOf: audioURL)
+                    player?.prepareToPlay()
+                    player?.play()
+                    totalTime = player?.duration ?? 0.0
+                    isPlaying = player?.isPlaying ?? false
+                    startPlaybackTimer()
+                } catch {
+                    print("Couldn't create player: \(error)")
                 }
-                
-            } catch {
-                print("Couldn't setup audio session: \(error)")
             }
-            return
+            
+        } catch {
+            print("Couldn't setup audio session: \(error)")
         }
-        
-        await MainActor.run {
-            player?.play()
-            totalTime = player?.duration ?? 0.0
-            isPlaying = player?.isPlaying ?? false
-            startPlaybackTimer()
-        }
+        return
+        //        }
+        //
+        //        await MainActor.run {
+        //            player?.play()
+        //            totalTime = player?.duration ?? 0.0
+        //            isPlaying = player?.isPlaying ?? false
+        //            startPlaybackTimer()
+        //        }
         
     }
     
