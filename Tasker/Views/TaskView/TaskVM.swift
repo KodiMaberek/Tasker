@@ -13,7 +13,7 @@ import SwiftUICore
 final class TaskVM {
     //MARK: - Dependencies
     let dateManager: DateManagerProtocol
-    let playerManager: PlayerProtocol
+    var playerManager: PlayerProtocol
     let casManager: CASManagerProtocol
     
     //MARK: Model
@@ -25,12 +25,28 @@ final class TaskVM {
     var showTimePicker = false
     var shareViewIsShowing = false
     
+    var playButtonTrigger = false
+    var sliderValue = 0.0
+    var isDragging = false
+    
+    var currentProgressTime: TimeInterval {
+        playerManager.currentTime
+    }
+    
+    var totalProgressTime: TimeInterval {
+        playerManager.totalTime
+    }
+    
     //MARK: - Computed properties
     var calendar: Calendar {
         dateManager.calendar
     }
     
-    var notificationDate = Date()
+    var notificationDate = Date() {
+        didSet {
+            checkTimeAfterSelected()
+        }
+    }
     
     @ObservationIgnored
     var color = Color.black {
@@ -152,4 +168,43 @@ final class TaskVM {
             }
         }
     }
+    
+    //MARK: Playing function
+    func playButtonTapped(task: TaskModel) async {
+        playButtonTrigger.toggle()
+        
+        guard playerManager.isPlaying == false else {
+            stopToPlay()
+            return
+        }
+        var data: Data?
+        
+        if let audio = task.audio {
+            data = casManager.getData(audio)
+            
+            if let data = data {
+                await playerManager.playAudioFromData(data, task: task)
+            }
+        }
+    }
+    
+    private func stopToPlay() {
+        playerManager.stopToPlay()
+    }
+    
+    func seekAudio(_ time: TimeInterval) {
+        playerManager.seekAudio(time)
+    }
+    
+    func currentTimeString() -> String {
+        let minutes = Int(currentProgressTime) / 60
+        let seconds = Int(currentProgressTime) % 60
+        
+        return String(format: "%02d:%02d", minutes, seconds)
+    }
+    
+    func checkIsPlaying() -> Bool {
+        playerManager.isPlaying
+    }
+    
 }

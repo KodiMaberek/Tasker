@@ -21,31 +21,46 @@ final class PlayerManager: PlayerProtocol, Sendable {
     private var currentTempURL: URL?
     private var playbackTimer: Timer?
     
+    var currentTime: TimeInterval = 0.0
+    var totalTime: TimeInterval = 0.0
+    
     func playAudioFromData(_ audio: Data, task: TaskModel) async {
         let audioSession = AVAudioSession.sharedInstance()
         self.task = task
         
-        do {
-            try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .duckOthers])
-            try audioSession.overrideOutputAudioPort(.speaker)
-            
-            let audioURL = await createTempAudioFileAsync(from: audio)
-            
-            await MainActor.run {
-                do {
-                    player = try AVAudioPlayer(contentsOf: audioURL)
-                    player?.prepareToPlay()
-                    player?.play()
-                    isPlaying = player?.isPlaying ?? false
-                    checkIsPlaying()
-                } catch {
-                    print("Couldn't create player: \(error)")
+        guard player != nil else {
+            do {
+                try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .duckOthers])
+                try audioSession.overrideOutputAudioPort(.speaker)
+                
+                let audioURL = await createTempAudioFileAsync(from: audio)
+                
+                await MainActor.run {
+                    do {
+                        player = try AVAudioPlayer(contentsOf: audioURL)
+                        player?.prepareToPlay()
+                        player?.play()
+                        totalTime = player?.duration ?? 0.0
+                        isPlaying = player?.isPlaying ?? false
+                        startPlaybackTimer()
+                    } catch {
+                        print("Couldn't create player: \(error)")
+                    }
                 }
+                
+            } catch {
+                print("Couldn't setup audio session: \(error)")
             }
-            
-        } catch {
-            print("Couldn't setup audio session: \(error)")
+            return
         }
+        
+        await MainActor.run {
+            player?.play()
+            totalTime = player?.duration ?? 0.0
+            isPlaying = player?.isPlaying ?? false
+            startPlaybackTimer()
+        }
+        
     }
     
     private func createTempAudioFileAsync(from data: Data) async -> URL {
@@ -78,24 +93,63 @@ final class PlayerManager: PlayerProtocol, Sendable {
         return tempURL
     }
     
-    func checkIsPlaying() {
+    func stopToPlay() {
+        player?.pause()
+        isPlaying = false
         playbackTimer?.invalidate()
+        playbackTimer = nil
+    }
+    
+    private var isSeeking = false
+    private var seekTimer: Timer?
+    
+    func seekAudio(_ time: TimeInterval) {
+        guard let player = player else { return }
         
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+        isSeeking = true
+        
+        seekTimer?.invalidate()
+        
+        currentTime = time
+        
+        seekTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { _ in
             Task { @MainActor in
-                if self.player?.isPlaying == false {
+                let wasPlaying = player.isPlaying
+                
+                if wasPlaying {
+                    player.pause()
+                }
+                
+                player.currentTime = time
+                
+                if wasPlaying {
+                    player.play()
+                }
+                
+                self.isSeeking = false
+                self.seekTimer = nil
+            }
+        }
+    }
+    
+    private func startPlaybackTimer() {
+        stopPlaybackTimer()
+        
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            Task { @MainActor in
+                guard let self = self, let player = self.player else { return }
+                
+                self.currentTime = player.currentTime
+                
+                if !player.isPlaying {
                     self.isPlaying = false
-                    self.playbackTimer?.invalidate()
-                    self.playbackTimer = nil
+                    self.stopPlaybackTimer()
                 }
             }
         }
     }
     
-    func stopToPlay() {
-        player?.stop()
-        player = nil
-        isPlaying = false
+    private func stopPlaybackTimer() {
         playbackTimer?.invalidate()
         playbackTimer = nil
     }

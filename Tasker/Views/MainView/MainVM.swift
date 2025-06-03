@@ -51,7 +51,6 @@ final class MainVM {
     }
     
     func startAfterChek() async throws {
-        guard !isRecording else { return }
         
         playerManager.stopToPlay()
         
@@ -78,6 +77,7 @@ final class MainVM {
         guard newValue ?? 0 >= 15.0 else {
             return
         }
+        
         stopRecord()
     }
     

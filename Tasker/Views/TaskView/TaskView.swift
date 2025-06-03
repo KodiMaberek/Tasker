@@ -13,6 +13,8 @@ struct TaskView: View {
     
     @State private var vm: TaskVM
     
+    @FocusState var focusState: Bool
+    
     init(casManager: CASManagerProtocol, task: MainModel) {
         self.vm = TaskVM(mainModel: task, casManager: casManager)
     }
@@ -24,13 +26,16 @@ struct TaskView: View {
                 .ignoresSafeArea()
             
             VStack(spacing: 0) {
+                
                 CustomTabBar()
                 
                 ScrollView {
                     VStack(spacing: 28) {
                         
-                        VoiceModeToogle()
+                        VoicePlaying()
                             .padding(.top, 12)
+                        
+                        VoiceModeToogle()
                         
                         MainSection()
                         
@@ -69,6 +74,8 @@ struct TaskView: View {
                 vm.onAppear()
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
+            .sensoryFeedback(.selection, trigger: vm.playButtonTrigger)
+            
             .sheet(isPresented: $vm.shareViewIsShowing) {
                 ShareView(activityItems: [vm.task])
                     .presentationDetents([.medium])
@@ -101,6 +108,57 @@ struct TaskView: View {
         .padding(.bottom, 3)
     }
     
+    //MARK: Voice Playing
+    @ViewBuilder
+    private func VoicePlaying() -> some View {
+        HStack(spacing: 12) {
+            Image(systemName: vm.checkIsPlaying() ? "pause" : "play")
+                .frame(width: 21, height: 21)
+                .onTapGesture {
+                    Task {
+                        await vm.playButtonTapped(task: vm.task)
+                    }
+                }
+            
+            Slider(
+                value: Binding(
+                    get: {
+                        vm.isDragging ? vm.sliderValue : vm.currentProgressTime
+                    },
+                    set: { newValue in
+                        vm.sliderValue = newValue
+                        if !vm.isDragging {
+                            vm.seekAudio(newValue)
+                        }
+                    }
+                ),
+                in: 0...vm.totalProgressTime,
+                onEditingChanged: { editing in
+                    if editing {
+                        vm.isDragging = true
+                    } else {
+                        vm.isDragging = false
+                        vm.seekAudio(vm.sliderValue)
+                    }
+                }
+            )
+            .tint(colorScheme.elementColor.hexColor())
+            
+            Text(vm.currentTimeString())
+                .font(.system(size: 17, weight: .regular, design: .default))
+                .foregroundStyle(.primary)
+        }
+        .padding(.vertical, 11)
+        .padding(.horizontal, 16)
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .fill(
+                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                )
+        )
+        .animation(.default, value: vm.currentProgressTime)
+    }
+    
     //MARK: - Voice Toogle
     @ViewBuilder
     private func VoiceModeToogle() -> some View {
@@ -122,7 +180,6 @@ struct TaskView: View {
                     Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
-        
     }
     
     //MARK: - Title, Info
@@ -134,14 +191,18 @@ struct TaskView: View {
                 .fontWeight(.semibold)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
+                .focused($focusState)
             
             CustomDivider()
             
-            TextField("Add more information", text: $vm.task.info, axis: .vertical)
-                .font(.system(size: 17, weight: .regular, design: .default))
-                .frame(minHeight: 120, alignment: .top)
-                .padding(.vertical, 13)
-                .padding(.horizontal, 16)
+            VStack {
+                TextField("Add more information", text: $vm.task.info, axis: .vertical)
+                    .font(.system(size: 17, weight: .regular, design: .default))
+                    .frame(minHeight: 70, alignment: .top)
+                    .padding(.vertical, 13)
+                    .padding(.horizontal, 16)
+                    .focused($focusState)
+            }
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
@@ -149,6 +210,9 @@ struct TaskView: View {
                     Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
+        .onTapGesture {
+            focusState = false
+        }
     }
     
     //MARK: Date Selector

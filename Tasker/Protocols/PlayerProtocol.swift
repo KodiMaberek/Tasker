@@ -10,8 +10,10 @@ import Foundation
 protocol PlayerProtocol {
     var isPlaying: Bool { get set }
     var task: TaskModel? { get set }
+    var currentTime: TimeInterval { get set }
+    var totalTime: TimeInterval { get set }
     
     func playAudioFromData(_ audio: Data, task: TaskModel) async
     func stopToPlay()
-    func checkIsPlaying()
+    func seekAudio(_ time: TimeInterval)
 }

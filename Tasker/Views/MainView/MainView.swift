@@ -12,6 +12,8 @@ struct MainView: View {
     
     @State private var vm = MainVM()
     
+    @State var scaleEffect = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -44,9 +46,6 @@ struct MainView: View {
                             }
                         })
                     )
-                    .onTapGesture {
-                        vm.stopRecord()
-                    }
                     .padding(.bottom, 15)
                 }
             }
