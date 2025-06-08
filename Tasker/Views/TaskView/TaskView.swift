@@ -72,6 +72,7 @@ struct TaskView: View {
                 }
                 .ignoresSafeArea(edges: .bottom)
                 .scrollIndicators(.hidden)
+                .scrollDismissesKeyboard(.immediately)
                 
                 SaveButton()
                 

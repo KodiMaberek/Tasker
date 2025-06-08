@@ -37,13 +37,17 @@ final class RecordManager: RecordingProtocol, @unchecked Sendable {
     //MARK: Start recording
     func startRecording() async {
         let fileName = baseDirectoryURL.appending(path: "\(UUID().uuidString).wav")
-        isRecording = false
+        let session = AVAudioSession.sharedInstance()
         
         do {
+            try session.setCategory(.playAndRecord, mode: .default, options: [.defaultToSpeaker])
+            try session.setActive(true)
             avAudioRecorder = try AVAudioRecorder(url: fileName, settings: setting)
             avAudioRecorder?.prepareToRecord()
             avAudioRecorder?.isMeteringEnabled = true
             avAudioRecorder?.record()
+            
+            try? await Task.sleep(nanoseconds: 100_000_000)
             isRecording = avAudioRecorder?.isRecording ?? false
             
             await updateTime()

@@ -222,6 +222,7 @@ final class TaskVM {
         playerManager.isPlaying
     }
     
+    //MARK: - Record functions
     func recordButtonTapped() async {
         if isRecording {
             stopRecord()
