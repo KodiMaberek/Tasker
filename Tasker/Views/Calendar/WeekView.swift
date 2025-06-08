@@ -27,7 +27,7 @@ struct WeekView: View {
                     ForEach(1..<8) { index in
                         if vm.isSelectedDayOfWeek(index) {
                             shape
-                                .fill(Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04))
+                                .fill(Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04))
                                 .frame(maxWidth: .infinity)
                         } else {
                             Color.clear.frame(maxWidth: .infinity)
@@ -100,7 +100,7 @@ struct WeekView: View {
             .background(
                 RoundedRectangle(cornerRadius: 14)
                     .fill(
-                        Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                        Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                     )
             )
         }

@@ -14,6 +14,8 @@ struct MainView: View {
     
     @State var scaleEffect = false
     
+    @State var showingAlert = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -49,12 +51,23 @@ struct MainView: View {
                     .padding(.bottom, 15)
                 }
             }
+            .alert("Easy there!", isPresented: $showingAlert) {
+                Button {
+                    showingAlert = false
+                } label: {
+                    Text("OKAAAAY🤬")
+                        .tint(.black)
+                }
+                .tint(.black)
+            } message: {
+                Text("We can't keep up with your speed. Let's slow it down a bit.")
+            }
             .navigationBarTitleDisplayMode(.inline)
             .ignoresSafeArea(.keyboard)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     Button {
-                        
+                        showingAlert = true
                     } label: {
                         Image(systemName: "calendar")
                             .foregroundStyle(colorScheme.elementColor.hexColor())
@@ -70,7 +83,7 @@ struct MainView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        
+                        showingAlert = true
                     } label: {
                         Image(systemName: "person.circle")
                             .foregroundStyle(colorScheme.elementColor.hexColor())

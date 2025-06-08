@@ -70,7 +70,7 @@ struct TaskRow: View {
                     HStack(spacing: 12) {
                         Text("\(Date(timeIntervalSince1970: task.value.notificationDate), format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
                             .font(.subheadline)
-                            .foregroundStyle(.tertiary.opacity(0.6))
+                            .foregroundStyle(.labelTertiary.opacity(0.6))
                             .padding(.leading, 16)
                             .lineLimit(1)
                         
@@ -113,7 +113,7 @@ struct TaskRow: View {
         ZStack {
             RoundedRectangle(cornerRadius: 6)
                 .fill(
-                    Color.tertiary.opacity(0.04)
+                    Color.labelTertiary.opacity(0.04)
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .overlay(

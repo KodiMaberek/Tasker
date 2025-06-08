@@ -34,7 +34,7 @@ struct ListView: View {
         if !vm.tasks.isEmpty {
             HStack {
                 Text("Tasks")
-                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .foregroundStyle(.labelTertiary.opacity(0.6))
                     .bold()
                 
                 Spacer()
@@ -71,7 +71,7 @@ struct ListView: View {
         if !vm.completedTasks.isEmpty {
             HStack {
                 Text("Completed task")
-                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .foregroundStyle(.labelTertiary.opacity(0.6))
                     .bold()
                 
                 Spacer()

@@ -57,7 +57,7 @@ struct RecordButton: View {
             .background(
                 ZStack {
                     Circle()
-                        .stroke(Color.tertiary.opacity(0.04), style: StrokeStyle(lineWidth: 3.0, lineCap: .round, lineJoin: .round))
+                        .stroke(Color.labelTertiary.opacity(0.04), style: StrokeStyle(lineWidth: 3.0, lineCap: .round, lineJoin: .round))
                     Circle()
                         .trim(from: 0, to: CGFloat(progress))
                         .stroke(colorScheme.elementColor.hexColor(), style: StrokeStyle(lineWidth: 3.0, lineCap: .round, lineJoin: .round))

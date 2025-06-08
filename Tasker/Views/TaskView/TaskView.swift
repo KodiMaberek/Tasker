@@ -55,7 +55,7 @@ struct TaskView: View {
                         .background(
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(
-                                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                                    Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                                 )
                         )
                         
@@ -63,9 +63,11 @@ struct TaskView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(
-                                        Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                                        Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                                     )
                             )
+                        
+                        CreatedDate()
                         
                         Spacer()
                     }
@@ -79,6 +81,7 @@ struct TaskView: View {
             }
             .onAppear {
                 vm.onAppear()
+                focusState = true
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)
@@ -100,6 +103,7 @@ struct TaskView: View {
                 dismissButton()
             } label: {
                 Text("Cancel")
+                    .foregroundStyle(.accentRed)
             }
             
             Spacer()
@@ -161,7 +165,7 @@ struct TaskView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
         .animation(.default, value: vm.currentProgressTime)
@@ -185,7 +189,7 @@ struct TaskView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
     }
@@ -226,7 +230,7 @@ struct TaskView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
     }
@@ -251,13 +255,12 @@ struct TaskView: View {
                     .frame(minHeight: 70, alignment: .top)
                     .padding(.vertical, 13)
                     .padding(.horizontal, 16)
-                    .focused($focusState)
             }
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    Color.tertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
         .onTapGesture {
@@ -460,7 +463,7 @@ struct TaskView: View {
             dismissButton()
             vm.doneButtonTapped()
         } label: {
-            Text("Done")
+            Text("Close")
                 .foregroundStyle(.white)
                 .padding(.vertical, 15)
                 .frame(maxWidth: .infinity)
@@ -484,6 +487,22 @@ struct TaskView: View {
             )
             .frame(height: 1)
             .padding(.leading, 16)
+    }
+    
+    //MARK: - Created Date
+    @ViewBuilder
+    private func CreatedDate() -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: "calendar")
+                .foregroundStyle(.labelTertiary).opacity(0.6)
+            
+            Text("Created:")
+                .foregroundStyle(.labelTertiary).opacity(0.6)
+            
+            Text(Date(timeIntervalSince1970:vm.task.createDate).formatted(.dateTime.month().day().hour().minute().year()))
+                .foregroundStyle(.labelTertiary)
+            
+        }
     }
 }
 
