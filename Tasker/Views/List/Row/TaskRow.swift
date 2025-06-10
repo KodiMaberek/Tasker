@@ -122,7 +122,7 @@ struct TaskRow: View {
                 )
             if vm.checkCompletedTaskForToday(task: task.value) {
                 Image(systemName: "checkmark")
-                    .foregroundStyle(.tertiary.opacity(0.8))
+                    .foregroundStyle(.labelTertiary.opacity(0.8))
                     .bold()
             }
         }
@@ -138,7 +138,7 @@ struct TaskRow: View {
         ZStack {
             Circle()
                 .fill(
-                    .tertiary.opacity(0.2)
+                    .labelTertiary.opacity(0.2)
                 )
             
             if task.value.audio != nil {

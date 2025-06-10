@@ -97,6 +97,7 @@ final class MainVM {
             }
         }
         model = MainModel.initial(TaskModel(id: UUID().uuidString, title: "", info: "", audio: hashOfAudio, notificationDate: dateManager.getDefaultNotificationTime().timeIntervalSince1970))
+        
         recordManager.clearFileFromDirectory()
     }
 }

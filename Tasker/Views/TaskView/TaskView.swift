@@ -13,7 +13,12 @@ struct TaskView: View {
     
     @State private var vm: TaskVM
     
-    @FocusState var focusState: Bool
+    @FocusState private var focusState: FocuseState?
+    
+    enum FocuseState: Hashable {
+        case title
+        case description
+    }
     
     init(casManager: CASManagerProtocol, task: MainModel) {
         self.vm = TaskVM(mainModel: task, casManager: casManager)
@@ -81,7 +86,10 @@ struct TaskView: View {
             }
             .onAppear {
                 vm.onAppear()
-                focusState = true
+                focusState = .title
+            }
+            .onChange(of: vm.showDatePicker) { newValue, oldValue in
+                focusState = nil
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)
@@ -245,7 +253,10 @@ struct TaskView: View {
                 .fontWeight(.semibold)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
-                .focused($focusState)
+                .focused($focusState, equals: .title)
+                .onSubmit {
+                    focusState = .description
+                }
             
             CustomDivider()
             
@@ -255,6 +266,7 @@ struct TaskView: View {
                     .frame(minHeight: 70, alignment: .top)
                     .padding(.vertical, 13)
                     .padding(.horizontal, 16)
+                    .focused($focusState, equals: .description)
             }
         }
         .background(
@@ -264,7 +276,7 @@ struct TaskView: View {
                 )
         )
         .onTapGesture {
-            focusState = false
+            focusState = nil
         }
     }
     

@@ -24,7 +24,6 @@ final class DateManager: DateManagerProtocol {
     var allMonths: [PeriodModel] = []
     
     init() {
-        selectedDate = today
         calendar.firstWeekday = firstDay
         initializeWeek()
     }
@@ -96,7 +95,7 @@ final class DateManager: DateManagerProtocol {
     
     func getDefaultNotificationTime() -> Date {
         let calendar = Calendar.current
-        let now = Date()
+        let now = selectedDate
         
         var morningComponents = calendar.dateComponents([.year, .month, .day], from: now)
         morningComponents.hour = 9

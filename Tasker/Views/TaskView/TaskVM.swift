@@ -84,9 +84,11 @@ final class TaskVM {
         self.mainModel = mainModel
         self.task = mainModel.value
         
-        Task { @MainActor in
-            self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
-        }
+        
+        self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
+        
+        
+        print(notificationDate)
     }
     
     //MARK: OnAppear
@@ -133,14 +135,14 @@ final class TaskVM {
     }
     
     func dateToString() -> String {
-        if calendar.isDateInToday(dateManager.selectedDate) {
+        if calendar.isDateInToday(notificationDate) {
             return "Today"
-        } else if calendar.isDateInTomorrow(dateManager.selectedDate) {
+        } else if calendar.isDateInTomorrow(notificationDate) {
             return "Tomorrow"
-        } else if calendar.isDateInYesterday(dateManager.selectedDate) {
+        } else if calendar.isDateInYesterday(notificationDate) {
             return "Yesterday"
         } else {
-            return dateManager.dateToString(date: dateManager.selectedDate, format: "MMMM d")
+            return dateManager.dateToString(date: notificationDate, format: "MMMM d")
         }
     }
     
