@@ -60,7 +60,7 @@ struct WeekView: View {
     
     @ViewBuilder
     private func DayOfWeeksView() -> some View {
-        TabView(selection: $vm.indexForWeek) {
+        TabView(selection: $vm.dateManager.indexForWeek) {
             ForEach(vm.weeks) { week in
                 HStack {
                     ForEach(week.date, id: \.self) { day in

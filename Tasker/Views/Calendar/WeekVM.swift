@@ -31,26 +31,12 @@ final class WeekVM {
         calendar.component(.weekday, from: dateManager.selectedDate)
     }
     
-    
     init() {
         dateManager = DateManager.shared
     }
     
-    @ObservationIgnored
-    var indexForWeek = 1 {
-        didSet {
-            Task { @MainActor in
-                try await Task.sleep(nanoseconds: 350000000)
-                let weeksDate = weeks.first(where: { $0.id == indexForWeek})!.date
-                if let sameWeekDay = weeksDate.first(where: {
-                    dateManager.calendar.component(.weekday, from: $0) == selectedWeekDay
-                }) {
-                    dateManager.selectedDate = sameWeekDay
-                } else {
-                    dateManager.selectedDate = weeks[1].date.first!
-                }
-            }
-        }
+    var indexForWeek: Int {
+        dateManager.indexForWeek
     }
     
     func selectedDateButtonTapped(_ day: Date) {
@@ -58,9 +44,7 @@ final class WeekVM {
     }
     
     func backToTodayButtonTapped() {
-        dateManager.selectedDate = today
-        dateManager.initializeWeek()
-        indexForWeek = 1
+        dateManager.backToTodayButtonTapped()
     }
     
     func isToday(_ date: Date) -> Bool {

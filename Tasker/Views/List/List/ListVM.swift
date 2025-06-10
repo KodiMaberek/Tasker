@@ -103,8 +103,7 @@ final class ListVM {
     }
     
     func backToTodayButtonTapped() {
-        dateManager.selectedDate = dateManager.today
-        dateManager.initializeWeek()
+        dateManager.backToTodayButtonTapped()
     }
     
     func nextDaySwiped() {

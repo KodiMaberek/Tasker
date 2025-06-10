@@ -23,6 +23,27 @@ final class DateManager: DateManagerProtocol {
     var allWeeks: [PeriodModel] = []
     var allMonths: [PeriodModel] = []
     
+    var selectedWeekDay: Int {
+        calendar.component(.weekday, from: selectedDate)
+    }
+    
+    @ObservationIgnored
+    var indexForWeek = 1 {
+        didSet {
+            Task { @MainActor in
+                try await Task.sleep(nanoseconds: 350000000)
+                let weeksDate = allWeeks.first(where: { $0.id == indexForWeek})!.date
+                if let sameWeekDay = weeksDate.first(where: {
+                    calendar.component(.weekday, from: $0) == selectedWeekDay
+                }) {
+                    selectedDate = sameWeekDay
+                } else {
+                    selectedDate = allWeeks[1].date.first!
+                }
+            }
+        }
+    }
+    
     init() {
         calendar.firstWeekday = firstDay
         initializeWeek()
@@ -128,10 +149,48 @@ final class DateManager: DateManagerProtocol {
     }
     
     func addOneDay() {
-        selectedDate = calendar.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+        let oldWeek = calendar.component(.weekOfYear, from: selectedDate)
+        let newDate = calendar.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        
+        selectedDate = newDate
+        
+        if newWeek != oldWeek {
+            updateWeekIndex(for: newDate)
+        }
     }
-
+    
     func subtractOneDay() {
-        selectedDate = calendar.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+        let oldWeek = calendar.component(.weekOfYear, from: selectedDate)
+        let newDate = calendar.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        
+        selectedDate = newDate
+        
+        if newWeek != oldWeek {
+            updateWeekIndex(for: newDate)
+        }
     }
+    
+    func backToTodayButtonTapped() {
+        selectedDate = today
+        initializeWeek()
+        indexForWeek = 1
+    }
+    
+    private func updateWeekIndex(for date: Date) {
+        let newWeekStart = startOfWeek(for: date)
+        
+        if let newWeek = allWeeks.first(where: { startOfWeek(for: $0.date.first!) == newWeekStart }) {
+            indexForWeek = newWeek.id
+        } else {
+            appendWeeksForward()
+            prependWeeksBackward()
+            
+            if let refreshedWeek = allWeeks.first(where: { startOfWeek(for: $0.date.first!) == newWeekStart }) {
+                indexForWeek = refreshedWeek.id
+            }
+        }
+    }
+    
 }

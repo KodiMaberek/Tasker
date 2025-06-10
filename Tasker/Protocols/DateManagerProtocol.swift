@@ -11,6 +11,7 @@ protocol DateManagerProtocol {
     var calendar: Calendar { get }
     var today: Date { get set }
     var selectedDate: Date { get set }
+    var indexForWeek: Int { get set }
     var allWeeks: [PeriodModel] { get set }
     var allMonths: [PeriodModel] { get set }
     
@@ -20,6 +21,7 @@ protocol DateManagerProtocol {
     func prependWeeksBackward()
     func dateToString(date: Date, format: String?) -> String
     func getDefaultNotificationTime() -> Date
+    func backToTodayButtonTapped()
     func subtractOneDay()
     func addOneDay()
 }
