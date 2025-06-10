@@ -125,4 +125,13 @@ final class DateManager: DateManagerProtocol {
         } else {
             return morningTime
         }
-    }}
+    }
+    
+    func addOneDay() {
+        selectedDate = calendar.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
+    }
+
+    func subtractOneDay() {
+        selectedDate = calendar.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
+    }
+}

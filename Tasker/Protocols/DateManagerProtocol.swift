@@ -20,4 +20,6 @@ protocol DateManagerProtocol {
     func prependWeeksBackward()
     func dateToString(date: Date, format: String?) -> String
     func getDefaultNotificationTime() -> Date
+    func subtractOneDay()
+    func addOneDay()
 }

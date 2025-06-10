@@ -21,10 +21,57 @@ struct ListView: View {
         ScrollView {
             TasksList()
             
+            if vm.completedTasks.isEmpty {
+                GeometryReader { geometry in
+                    Color.clear
+                        .frame(height: max(geometry.size.height, 400))
+                        .contentShape(Rectangle())
+                        .gesture(
+                            DragGesture(minimumDistance: 1)
+                                .onChanged { _ in
+                                    if !vm.startSwipping {
+                                        vm.startSwipping = true
+                                    }
+                                }
+                                .onEnded { value in
+                                    if value.translation.width < -50 {
+                                        vm.nextDaySwiped()
+                                    } else if value.translation.width > 50 {
+                                        vm.previousDaySwiped()
+                                    }
+                                    vm.startSwipping = false
+                                }
+                        )
+                        .onTapGesture(count: 2) {
+                            vm.backToTodayButtonTapped()
+                        }
+                }
+            }
+            
             CompletedTasksList()
+            
+            GeometryReader { geometry in
+                Color.clear
+                    .frame(height: max(geometry.size.height, 400))
+                    .contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 30)
+                            .onEnded { value in
+                                if value.translation.width < -50 {
+                                    vm.nextDaySwiped()
+                                } else if value.translation.width > 50 {
+                                    vm.previousDaySwiped()
+                                }
+                            }
+                    )
+                    .onTapGesture(count: 2) {
+                        vm.backToTodayButtonTapped()
+                    }
+            }
         }
         .customBlurForContainer(colorScheme: colorScheme)
         .scrollIndicators(.hidden)
+        .scrollDisabled(vm.startSwipping)
         .animation(.linear, value: completedTasksHidden)
         .sensoryFeedback(.impact, trigger: completedTasksHidden)
     }

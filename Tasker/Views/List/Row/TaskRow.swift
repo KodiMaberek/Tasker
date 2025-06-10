@@ -59,19 +59,21 @@ struct TaskRow: View {
                     HStack(spacing: 12) {
                         CheckMark()
                         
-                        Text(task.value.title)
-                            .multilineTextAlignment(.leading)
-                            .foregroundStyle(.labelPrimary)
-                            .font(.callout)
+                        ScrollView(.horizontal) {
+                            Text(task.value.title)
+                                .multilineTextAlignment(.leading)
+                                .foregroundStyle(.labelPrimary)
+                                .font(.callout)
+                                .lineLimit(1)
+                        }
+                        .scrollIndicators(.hidden)
                     }
-                    
-                    Spacer()
                     
                     HStack(spacing: 12) {
                         Text("\(Date(timeIntervalSince1970: task.value.notificationDate), format: .dateTime.hour(.twoDigits(amPM: .abbreviated)).minute(.twoDigits))")
                             .font(.subheadline)
                             .foregroundStyle(.labelTertiary.opacity(0.6))
-                            .padding(.leading, 16)
+                            .padding(.leading, 6)
                             .lineLimit(1)
                         
                         PlayButton()

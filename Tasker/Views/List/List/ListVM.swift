@@ -10,9 +10,11 @@ import SwiftUI
 
 @Observable
 final class ListVM {
-    let dateManager: DateManagerProtocol
+    var dateManager: DateManagerProtocol
     let casManager: CASManagerProtocol
     let playerManager: PlayerProtocol
+    
+    var startSwipping = false
     
     var tasks: [MainModel] {
         casManager.models.filter { model in
@@ -98,5 +100,18 @@ final class ListVM {
             
             return task.dayOfWeek[dayIndex].value
         }
+    }
+    
+    func backToTodayButtonTapped() {
+        dateManager.selectedDate = dateManager.today
+        dateManager.initializeWeek()
+    }
+    
+    func nextDaySwiped() {
+        dateManager.addOneDay()
+    }
+    
+    func previousDaySwiped() {
+        dateManager.subtractOneDay()
     }
 }
