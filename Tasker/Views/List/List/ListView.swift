@@ -18,60 +18,41 @@ struct ListView: View {
     }
     
     var body: some View {
-        ScrollView {
-            TasksList()
-            
-            if vm.completedTasks.isEmpty {
-                GeometryReader { geometry in
-                    Color.clear
-                        .frame(height: max(geometry.size.height, 400))
-                        .contentShape(Rectangle())
-                        .gesture(
-                            DragGesture(minimumDistance: 1)
-                                .onChanged { _ in
-                                    if !vm.startSwipping {
-                                        vm.startSwipping = true
-                                    }
-                                }
-                                .onEnded { value in
-                                    if value.translation.width < -50 {
-                                        vm.nextDaySwiped()
-                                    } else if value.translation.width > 50 {
-                                        vm.previousDaySwiped()
-                                    }
-                                    vm.startSwipping = false
-                                }
-                        )
-                        .onTapGesture(count: 2) {
-                            vm.backToTodayButtonTapped()
+        GeometryReader { screenGeometry in
+            ScrollView {
+                VStack(spacing: 0) {
+                    
+                    VStack(spacing: 0) {
+                        TasksList()
+                        
+                        CompletedTasksList()
+                    }
+                    .background(
+                        GeometryReader { contentGeometry in
+                            Color.clear
+                                .preference(
+                                    key: ContentHeightPreferenceKey.self,
+                                    value: contentGeometry.size.height
+                                )
                         }
+                    )
+                    
+                    GestureDetectView()
+                        .frame(height: vm.calculateGestureViewHeight(
+                            screenHeight: screenGeometry.size.height,
+                            contentHeight: vm.contentHeight,
+                            safeAreaTop: screenGeometry.safeAreaInsets.top,
+                            safeAreaBottom: screenGeometry.safeAreaInsets.bottom
+                        ))
                 }
             }
-            
-            CompletedTasksList()
-            
-            GeometryReader { geometry in
-                Color.clear
-                    .frame(height: max(geometry.size.height, 400))
-                    .contentShape(Rectangle())
-                    .gesture(
-                        DragGesture(minimumDistance: 30)
-                            .onEnded { value in
-                                if value.translation.width < -50 {
-                                    vm.nextDaySwiped()
-                                } else if value.translation.width > 50 {
-                                    vm.previousDaySwiped()
-                                }
-                            }
-                    )
-                    .onTapGesture(count: 2) {
-                        vm.backToTodayButtonTapped()
-                    }
+            .scrollIndicators(.hidden)
+            .scrollDisabled(vm.startSwipping)
+            .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
+                vm.contentHeight = height
             }
         }
         .customBlurForContainer(colorScheme: colorScheme)
-        .scrollIndicators(.hidden)
-        .scrollDisabled(vm.startSwipping)
         .animation(.linear, value: completedTasksHidden)
         .sensoryFeedback(.impact, trigger: completedTasksHidden)
     }
@@ -155,8 +136,49 @@ struct ListView: View {
             }
         }
     }
+    
+    //MARK: Gesture dectectView
+    @ViewBuilder
+    private func GestureDetectView() -> some View {
+        Color.clear
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 1)
+                    .onChanged { _ in
+                        if !vm.startSwipping {
+                            vm.startSwipping = true
+                        }
+                    }
+                    .onEnded { value in
+                        if value.translation.width < -50 {
+                            vm.nextDaySwiped()
+                        } else if value.translation.width > 50 {
+                            vm.previousDaySwiped()
+                        }
+                        
+                        if value.translation.height < -10 {
+                            print("down")
+                        } else if value.translation.height > 10 {
+                            print("up")
+                        }
+                        vm.startSwipping = false
+                    }
+            )
+            .onTapGesture(count: 2) {
+                vm.backToTodayButtonTapped()
+            }
+    }
 }
 
 #Preview {
     ListView(casManager: CASManager())
+}
+
+
+struct ContentHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
 }

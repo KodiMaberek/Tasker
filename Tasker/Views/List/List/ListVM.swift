@@ -14,7 +14,9 @@ final class ListVM {
     let casManager: CASManagerProtocol
     let playerManager: PlayerProtocol
     
+    //MARK: UI State
     var startSwipping = false
+    var contentHeight: CGFloat = 0
     
     var tasks: [MainModel] {
         casManager.models.filter { model in
@@ -30,6 +32,13 @@ final class ListVM {
             model.value.markAsDeleted == false &&
             isTaskScheduledForDate(model.value, date: selectedDate) &&
             model.value.done?.contains { $0.completedFor == selectedDate } == true
+        }
+    }
+    
+    var todayTasks: [MainModel] {
+        casManager.models.filter { model in
+            model.value.markAsDeleted == false &&
+            isTaskScheduledForDate(model.value, date: selectedDate)
         }
     }
     
@@ -112,5 +121,36 @@ final class ListVM {
     
     func previousDaySwiped() {
         dateManager.subtractOneDay()
+    }
+    
+    //MARK: - Calculate size for gestureView
+    func calculateGestureViewHeight(screenHeight: CGFloat, contentHeight: CGFloat, safeAreaTop: CGFloat, safeAreaBottom: CGFloat) -> CGFloat {
+        let availableScreenHeight = screenHeight - safeAreaTop - safeAreaBottom
+        let remainingHeight = availableScreenHeight - contentHeight
+        
+        let minGestureHeight: CGFloat = 50
+        var maxGestureHeight: CGFloat = 250
+        
+        switch todayTasks.count {
+        case 0: maxGestureHeight = 800
+        case 1...2: maxGestureHeight = 500
+        case 3: maxGestureHeight = 400
+        case 4: maxGestureHeight = 350
+        case 5: maxGestureHeight = 300
+        default: break
+        }
+        
+        let idealGestureHeight: CGFloat = 150
+        
+        switch remainingHeight {
+        case let height where height >= idealGestureHeight:
+            return min(height, maxGestureHeight)
+            
+        case let height where height >= minGestureHeight:
+            return height
+            
+        default:
+            return minGestureHeight
+        }
     }
 }

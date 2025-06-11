@@ -86,7 +86,6 @@ struct TaskView: View {
             }
             .onAppear {
                 vm.onAppear()
-                focusState = .title
             }
             .onChange(of: vm.showDatePicker) { newValue, oldValue in
                 focusState = nil
@@ -254,9 +253,6 @@ struct TaskView: View {
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
                 .focused($focusState, equals: .title)
-                .onSubmit {
-                    focusState = .description
-                }
             
             CustomDivider()
             

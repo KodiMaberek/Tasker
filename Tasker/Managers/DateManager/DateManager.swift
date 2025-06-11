@@ -149,32 +149,45 @@ final class DateManager: DateManagerProtocol {
     }
     
     func addOneDay() {
-        let oldWeek = calendar.component(.weekOfYear, from: selectedDate)
-        let newDate = calendar.date(byAdding: .day, value: 1, to: selectedDate) ?? selectedDate
-        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        let currentDate = selectedDate
+        let newDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+        
+        // Проверка на выход за пределы
+        if let lastDate = allWeeks.last?.date.last, newDate > lastDate {
+            appendWeeksForward()
+        }
         
         selectedDate = newDate
         
-        if newWeek != oldWeek {
+        let currentWeek = calendar.component(.weekOfYear, from: currentDate)
+        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        
+        if newWeek != currentWeek {
             updateWeekIndex(for: newDate)
         }
     }
     
     func subtractOneDay() {
-        let oldWeek = calendar.component(.weekOfYear, from: selectedDate)
-        let newDate = calendar.date(byAdding: .day, value: -1, to: selectedDate) ?? selectedDate
-        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        let currentDate = selectedDate
+        let newDate = calendar.date(byAdding: .day, value: -1, to: currentDate) ?? currentDate
+        
+        if let firstDate = allWeeks.first?.date.first, newDate < firstDate {
+            prependWeeksBackward()
+        }
         
         selectedDate = newDate
         
-        if newWeek != oldWeek {
+        let currentWeek = calendar.component(.weekOfYear, from: currentDate)
+        let newWeek = calendar.component(.weekOfYear, from: newDate)
+        
+        if newWeek != currentWeek {
             updateWeekIndex(for: newDate)
         }
     }
     
+    
     func backToTodayButtonTapped() {
         selectedDate = today
-        initializeWeek()
         indexForWeek = 1
     }
     
