@@ -84,11 +84,7 @@ final class TaskVM {
         self.mainModel = mainModel
         self.task = mainModel.value
         
-        
         self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
-        
-        
-        print(notificationDate)
     }
     
     //MARK: OnAppear
