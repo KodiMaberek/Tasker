@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainView: View {
-    @Environment(\.dependencies) var manager
     @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = MainVM()
@@ -97,9 +96,6 @@ struct MainView: View {
             .sheet(item: $vm.model) { model in
                 TaskView(mainModel: model)
             }
-        }
-        .onAppear {
-            vm.onAppear(manager: manager)
         }
         .navigationBarTitleDisplayMode(.inline)
         .animation(.default, value: vm.isRecording)

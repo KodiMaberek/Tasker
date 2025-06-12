@@ -9,11 +9,8 @@ import SwiftUI
 
 @Observable
 final class WeekVM {
-    var manager: DependenceManagerProtocol?
-    
-    var dateManager: DateManagerProtocol {
-        manager?.dateManager ?? DateManager()
-    }
+    @ObservationIgnored
+    @Injected(\.dateManager) var dateManager: DateManagerProtocol
     
     var calendar: Calendar {
         dateManager.calendar
@@ -27,16 +24,16 @@ final class WeekVM {
         dateManager.today
     }
     
+    var indexForWeek: Int {
+        dateManager.indexForWeek
+    }
+    
     var weeks: [PeriodModel] {
         dateManager.allWeeks
     }
     
     var selectedWeekDay: Int {
         calendar.component(.weekday, from: dateManager.selectedDate)
-    }
-    
-    func onAppear(manager: DependenceManagerProtocol) {
-        self.manager = manager
     }
     
     func selectedDateButtonTapped(_ day: Date) {

@@ -15,32 +15,16 @@ final class MainVM {
     @AppStorage("textForYourSelf", store: .standard) var textForYourSelf = "Write your title 🎯"
     
     //MARK: - Depencies
-    var manager: DependenceManagerProtocol?
-    
-    private var casManager: CASManagerProtocol {
-        print("cas manager init")
-        return manager?.casManager ?? CASManager()
-    }
-    
-    private var recordPermission: PermissionProtocol {
-        print("premission manager init")
-        return manager?.permissionManager ?? PermissionManager()
-    }
-    
-    private var recordManager: RecorderManagerProtocol {
-        print("record manager init")
-        return manager?.recorderManager ?? RecorderManager()
-    }
-    
-    private var playerManager: PlayerManagerProtocol {
-        print("player manager init")
-        return manager?.playerManager ?? PlayerManager()
-    }
-    
-    private var dateManager: DateManagerProtocol {
-        print("date manager init")
-        return manager?.dateManager ?? DateManager()
-    }
+    @ObservationIgnored
+    @Injected(\.casManager) private var casManager: CASManagerProtocol
+    @ObservationIgnored
+    @Injected(\.permissionManager) private var recordPermission: PermissionProtocol
+    @ObservationIgnored
+    @Injected(\.recorderManager) private var recordManager: RecorderManagerProtocol
+    @ObservationIgnored
+    @Injected(\.playerManager) private var playerManager: PlayerManagerProtocol
+    @ObservationIgnored
+    @Injected(\.dateManager) private var dateManager: DateManagerProtocol
     
     //MARK: - Model
     var model: MainModel?
@@ -61,10 +45,6 @@ final class MainVM {
     
     var decibelLvl: Float {
         recordManager.decibelLevel
-    }
-    
-    func onAppear(manager: DependenceManagerProtocol) {
-        self.manager = manager
     }
     
     func startAfterChek() async throws {

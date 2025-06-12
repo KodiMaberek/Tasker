@@ -27,8 +27,7 @@ final class DateManager: DateManagerProtocol {
         calendar.component(.weekday, from: selectedDate)
     }
     
-    @ObservationIgnored
-    @AppStorage("indexForWeek") var indexForWeek = 1 {
+    var indexForWeek = 1 {
         didSet {
             Task { @MainActor in
                 try await Task.sleep(nanoseconds: 350000000)
@@ -46,6 +45,7 @@ final class DateManager: DateManagerProtocol {
     
     //MARK: - Init
     init() {
+        print("init Date manager")
         calendar.firstWeekday = firstDay
         initializeWeek()
     }

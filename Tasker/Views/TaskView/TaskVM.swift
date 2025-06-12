@@ -10,7 +10,6 @@ import SwiftUICore
 
 @Observable
 final class TaskVM {
-    var manager: DependenceManagerProtocol?
     
     //MARK: Model
     var mainModel: MainModel = mockModel()
@@ -26,33 +25,14 @@ final class TaskVM {
     var isDragging = false
     
     //MARK: - Managers
-    private var dateManager: DateManagerProtocol {
-        guard let dateManager = manager?.dateManager else {
-            return DateManager()
-        }
-        return dateManager
-    }
-
-    private var casManager: CASManagerProtocol {
-        guard let casManager = manager?.casManager else {
-            return CASManager()
-        }
-        return casManager
-    }
-
-    private var playerManager: PlayerManagerProtocol {
-        guard let player = manager?.playerManager else {
-           return PlayerManager()
-        }
-        return player
-    }
-
-    private var recorderManager: RecorderManagerProtocol {
-        guard let recorder = manager?.recorderManager else {
-            return RecorderManager()
-        }
-        return recorder
-    }
+    @ObservationIgnored
+    @Injected(\.casManager) private var casManager: CASManagerProtocol
+    @ObservationIgnored
+    @Injected(\.playerManager) private var playerManager: PlayerManagerProtocol
+    @ObservationIgnored
+    @Injected(\.recorderManager) private var recorderManager: RecorderManagerProtocol
+    @ObservationIgnored
+    @Injected(\.dateManager) private var dateManager: DateManagerProtocol
     
     
     //MARK: - Computed properties
@@ -96,17 +76,9 @@ final class TaskVM {
     private var debounceTimer: Timer?
     private var lastNotificationDate = Date()
     
-    
     //MARK: - Init
-    deinit {
-        manager = nil
-    }
-    
-    //MARK: OnAppear
-    func onAppear(mainModel: MainModel, manager: DependenceManagerProtocol) {
-        self.manager = manager
+    init(mainModel: MainModel) {
         self.mainModel = mainModel
-        
         task = mainModel.value
 
         notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)

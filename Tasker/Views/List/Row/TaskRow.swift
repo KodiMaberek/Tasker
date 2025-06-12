@@ -9,7 +9,6 @@ import SwiftUI
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
-    @Environment(\.dependencies) var manager
     
     @State private var vm = TaskRowVM()
     
@@ -18,9 +17,6 @@ struct TaskRow: View {
     //MARK: - Body
     var body: some View {
         FinalTaskRow()
-            .onAppear {
-                vm.onAppear(manger: manager)
-            }
             .sheet(item: $vm.selectedTask) { task in
                 TaskView(mainModel: task)
             }

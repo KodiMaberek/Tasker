@@ -18,6 +18,7 @@ final class CASManager: CASManagerProtocol {
     var models: [MainModel] = []
     
     init() {
+        print("init cas")
         let localDirectory = CASManager.createMainDirectory()!
         self.localDirectory = localDirectory
         

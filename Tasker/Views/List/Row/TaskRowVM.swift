@@ -9,20 +9,14 @@ import Foundation
 
 @Observable
 final class TaskRowVM {
-    var manager: DependenceManagerProtocol? 
-    
     //MARK: Dependecies
-    private var playerManager: PlayerManagerProtocol {
-        manager?.playerManager ?? PlayerManager()
-    }
+    @ObservationIgnored
+    @Injected(\.playerManager) private var playerManager: PlayerManagerProtocol
+    @ObservationIgnored
+    @Injected(\.dateManager) private var dateManager: DateManagerProtocol
+    @ObservationIgnored
+    @Injected(\.casManager) private var casManager: CASManagerProtocol
     
-    private var dateManager: DateManagerProtocol {
-        manager?.dateManager ?? DateManager()
-    }
-    
-    private var casManager: CASManagerProtocol {
-        manager?.casManager ?? CASManager()
-    }
     
     //MARK: - Properties
     var playingTask: TaskModel?
@@ -54,14 +48,6 @@ final class TaskRowVM {
     
     private var nowDate: Double {
         Date.now.timeIntervalSince1970
-    }
-    
-    deinit {
-        manager = nil
-    }
-    
-    func onAppear(manger: DependenceManagerProtocol) {
-        self.manager = manger
     }
     
     //MARK: Selected task

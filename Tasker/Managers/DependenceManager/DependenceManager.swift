@@ -24,14 +24,45 @@ protocol DependenceManagerProtocol {
     var permissionManager: PermissionProtocol { get }
 }
 
-
-struct DependencyKey: EnvironmentKey {
-    static var defaultValue: DependenceManagerProtocol = DependenceManager()
+protocol DependencyRegistry {
+    var manager: DependenceManagerProtocol { get }
 }
 
-extension EnvironmentValues {
-    var dependencies: DependenceManagerProtocol {
-        get { self[DependencyKey.self] }
-        set { self[DependencyKey.self] = newValue }
+enum DependencyContext {
+    private static var _current: DependencyRegistry = DefaultRegistry()
+    
+    static var current: DependencyRegistry {
+        get { _current }
+        set { _current = newValue }
+    }
+    
+    private struct DefaultRegistry: DependencyRegistry {
+        let manager: DependenceManagerProtocol = DependenceManager()
     }
 }
+
+@propertyWrapper
+final class Injected<T> {
+    private let keyPath: KeyPath<DependenceManagerProtocol, T>
+    private var cached: T?
+
+    init(_ keyPath: KeyPath<DependenceManagerProtocol, T>) {
+        self.keyPath = keyPath
+    }
+
+    var wrappedValue: T {
+        get {
+            if let cached = cached {
+                return cached
+            }
+            let resolved = DependencyContext.current.manager[keyPath: keyPath]
+            cached = resolved
+            return resolved
+        }
+        set {
+            cached = newValue
+        }
+    }
+}
+
+

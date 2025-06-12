@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ListView: View {
-    @Environment(\.dependencies) var manager
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("completedTasksHidden") var completedTasksHidden = false
     
@@ -48,9 +47,6 @@ struct ListView: View {
             .onPreferenceChange(ContentHeightPreferenceKey.self) { height in
                 vm.contentHeight = height
             }
-        }
-        .onAppear {
-            vm.onAppear(manager: manager)
         }
         .customBlurForContainer(colorScheme: colorScheme)
         .animation(.linear, value: completedTasksHidden)

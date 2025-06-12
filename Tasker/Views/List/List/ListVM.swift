@@ -10,20 +10,12 @@ import SwiftUI
 
 @Observable
 final class ListVM {
-    
-    var manager: DependenceManagerProtocol?
-    
-    var dateManager: DateManagerProtocol {
-        manager?.dateManager ?? DateManager()
-    }
-    
-    var casManager: CASManagerProtocol {
-        manager?.casManager ?? CASManager()
-    }
-    
-    var playerManager: PlayerManagerProtocol {
-        manager?.playerManager ?? PlayerManager()
-    }
+    @ObservationIgnored
+    @Injected(\.dateManager) private var dateManager: DateManagerProtocol
+    @ObservationIgnored
+    @Injected(\.casManager) private var casManager: CASManagerProtocol
+    @ObservationIgnored
+    @Injected(\.playerManager) private var playerManager: PlayerManagerProtocol
     
     //MARK: UI State
     var startSwipping = false
@@ -59,14 +51,6 @@ final class ListVM {
     
     private var selectedDate: Double {
         calendar.startOfDay(for: dateManager.selectedDate).timeIntervalSince1970
-    }
-    
-    deinit {
-        manager = nil
-    }
-    
-    func onAppear(manager: DependenceManagerProtocol) {
-        self.manager = manager
     }
     
     //MARK: - Check for visible

@@ -34,6 +34,10 @@ final class RecorderManager: RecorderManagerProtocol, @unchecked Sendable {
     
     var fileName: URL?
     
+    init() {
+        print("init recorder manager")
+    }
+    
     //MARK: Start recording
     func startRecording() async {
         let fileName = baseDirectoryURL.appending(path: "\(UUID().uuidString).wav")
