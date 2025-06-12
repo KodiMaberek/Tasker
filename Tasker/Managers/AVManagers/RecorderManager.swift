@@ -1,5 +1,5 @@
 //
-//  RecordManager.swift
+//  RecorderManager.swift
 //  Tasker
 //
 //  Created by Rodion Akhmedov on 4/10/25.
@@ -9,7 +9,7 @@ import AVFoundation
 import Foundation
 
 @Observable
-final class RecordManager: RecordingProtocol, @unchecked Sendable {
+final class RecorderManager: RecorderManagerProtocol, @unchecked Sendable {
     
     private var avAudioRecorder: AVAudioRecorder?
     

@@ -1,5 +1,5 @@
 //
-//  PlayerProtocol.swift
+//  PlayerManagerProtocol.swift
 //  Tasker
 //
 //  Created by Rodion Akhmedov on 4/11/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol PlayerProtocol {
+protocol PlayerManagerProtocol {
     var isPlaying: Bool { get set }
     var task: TaskModel? { get set }
     var currentTime: TimeInterval { get set }

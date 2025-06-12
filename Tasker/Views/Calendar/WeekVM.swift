@@ -11,9 +11,6 @@ import SwiftUI
 final class WeekVM {
     var manager: DependenceManagerProtocol?
     
-    @ObservationIgnored
-    @AppStorage("indexForWeek") var indexForWeek = 1
-    
     var dateManager: DateManagerProtocol {
         manager?.dateManager ?? DateManager()
     }

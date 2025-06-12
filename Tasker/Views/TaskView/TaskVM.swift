@@ -40,16 +40,16 @@ final class TaskVM {
         return casManager
     }
 
-    private var playerManager: PlayerProtocol {
+    private var playerManager: PlayerManagerProtocol {
         guard let player = manager?.playerManager else {
            return PlayerManager()
         }
         return player
     }
 
-    private var recorderManager: RecordingProtocol {
+    private var recorderManager: RecorderManagerProtocol {
         guard let recorder = manager?.recorderManager else {
-            return RecordManager()
+            return RecorderManager()
         }
         return recorder
     }

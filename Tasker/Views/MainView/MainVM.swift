@@ -17,20 +17,29 @@ final class MainVM {
     //MARK: - Depencies
     var manager: DependenceManagerProtocol?
     
-    var casManager: CASManagerProtocol {
-        manager?.casManager ?? CASManager()
+    private var casManager: CASManagerProtocol {
+        print("cas manager init")
+        return manager?.casManager ?? CASManager()
     }
-    var recordPermission: PermissionProtocol {
-        manager?.permissionManager ?? PermissionManager()
+    
+    private var recordPermission: PermissionProtocol {
+        print("premission manager init")
+        return manager?.permissionManager ?? PermissionManager()
     }
-    var recordManager: RecordingProtocol {
-        manager?.recorderManager ?? RecordManager()
+    
+    private var recordManager: RecorderManagerProtocol {
+        print("record manager init")
+        return manager?.recorderManager ?? RecorderManager()
     }
-    var playerManager: PlayerProtocol {
-        manager?.playerManager ?? PlayerManager()
+    
+    private var playerManager: PlayerManagerProtocol {
+        print("player manager init")
+        return manager?.playerManager ?? PlayerManager()
     }
-    var dateManager: DateManagerProtocol {
-        manager?.dateManager ?? DateManager()
+    
+    private var dateManager: DateManagerProtocol {
+        print("date manager init")
+        return manager?.dateManager ?? DateManager()
     }
     
     //MARK: - Model

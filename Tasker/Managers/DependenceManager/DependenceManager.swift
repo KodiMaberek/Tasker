@@ -8,30 +8,18 @@
 import Foundation
 import SwiftUICore
 
-@Observable
 final class DependenceManager: DependenceManagerProtocol {
-    var casManager: CASManagerProtocol
-    var playerManager: PlayerProtocol
-    var recorderManager: RecordingProtocol
-    var dateManager: DateManagerProtocol
-    var permissionManager: PermissionProtocol
-    
-    init() {
-        print("start")
-        casManager = CASManager()
-        playerManager = PlayerManager()
-        recorderManager = RecordManager()
-        dateManager = DateManager()
-        permissionManager = PermissionManager()
-        print("end")
-    }
+    lazy var casManager: CASManagerProtocol = CASManager()
+    lazy var playerManager: PlayerManagerProtocol = PlayerManager()
+    lazy var recorderManager: RecorderManagerProtocol = RecorderManager()
+    lazy var dateManager: DateManagerProtocol = DateManager()
+    lazy var permissionManager: PermissionProtocol = PermissionManager()
 }
 
-
 protocol DependenceManagerProtocol {
-    var casManager: CASManagerProtocol { get }
-    var playerManager: PlayerProtocol { get }
-    var recorderManager: RecordingProtocol { get }
+    var casManager: CASManagerProtocol { get set }
+    var playerManager: PlayerManagerProtocol { get }
+    var recorderManager: RecorderManagerProtocol { get }
     var dateManager: DateManagerProtocol { get }
     var permissionManager: PermissionProtocol { get }
 }

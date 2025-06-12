@@ -12,7 +12,7 @@ final class TaskRowVM {
     var manager: DependenceManagerProtocol? 
     
     //MARK: Dependecies
-    private var playerManager: PlayerProtocol {
+    private var playerManager: PlayerManagerProtocol {
         manager?.playerManager ?? PlayerManager()
     }
     

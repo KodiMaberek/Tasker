@@ -9,7 +9,7 @@ import AVFoundation
 import Foundation
 
 @Observable
-final class PlayerManager: PlayerProtocol, Sendable {
+final class PlayerManager: PlayerManagerProtocol, Sendable {
     
     //MARK: Properties
     var isPlaying = false

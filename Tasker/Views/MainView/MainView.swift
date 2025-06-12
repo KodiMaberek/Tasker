@@ -13,8 +13,6 @@ struct MainView: View {
     
     @State private var vm = MainVM()
     
-    @State var scaleEffect = false
-    
     @State var showingAlert = false
     
     var body: some View {

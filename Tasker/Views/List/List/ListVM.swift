@@ -21,7 +21,7 @@ final class ListVM {
         manager?.casManager ?? CASManager()
     }
     
-    var playerManager: PlayerProtocol {
+    var playerManager: PlayerManagerProtocol {
         manager?.playerManager ?? PlayerManager()
     }
     

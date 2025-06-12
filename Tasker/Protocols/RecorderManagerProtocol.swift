@@ -1,5 +1,5 @@
 //
-//  RecordingProtocol.swift
+//  RecorderManagerProtocol.swift
 //  Tasker
 //
 //  Created by Rodion Akhmedov on 4/11/25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol RecordingProtocol {
+protocol RecorderManagerProtocol {
     var timer: Timer? { get }
     var currentlyTime: Double { get }
     var progress: Double { get }
