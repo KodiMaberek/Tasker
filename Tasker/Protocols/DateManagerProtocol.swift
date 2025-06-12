@@ -5,6 +5,7 @@
 //  Created by Rodion Akhmedov on 4/11/25.
 //
 
+import Combine
 import Foundation
 
 protocol DateManagerProtocol {
@@ -17,11 +18,15 @@ protocol DateManagerProtocol {
     
     func initializeWeek()
     func startOfWeek(for date: Date) -> Date
+    func selectedDateChange(_ day: Date)
     func appendWeeksForward()
     func prependWeeksBackward()
     func dateToString(date: Date, format: String?) -> String
     func getDefaultNotificationTime() -> Date
-    func backToTodayButtonTapped()
-    func subtractOneDay()
+    /// Reset selected day to current current
+    func backToToday()
+    /// Next day after swipe to left
     func addOneDay()
+    /// Previous day after swip to right
+    func subtractOneDay()
 }

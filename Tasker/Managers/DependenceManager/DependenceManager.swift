@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 @Observable
 final class DependenceManager: DependenceManagerProtocol {
@@ -16,11 +17,13 @@ final class DependenceManager: DependenceManagerProtocol {
     var permissionManager: PermissionProtocol
     
     init() {
+        print("start")
         casManager = CASManager()
         playerManager = PlayerManager()
         recorderManager = RecordManager()
         dateManager = DateManager()
         permissionManager = PermissionManager()
+        print("end")
     }
 }
 
@@ -31,4 +34,16 @@ protocol DependenceManagerProtocol {
     var recorderManager: RecordingProtocol { get }
     var dateManager: DateManagerProtocol { get }
     var permissionManager: PermissionProtocol { get }
+}
+
+
+struct DependencyKey: EnvironmentKey {
+    static var defaultValue: DependenceManagerProtocol = DependenceManager()
+}
+
+extension EnvironmentValues {
+    var dependencies: DependenceManagerProtocol {
+        get { self[DependencyKey.self] }
+        set { self[DependencyKey.self] = newValue }
+    }
 }

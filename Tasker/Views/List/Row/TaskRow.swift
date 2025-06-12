@@ -9,19 +9,18 @@ import SwiftUI
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
+    @Environment(\.dependencies) var manager
     
-    @State var vm: TaskRowVM
+    @State private var vm = TaskRowVM()
     
     var task: MainModel
-    
-    init(casManager: CASManagerProtocol, playerManager: PlayerProtocol, task: MainModel) {
-        self.vm = TaskRowVM(casManager: casManager, playerManager: playerManager)
-        self.task = task
-    }
     
     //MARK: - Body
     var body: some View {
         FinalTaskRow()
+            .onAppear {
+                vm.onAppear(manger: manager)
+            }
             .sheet(item: $vm.selectedTask) { task in
                 TaskView(mainModel: task)
             }
@@ -165,5 +164,5 @@ struct TaskRow: View {
 }
 
 #Preview {
-    TaskRow(casManager: CASManager(), playerManager: PlayerManager(), task: mockModel())
+    TaskRow(task: mockModel())
 }

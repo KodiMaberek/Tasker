@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.dependencies) var manager
     @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = MainVM()
@@ -25,7 +26,7 @@ struct MainView: View {
                 VStack(spacing: 0) {
                     WeekView()
                     
-                    ListView(casManager: vm.casManager)
+                    ListView()
                         .padding(.horizontal, 16)
                     
                     Spacer()
@@ -98,6 +99,9 @@ struct MainView: View {
             .sheet(item: $vm.model) { model in
                 TaskView(mainModel: model)
             }
+        }
+        .onAppear {
+            vm.onAppear(manager: manager)
         }
         .navigationBarTitleDisplayMode(.inline)
         .animation(.default, value: vm.isRecording)

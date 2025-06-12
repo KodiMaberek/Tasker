@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct WeekView: View {
+    @Environment(\.dependencies) var manager
     @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = WeekVM()
@@ -51,6 +52,9 @@ struct WeekView: View {
             TodayButton()
                 .padding(.top, 8)
         }
+        .onAppear {
+            vm.onAppear(manager: manager)
+        }
         .padding(.bottom, 2)
         .animation(.default, value: vm.indexForWeek)
         .animation(.default, value: vm.selectedDate)
@@ -60,7 +64,7 @@ struct WeekView: View {
     
     @ViewBuilder
     private func DayOfWeeksView() -> some View {
-        TabView(selection: $vm.dateManager.indexForWeek) {
+        TabView(selection: $vm.indexForWeek) {
             ForEach(vm.weeks) { week in
                 HStack {
                     ForEach(week.date, id: \.self) { day in

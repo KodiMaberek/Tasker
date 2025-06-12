@@ -7,13 +7,13 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @Observable
 final class DateManager: DateManagerProtocol {
+    ///for the set up first day of week
     @ObservationIgnored
     @AppStorage("calendar", store: .standard) var firstDay = 1
-    
-    static var shared = DateManager()
     
     var calendar = Calendar.current
     
@@ -28,7 +28,7 @@ final class DateManager: DateManagerProtocol {
     }
     
     @ObservationIgnored
-    var indexForWeek = 1 {
+    @AppStorage("indexForWeek") var indexForWeek = 1 {
         didSet {
             Task { @MainActor in
                 try await Task.sleep(nanoseconds: 350000000)
@@ -44,9 +44,14 @@ final class DateManager: DateManagerProtocol {
         }
     }
     
+    //MARK: - Init
     init() {
         calendar.firstWeekday = firstDay
         initializeWeek()
+    }
+    
+    func selectedDateChange( _ day: Date) {
+        selectedDate = day
     }
     
     //MARK: - Logic for week
@@ -73,6 +78,10 @@ final class DateManager: DateManagerProtocol {
     
     func startOfWeek(for date: Date) -> Date {
         calendar.date(from: calendar.dateComponents([.yearForWeekOfYear, .weekOfYear], from: date)) ?? date
+    }
+    
+    func changeIndexForWeek(_ index: Int) {
+        indexForWeek = index
     }
     
     private func generateWeek(for date: Date) -> [Date] {
@@ -146,7 +155,7 @@ final class DateManager: DateManagerProtocol {
         let currentDate = selectedDate
         let newDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
         
-        // Проверка на выход за пределы
+        //check if day last in week
         if let lastDate = allWeeks.last?.date.last, newDate > lastDate {
             appendWeeksForward()
         }
@@ -179,8 +188,7 @@ final class DateManager: DateManagerProtocol {
         }
     }
     
-    
-    func backToTodayButtonTapped() {
+    func backToToday() {
         selectedDate = today
         indexForWeek = 1
     }

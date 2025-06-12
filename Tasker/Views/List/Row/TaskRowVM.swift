@@ -7,14 +7,22 @@
 
 import Foundation
 
-@MainActor
 @Observable
 final class TaskRowVM {
+    var manager: DependenceManagerProtocol? 
     
     //MARK: Dependecies
-    var playerManager: PlayerProtocol
-    var dateManager: DateManagerProtocol
-    var casManager: CASManagerProtocol
+    private var playerManager: PlayerProtocol {
+        manager?.playerManager ?? PlayerManager()
+    }
+    
+    private var dateManager: DateManagerProtocol {
+        manager?.dateManager ?? DateManager()
+    }
+    
+    private var casManager: CASManagerProtocol {
+        manager?.casManager ?? CASManager()
+    }
     
     //MARK: - Properties
     var playingTask: TaskModel?
@@ -48,11 +56,12 @@ final class TaskRowVM {
         Date.now.timeIntervalSince1970
     }
     
-    //MARK: - Init
-    init(casManager: CASManagerProtocol, playerManager: PlayerProtocol) {
-        dateManager = DateManager.shared
-        self.casManager = casManager
-        self.playerManager = playerManager
+    deinit {
+        manager = nil
+    }
+    
+    func onAppear(manger: DependenceManagerProtocol) {
+        self.manager = manger
     }
     
     //MARK: Selected task

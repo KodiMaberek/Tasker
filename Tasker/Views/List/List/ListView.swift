@@ -8,14 +8,11 @@
 import SwiftUI
 
 struct ListView: View {
+    @Environment(\.dependencies) var manager
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("completedTasksHidden") var completedTasksHidden = false
     
-    @State var vm: ListVM
-    
-    init(casManager: CASManagerProtocol) {
-        self.vm = ListVM(casManager: casManager)
-    }
+    @State private var vm = ListVM()
     
     var body: some View {
         GeometryReader { screenGeometry in
@@ -52,6 +49,9 @@ struct ListView: View {
                 vm.contentHeight = height
             }
         }
+        .onAppear {
+            vm.onAppear(manager: manager)
+        }
         .customBlurForContainer(colorScheme: colorScheme)
         .animation(.linear, value: completedTasksHidden)
         .sensoryFeedback(.impact, trigger: completedTasksHidden)
@@ -72,7 +72,7 @@ struct ListView: View {
             
             VStack(spacing: 0) {
                 ForEach(Array(vm.tasks.enumerated()), id: \.element) { index, task in
-                    TaskRow(casManager: vm.casManager, playerManager: vm.playerManager, task: task)
+                    TaskRow(task: task)
                         .foregroundStyle(.primary)
                         .transition(.asymmetric(
                             insertion: .move(edge: .top).combined(with: .opacity),
@@ -118,7 +118,7 @@ struct ListView: View {
             if completedTasksHidden {
                 VStack(spacing: 0) {
                     ForEach(Array(vm.completedTasks.enumerated()), id: \.element) { index, task in
-                        TaskRow(casManager: vm.casManager, playerManager: vm.playerManager, task: task)
+                        TaskRow(task: task)
                             .foregroundStyle(.primary)
                         
                         if index != vm.completedTasks.count - 1 {
@@ -171,7 +171,7 @@ struct ListView: View {
 }
 
 #Preview {
-    ListView(casManager: CASManager())
+    ListView()
 }
 
 

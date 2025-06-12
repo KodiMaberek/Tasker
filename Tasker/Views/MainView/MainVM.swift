@@ -15,11 +15,23 @@ final class MainVM {
     @AppStorage("textForYourSelf", store: .standard) var textForYourSelf = "Write your title 🎯"
     
     //MARK: - Depencies
-    let casManager: CASManagerProtocol
-    let recordPermission: PermissionProtocol
-    let recordManager: RecordingProtocol
-    let playerManager: PlayerProtocol
-    let dateManager: DateManagerProtocol
+    var manager: DependenceManagerProtocol?
+    
+    var casManager: CASManagerProtocol {
+        manager?.casManager ?? CASManager()
+    }
+    var recordPermission: PermissionProtocol {
+        manager?.permissionManager ?? PermissionManager()
+    }
+    var recordManager: RecordingProtocol {
+        manager?.recorderManager ?? RecordManager()
+    }
+    var playerManager: PlayerProtocol {
+        manager?.playerManager ?? PlayerManager()
+    }
+    var dateManager: DateManagerProtocol {
+        manager?.dateManager ?? DateManager()
+    }
     
     //MARK: - Model
     var model: MainModel?
@@ -42,12 +54,8 @@ final class MainVM {
         recordManager.decibelLevel
     }
     
-    init() {
-        casManager = CASManager()
-        recordPermission = PermissionManager()
-        recordManager = RecordManager()
-        playerManager = PlayerManager()
-        dateManager = DateManager.shared
+    func onAppear(manager: DependenceManagerProtocol) {
+        self.manager = manager
     }
     
     func startAfterChek() async throws {

@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismissButton
+    @Environment(\.dependencies) var manager
     
     @State private var vm = TaskVM()
     
@@ -76,7 +77,7 @@ struct TaskView: View {
                 
             }
             .onAppear {
-                vm.onAppear(mainModel: mainModel)
+                vm.onAppear(mainModel: mainModel, manager: manager)
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)

@@ -52,15 +52,6 @@ final class PlayerManager: PlayerProtocol, Sendable {
             print("Couldn't setup audio session: \(error)")
         }
         return
-        //        }
-        //
-        //        await MainActor.run {
-        //            player?.play()
-        //            totalTime = player?.duration ?? 0.0
-        //            isPlaying = player?.isPlaying ?? false
-        //            startPlaybackTimer()
-        //        }
-        
     }
     
     private func createTempAudioFileAsync(from data: Data) async -> URL {

@@ -10,12 +10,7 @@ import SwiftUICore
 
 @Observable
 final class TaskVM {
-    //MARK: - Dependencies
-    let casManager: CASManagerProtocol
-    let dateManager: DateManagerProtocol
-    var playerManager: PlayerProtocol
-    var recordManager: RecordingProtocol
-    
+    var manager: DependenceManagerProtocol?
     
     //MARK: Model
     var mainModel: MainModel = mockModel()
@@ -30,6 +25,34 @@ final class TaskVM {
     var sliderValue = 0.0
     var isDragging = false
     
+    //MARK: - Managers
+    private var dateManager: DateManagerProtocol {
+        guard let dateManager = manager?.dateManager else {
+            return DateManager()
+        }
+        return dateManager
+    }
+
+    private var casManager: CASManagerProtocol {
+        guard let casManager = manager?.casManager else {
+            return CASManager()
+        }
+        return casManager
+    }
+
+    private var playerManager: PlayerProtocol {
+        guard let player = manager?.playerManager else {
+           return PlayerManager()
+        }
+        return player
+    }
+
+    private var recorderManager: RecordingProtocol {
+        guard let recorder = manager?.recorderManager else {
+            return RecordManager()
+        }
+        return recorder
+    }
     
     
     //MARK: - Computed properties
@@ -54,11 +77,11 @@ final class TaskVM {
     
     // Recording
     var isRecording: Bool {
-        recordManager.isRecording
+        recorderManager.isRecording
     }
     
     var decibelLVL: Float {
-        recordManager.decibelLevel
+        recorderManager.decibelLevel
     }
     
     @ObservationIgnored
@@ -75,24 +98,18 @@ final class TaskVM {
     
     
     //MARK: - Init
-    init() {
-        print("init")
-        dateManager = DateManager.shared
-        playerManager = PlayerManager()
-        recordManager = RecordManager()
-        casManager = CASManager()
-    }
-    
     deinit {
-        print("deinit")
+        manager = nil
     }
     
     //MARK: OnAppear
-    func onAppear(mainModel: MainModel) {
+    func onAppear(mainModel: MainModel, manager: DependenceManagerProtocol) {
+        self.manager = manager
         self.mainModel = mainModel
-        self.task = mainModel.value
         
-        self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
+        task = mainModel.value
+
+        notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
     }
     
     func selectDateButtonTapped() {
@@ -233,13 +250,13 @@ final class TaskVM {
     }
     
     private func startRecord() async {
-        await recordManager.startRecording()
+        await recorderManager.startRecording()
     }
     
     private func stopRecord() {
         var hashOfAudio: String?
         
-        if let audioURLString = recordManager.stopRecording() {
+        if let audioURLString = recorderManager.stopRecording() {
             hashOfAudio = casManager.saveAudio(url: audioURLString)
         }
         

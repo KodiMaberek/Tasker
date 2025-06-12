@@ -9,12 +9,9 @@ import SwiftUI
 
 @main
 struct Tasker: App {
-    @State private var manager = DependenceManager()
-    
     var body: some Scene {
         WindowGroup {
-            AppView()
-                .environment(manager)
+            MainView()
         }
     }
 }
