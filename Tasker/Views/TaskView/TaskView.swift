@@ -11,18 +11,9 @@ struct TaskView: View {
     @Environment(\.colorScheme) var colorScheme
     @Environment(\.dismiss) var dismissButton
     
-    @State private var vm: TaskVM
+    @State private var vm = TaskVM()
     
-    @FocusState private var focusState: FocuseState?
-    
-    enum FocuseState: Hashable {
-        case title
-        case description
-    }
-    
-    init(casManager: CASManagerProtocol, task: MainModel) {
-        self.vm = TaskVM(mainModel: task, casManager: casManager)
-    }
+    var mainModel: MainModel
     
     var body: some View {
         ZStack {
@@ -85,10 +76,7 @@ struct TaskView: View {
                 
             }
             .onAppear {
-                vm.onAppear()
-            }
-            .onChange(of: vm.showDatePicker) { newValue, oldValue in
-                focusState = nil
+                vm.onAppear(mainModel: mainModel)
             }
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)
@@ -252,7 +240,6 @@ struct TaskView: View {
                 .fontWeight(.semibold)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
-                .focused($focusState, equals: .title)
             
             CustomDivider()
             
@@ -262,7 +249,6 @@ struct TaskView: View {
                     .frame(minHeight: 70, alignment: .top)
                     .padding(.vertical, 13)
                     .padding(.horizontal, 16)
-                    .focused($focusState, equals: .description)
             }
         }
         .background(
@@ -271,9 +257,6 @@ struct TaskView: View {
                     Color.labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
                 )
         )
-        .onTapGesture {
-            focusState = nil
-        }
     }
     
     //MARK: Date Selector
@@ -515,5 +498,5 @@ struct TaskView: View {
 }
 
 #Preview {
-    TaskView(casManager: CASManager(), task: mockModel())
+    TaskView(mainModel: mockModel())
 }

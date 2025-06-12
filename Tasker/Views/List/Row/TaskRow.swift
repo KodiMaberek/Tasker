@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme
+    
     @State var vm: TaskRowVM
     
     var task: MainModel
@@ -22,7 +23,7 @@ struct TaskRow: View {
     var body: some View {
         FinalTaskRow()
             .sheet(item: $vm.selectedTask) { task in
-                TaskView(casManager: vm.casManager, task: task)
+                TaskView(mainModel: task)
             }
             .confirmationDialog("", isPresented: $vm.confirmationDialogIsPresented) {
                 if vm.singleTask {

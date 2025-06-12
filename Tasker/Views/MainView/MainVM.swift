@@ -47,7 +47,7 @@ final class MainVM {
         recordPermission = PermissionManager()
         recordManager = RecordManager()
         playerManager = PlayerManager()
-        dateManager = DateManager()
+        dateManager = DateManager.shared
     }
     
     func startAfterChek() async throws {

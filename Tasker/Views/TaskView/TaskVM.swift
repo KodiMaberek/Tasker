@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUICore
 
-@MainActor
 @Observable
 final class TaskVM {
     //MARK: - Dependencies
@@ -19,8 +18,8 @@ final class TaskVM {
     
     
     //MARK: Model
-    var mainModel: MainModel
-    var task: TaskModel
+    var mainModel: MainModel = mockModel()
+    var task: TaskModel = mockModel().value
     
     //MARK: UI States
     var showDatePicker = false
@@ -76,20 +75,24 @@ final class TaskVM {
     
     
     //MARK: - Init
-    init(mainModel: MainModel, casManager: CASManagerProtocol) {
+    init() {
+        print("init")
         dateManager = DateManager.shared
         playerManager = PlayerManager()
         recordManager = RecordManager()
-        self.casManager = casManager
+        casManager = CASManager()
+    }
+    
+    deinit {
+        print("deinit")
+    }
+    
+    //MARK: OnAppear
+    func onAppear(mainModel: MainModel) {
         self.mainModel = mainModel
         self.task = mainModel.value
         
         self.notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
-    }
-    
-    //MARK: OnAppear
-    func onAppear() {
-        updateActuallyTime()
     }
     
     func selectDateButtonTapped() {

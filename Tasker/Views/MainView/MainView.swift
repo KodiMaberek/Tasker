@@ -96,7 +96,7 @@ struct MainView: View {
                 }
             }
             .sheet(item: $vm.model) { model in
-                TaskView(casManager: vm.casManager, task: model)
+                TaskView(mainModel: model)
             }
         }
         .navigationBarTitleDisplayMode(.inline)
