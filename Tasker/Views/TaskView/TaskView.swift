@@ -13,6 +13,13 @@ struct TaskView: View {
     
     @State private var vm: TaskVM
     
+    @FocusState private var sectionInFocuse: SectionInFocuse?
+    
+    enum SectionInFocuse: Hashable {
+        case title
+        case description
+    }
+    
     init(mainModel: MainModel) {
         vm = TaskVM(mainModel: mainModel)
     }
@@ -102,7 +109,7 @@ struct TaskView: View {
     private func CustomTabBar() -> some View {
         HStack(alignment: .center) {
             Button {
-                    vm.deleteTaskButtonTapped()
+                vm.deleteTaskButtonTapped()
             } label: {
                 Text("Delete")
                     .foregroundStyle(.accentRed)
@@ -247,6 +254,7 @@ struct TaskView: View {
                 .fontWeight(.semibold)
                 .padding(.vertical, 13)
                 .padding(.horizontal, 16)
+                .focused($sectionInFocuse, equals: .title)
             
             CustomDivider()
             
@@ -256,7 +264,11 @@ struct TaskView: View {
                     .frame(minHeight: 70, alignment: .top)
                     .padding(.vertical, 13)
                     .padding(.horizontal, 16)
+                    .focused($sectionInFocuse, equals: .description)
             }
+        }
+        .onChange(of: vm.showDatePicker) { newValue, oldValue in
+            sectionInFocuse = nil
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
