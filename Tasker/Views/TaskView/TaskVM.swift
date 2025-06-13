@@ -10,20 +10,6 @@ import SwiftUICore
 
 @Observable
 final class TaskVM {
-    
-    //MARK: Model
-    var mainModel: MainModel = mockModel()
-    var task: TaskModel = mockModel().value
-    
-    //MARK: UI States
-    var showDatePicker = false
-    var showTimePicker = false
-    var shareViewIsShowing = false
-    
-    var playButtonTrigger = false
-    var sliderValue = 0.0
-    var isDragging = false
-    
     //MARK: - Managers
     @ObservationIgnored
     @Injected(\.casManager) private var casManager: CASManagerProtocol
@@ -33,7 +19,27 @@ final class TaskVM {
     @Injected(\.recorderManager) private var recorderManager: RecorderManagerProtocol
     @ObservationIgnored
     @Injected(\.dateManager) private var dateManager: DateManagerProtocol
+    @ObservationIgnored
+    @Injected(\.taskManager) private var taskManager
     
+    //MARK: Model
+    var mainModel: MainModel = mockModel()
+    var task: TaskModel = mockModel().value
+    
+    //MARK: UI States
+    var showDatePicker = false
+    var showTimePicker = false
+    var shareViewIsShowing = false
+    var taskDoneTrigger = false
+    
+    var playButtonTrigger = false
+    var sliderValue = 0.0
+    var isDragging = false
+    
+    //MARK: Confirmation dialog
+    var confirmationDialogIsPresented = false
+    var messageForDelete = ""
+    var singleTask = true
     
     //MARK: - Computed properties
     var calendar: Calendar {
@@ -44,6 +50,10 @@ final class TaskVM {
         didSet {
             checkTimeAfterSelected()
         }
+    }
+    
+    var dateForAppearence: String {
+        dateToString()
     }
     
     // Playing
@@ -71,6 +81,10 @@ final class TaskVM {
         }
     }
     
+    private var originalNotificationTimeComponents: DateComponents {
+        calendar.dateComponents([.hour, .minute], from: Date(timeIntervalSince1970: task.notificationDate))
+    }
+    
     //MARK: - Private properties
     private var lastChangeTime = Date()
     private var debounceTimer: Timer?
@@ -80,8 +94,9 @@ final class TaskVM {
     init(mainModel: MainModel) {
         self.mainModel = mainModel
         task = mainModel.value
-
-        notificationDate = Date(timeIntervalSince1970: mainModel.value.notificationDate)
+        
+        let time = originalNotificationTimeComponents
+        notificationDate = combineDateAndTime(timeComponents: time)
     }
     
     func selectDateButtonTapped() {
@@ -100,42 +115,23 @@ final class TaskVM {
         shareViewIsShowing.toggle()
     }
     
-    func doneButtonTapped() {
-        let mainModel = self.mainModel
-        mainModel.value = preparedTask()
+    //MARK: - Save Button
+    func saveTask() {
+        task = preparedTask()
+        mainModel.value = task
         casManager.saveModel(mainModel)
     }
     
     private func preparedTask() -> TaskModel {
-        var filledTask = TaskModel(id: UUID().uuidString, title: task.title.isEmpty ? "New Task" : task.title, info: task.info, createDate: task.createDate)
-        filledTask.notificationDate = notificationDate.timeIntervalSince1970
-        filledTask.done = task.done
-        filledTask.taskColor = task.taskColor
-        filledTask.repeatTask = task.repeatTask
-        filledTask.audio = task.audio
-        filledTask.voiceMode = task.voiceMode
-        filledTask.deleted = task.deleted
-        filledTask.endDate = task.endDate
-        filledTask.previousUniqueID = task.previousUniqueID
-        filledTask.secondNotificationDate = task.secondNotificationDate
-        
-        return filledTask
+        return taskManager.preparedTask(task: task, date: notificationDate)
     }
     
-    func dateToString() -> String {
-        if calendar.isDateInToday(notificationDate) {
-            return "Today"
-        } else if calendar.isDateInTomorrow(notificationDate) {
-            return "Tomorrow"
-        } else if calendar.isDateInYesterday(notificationDate) {
-            return "Yesterday"
-        } else {
-            return dateManager.dateToString(date: notificationDate, format: "MMMM d")
-        }
+    private func dateToString() -> String {
+        dateManager.dateToString(for: notificationDate, format: "MMMM d", useForWeekView: false)
     }
     
-    private func updateActuallyTime() {
-        notificationDate = dateManager.getDefaultNotificationTime()
+    private func combineDateAndTime(timeComponents: DateComponents) -> Date {
+        dateManager.combineDateAndTime(timeComponents: timeComponents)
     }
     
     private func dateHasBeenSelected() {
@@ -172,6 +168,36 @@ final class TaskVM {
                 }
             }
         }
+    }
+    
+    //MARK: - Check Mark Function
+    func checkCompletedTaskForToday() -> Bool {
+        taskManager.checkCompletedTaskForToday(task: task)
+    }
+    
+    func checkMarkTapped() {
+        task = taskManager.checkMarkTapped(task: mainModel).value
+        taskDoneTrigger.toggle()
+        saveTask()
+    }
+    
+    //MARK: - Delete functions
+    func deleteTaskButtonTapped() {
+        guard task.repeatTask == .never else {
+            messageForDelete = "This's a recurring task."
+            singleTask = false
+            confirmationDialogIsPresented.toggle()
+            return
+        }
+        
+        messageForDelete = "Delete this task?"
+        singleTask = true
+        confirmationDialogIsPresented.toggle()
+    }
+    
+    func deleteButtonTapped(model: MainModel, deleteCompletely: Bool = false) {
+        task = taskManager.deleteTask(task: model, deleteCompletely: deleteCompletely).value
+        saveTask()
     }
     
     //MARK: Playing function
@@ -233,7 +259,5 @@ final class TaskVM {
         }
         
         task.audio = hashOfAudio
-        
-        doneButtonTapped()
     }
 }

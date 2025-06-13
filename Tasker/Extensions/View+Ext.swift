@@ -31,4 +31,17 @@ extension View {
                 .allowsHitTesting(false)
             }
     }
+    
+    /// Confirmation dialog
+    func taskDeleteDialog(isPresented: Binding<Bool>, task: MainModel, message: String, isSingleTask: Bool, onDelete: @escaping (MainModel, Bool) -> Void) -> some View {
+        modifier(
+            TaskDeleteDialog(
+                isPresented: isPresented,
+                task: task,
+                message: message,
+                isSingleTask: isSingleTask,
+                onDelete: onDelete
+            )
+        )
+    }
 }

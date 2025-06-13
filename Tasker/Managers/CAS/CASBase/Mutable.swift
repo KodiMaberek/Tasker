@@ -37,7 +37,7 @@ public class Mutable: Hashable {
 }
 
 extension Cas {
-
+    
     @discardableResult
     public func saveData(_ mutable: Mutable, _ data: Data?) throws -> String? {
         var blobId: String?
@@ -57,35 +57,37 @@ extension Cas {
         mutable.parent = Parent(commitId: commitId, blobId: blobId)
         return commitId
     }
-
+    
     public func loadData(_ mutable: Mutable) throws -> Data? {
         guard let blobId = mutable.parent?.blobId else {
             return nil
         }
         return try get(blobId)
     }
-
+    
     @discardableResult
     public func delete(_ mutable: Mutable) throws -> String? {
         try saveData(mutable, nil)
     }
-
+    
     @discardableResult
     public func saveJson<T: Encodable>(_ mutable: Mutable, _ value: T?) throws -> String? {
         var data: Data?
         if let value = value {
-            data = try JSONEncoder().encode(value)
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .sortedKeys
+            data = try encoder.encode(value)
         }
         return try saveData(mutable, data)
     }
-
+    
     public func loadJson<T: Decodable>(_ mutable: Mutable) throws -> T? {
         guard let data = try loadData(mutable) else {
             return nil
         }
         return try JSONDecoder().decode(T.self, from: data)
     }
-
+    
     func loadCommit(_ commitId: String) throws -> Commit? {
         guard
             let commitData = try self.get(commitId)
@@ -94,7 +96,7 @@ extension Cas {
         }
         return try? JSONDecoder().decode(Commit.self, from: commitData)
     }
-
+    
     public func listMutable() throws -> [Mutable] {
         var parents: Set<String> = []
         var result: [String: Commit] = [:]

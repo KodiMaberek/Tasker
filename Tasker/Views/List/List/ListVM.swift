@@ -27,7 +27,7 @@ final class ListVM {
             model.value.deleted?.contains { $0.deletedFor == selectedDate } != true &&
             isTaskScheduledForDate(model.value, date: selectedDate) &&
             (model.value.done == nil || !model.value.done!.contains { $0.completedFor == selectedDate })
-        }
+        }.sorted { $0.value.notificationDate < $1.value.notificationDate }
     }
     
     var completedTasks: [MainModel] {
@@ -35,7 +35,7 @@ final class ListVM {
             model.value.markAsDeleted == false &&
             isTaskScheduledForDate(model.value, date: selectedDate) &&
             model.value.done?.contains { $0.completedFor == selectedDate } == true
-        }
+        }.sorted { $0.value.notificationDate < $1.value.notificationDate }
     }
     
     var todayTasks: [MainModel] {

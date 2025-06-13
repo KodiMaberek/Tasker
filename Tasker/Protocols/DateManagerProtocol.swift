@@ -10,7 +10,7 @@ import Foundation
 
 protocol DateManagerProtocol {
     var calendar: Calendar { get }
-    var today: Date { get set }
+    var currentTime: Date { get set }
     var selectedDate: Date { get set }
     var indexForWeek: Int { get set }
     var allWeeks: [PeriodModel] { get set }
@@ -21,7 +21,10 @@ protocol DateManagerProtocol {
     func selectedDateChange(_ day: Date)
     func appendWeeksForward()
     func prependWeeksBackward()
-    func dateToString(date: Date, format: String?) -> String
+    /// Converte date to string
+    func dateToString(for date: Date, format: String?, useForWeekView: Bool) -> String
+    /// Combine date from selected date and notification date
+    func combineDateAndTime(timeComponents: DateComponents) -> Date
     func getDefaultNotificationTime() -> Date
     /// Reset selected day to current current
     func backToToday()

@@ -17,7 +17,7 @@ final class DateManager: DateManagerProtocol {
     
     var calendar = Calendar.current
     
-    var today = Date()
+    var currentTime = Date()
     var selectedDate = Date()
     
     var allWeeks: [PeriodModel] = []
@@ -109,7 +109,23 @@ final class DateManager: DateManagerProtocol {
         }
     }
     
-    func dateToString(date: Date, format: String? = nil) -> String {
+    func dateToString(for date: Date, format: String?, useForWeekView: Bool = false) -> String {
+        if useForWeekView {
+            return formatterDate(date: date, format: format)
+        } else {
+            if calendar.isDateInToday(date) {
+                return "Today"
+            } else if calendar.isDateInTomorrow(date) {
+                return "Tomorrow"
+            } else if calendar.isDateInYesterday(date) {
+                return "Yesterday"
+            } else {
+                return formatterDate(date: date, format: format)
+            }
+        }
+    }
+    
+    private func formatterDate(date: Date, format: String?) -> String {
         if let format = format {
             let formatter = DateFormatter()
             formatter.dateFormat = format
@@ -117,10 +133,17 @@ final class DateManager: DateManagerProtocol {
             return formatter.string(from: date)
         }
         
-        let weekday = date.formatted(.dateTime.weekday(.wide).locale(Locale.current))
-        let dateString = date.formatted(.dateTime.day().month(.wide).year().locale(Locale.current))
+        let weekday = selectedDate.formatted(.dateTime.weekday(.wide).locale(Locale.current))
+        let dateString = selectedDate.formatted(.dateTime.day().month(.wide).year().locale(Locale.current))
         
         return "\(weekday) - \(dateString)"
+    }
+    
+    func combineDateAndTime(timeComponents: DateComponents) -> Date {
+        var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+        dateComponents.hour = timeComponents.hour
+        dateComponents.minute = timeComponents.minute
+        return calendar.date(from: dateComponents)!
     }
     
     func getDefaultNotificationTime() -> Date {
@@ -132,21 +155,21 @@ final class DateManager: DateManagerProtocol {
             return calendar.date(from: components)!
         }
         
-        if !calendar.isDate(selectedDate, inSameDayAs: today) {
+        if !calendar.isDate(selectedDate, inSameDayAs: currentTime) {
             return dateAt(selectedDate, hour: 9)
         }
         
-        let hour = calendar.component(.hour, from: today)
+        let hour = calendar.component(.hour, from: currentTime)
         
         switch hour {
-        case ..<9:
-            return dateAt(today, hour: 9)
+        case 0..<9:
+            return dateAt(currentTime, hour: 9)
         case 9..<21:
-            return dateAt(today, hour: hour + 1)
+            return dateAt(currentTime, hour: hour + 1)
         case 21...22:
-            return dateAt(today, hour: 21)
+            return dateAt(currentTime, hour: 21)
         default:
-            let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+            let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentTime)!
             return dateAt(tomorrow, hour: 9)
         }
     }
@@ -189,7 +212,7 @@ final class DateManager: DateManagerProtocol {
     }
     
     func backToToday() {
-        selectedDate = today
+        selectedDate = currentTime
         indexForWeek = 1
     }
     

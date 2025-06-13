@@ -16,44 +16,32 @@ struct TaskRow: View {
     
     //MARK: - Body
     var body: some View {
-        FinalTaskRow()
+        TaskRow()
             .sheet(item: $vm.selectedTask) { task in
                 TaskView(mainModel: task)
             }
-            .confirmationDialog("", isPresented: $vm.confirmationDialogIsPresented) {
-                if vm.singleTask {
-                    Button(role: .destructive) {
-                        vm.deleteButtonTapped(task: task, deleteCompletely: true)
-                    } label: {
-                        Text("Delete this task")
-                    }
-                } else {
-                    Button(role: .destructive) {
-                        vm.deleteButtonTapped(task: task)
-                    } label: {
-                        Text("Delete only this task")
-                    }
-                    
-                    Button {
-                        vm.deleteButtonTapped(task: task, deleteCompletely: true)
-                    } label: {
-                        Text("Delete all of these tasks")
-                    }
-                }
-            } message: {
-                Text(vm.messageForDelete)
-            }
+            .taskDeleteDialog(
+                isPresented: $vm.confirmationDialogIsPresented,
+                task: task,
+                message: vm.messageForDelete,
+                isSingleTask: vm.singleTask,
+                onDelete: vm.deleteButtonTapped
+            )
             .sensoryFeedback(.selection, trigger: vm.selectedTask)
-            .sensoryFeedback(.success, trigger: vm.taskDone)
+            .sensoryFeedback(.success, trigger: vm.taskDoneTrigger)
+            .sensoryFeedback(.decrease, trigger: vm.taskDeleteTrigger)
     }
     
+    //MARK: Task row
     @ViewBuilder
-    private func FinalTaskRow() -> some View {
+    private func TaskRow() -> some View {
         List {
             ForEach(0..<1) { _ in
                 HStack(spacing: 0) {
                     HStack(spacing: 12) {
-                        CheckMark()
+                        TaskCheckMark(complete: vm.checkCompletedTaskForToday(task: task)) {
+                            vm.checkMarkTapped(task: task)
+                        }
                         
                         ScrollView(.horizontal) {
                             Text(task.value.title)
@@ -85,7 +73,7 @@ struct TaskRow: View {
                     task.value.taskColor.color(for: colorTheme)
                 )
                 .frame(maxWidth: .infinity)
-                .sensoryFeedback(.success, trigger: vm.taskDone)
+                .sensoryFeedback(.success, trigger: vm.taskDoneTrigger)
             }
             .listRowSeparator(.hidden)
             .listRowInsets(EdgeInsets())
@@ -103,31 +91,6 @@ struct TaskRow: View {
         .listRowSeparator(.hidden)
         .frame(height: vm.listRowHeight)
         .scrollDisabled(true)
-    }
-    
-    //MARK: - Check Mark
-    @ViewBuilder
-    private func CheckMark() -> some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(
-                    Color.labelTertiary.opacity(0.04)
-                )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(.black.opacity(0.20), lineWidth: 1)
-                )
-            if vm.checkCompletedTaskForToday(task: task.value) {
-                Image(systemName: "checkmark")
-                    .foregroundStyle(.labelTertiary.opacity(0.8))
-                    .bold()
-            }
-        }
-        .frame(width: 24, height: 24)
-        .onTapGesture {
-            vm.checkMarkTapped(task: task)
-        }
     }
     
     //MARK: - Play Button

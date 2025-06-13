@@ -16,14 +16,16 @@ final class TaskRowVM {
     @Injected(\.dateManager) private var dateManager: DateManagerProtocol
     @ObservationIgnored
     @Injected(\.casManager) private var casManager: CASManagerProtocol
-    
+    @ObservationIgnored
+    @Injected(\.taskManager) private var taskManager: TaskManagerProtocol
     
     //MARK: - Properties
     var playingTask: TaskModel?
     var selectedTask: MainModel?
     
     //MARK: - UI States
-    var taskDone = false
+    var taskDoneTrigger = false
+    var taskDeleteTrigger = false
     var listRowHeight = CGFloat(52)
     var startPlay = false
     
@@ -38,17 +40,6 @@ final class TaskRowVM {
     }
     
     //MARK: Private Properties
-    private var calendar: Calendar {
-        dateManager.calendar
-    }
-    
-    private var selectedDate: Double {
-        calendar.startOfDay(for: Date(timeIntervalSince1970: dateManager.selectedDate.timeIntervalSince1970)).timeIntervalSince1970
-    }
-    
-    private var nowDate: Double {
-        Date.now.timeIntervalSince1970
-    }
     
     //MARK: Selected task
     func selectedTaskButtonTapped(_ task: MainModel) {
@@ -57,48 +48,16 @@ final class TaskRowVM {
     }
     
     //MARK: - Check Mark Function
+    func checkCompletedTaskForToday(task: MainModel) -> Bool {
+        taskManager.checkCompletedTaskForToday(task: task.value)
+    }
+    
     func checkMarkTapped(task: MainModel) {
-        let newTask = task
-        newTask.value.done = updateExistingTaskCompletion(task: newTask.value)
-        
-        casManager.saveModel(newTask)
-        
-        taskDone.toggle()
+        let model = taskManager.checkMarkTapped(task: task)
+        taskDoneTrigger.toggle()
         stopToPlay()
-    }
-    
-    func checkCompletedTaskForToday(task: TaskModel) -> Bool {
-        return task.done?.contains(where: { $0.completedFor == selectedDate }) ?? false
-    }
-    
-    private func updateExistingTaskCompletion(task: TaskModel) -> [CompleteRecord] {
-        var newCompleteRecords: [CompleteRecord] = []
         
-        if let existingRecords = task.done {
-            for record in existingRecords {
-                let newRecord = CompleteRecord(
-                    completedFor: record.completedFor ?? 0,
-                    timeMark: record.timeMark
-                )
-                newCompleteRecords.append(newRecord)
-            }
-            
-            
-            if let indexToRemove = newCompleteRecords.firstIndex(where: { $0.completedFor == selectedDate }) {
-                newCompleteRecords.remove(at: indexToRemove)
-            } else {
-                newCompleteRecords.append(createNewTaskCompletion(task: task))
-            }
-        }
-        else {
-            newCompleteRecords.append(createNewTaskCompletion(task: task))
-        }
-        
-        return newCompleteRecords
-    }
-    
-    private func createNewTaskCompletion(task: TaskModel) -> CompleteRecord {
-        CompleteRecord(completedFor: selectedDate,timeMark: nowDate)
+        casManager.saveModel(model)
     }
     
     //MARK: - Delete functions
@@ -116,30 +75,9 @@ final class TaskRowVM {
     }
     
     func deleteButtonTapped(task: MainModel, deleteCompletely: Bool = false) {
-        guard task.value.markAsDeleted == false else { return }
-        
-        let newTask = task
-        
-        if deleteCompletely == true {
-            newTask.value.markAsDeleted = true
-        } else {
-            newTask.value.deleted = updateExistingTaskDeleted(task: newTask.value)
-        }
-        
-        casManager.saveModel(newTask)
-    }
-    
-    private func updateExistingTaskDeleted(task: TaskModel) -> [DeleteRecord] {
-        var newDeletedRecords: [DeleteRecord] = []
-        
-        if let deletedRecord = task.deleted {
-            newDeletedRecords = deletedRecord
-            newDeletedRecords.append(DeleteRecord(deletedFor: selectedDate, timeMark: nowDate))
-        } else {
-            newDeletedRecords.append(DeleteRecord(deletedFor: selectedDate, timeMark: nowDate))
-        }
-        
-        return newDeletedRecords
+        let newModel = taskManager.deleteTask(task: task, deleteCompletely: deleteCompletely)
+        taskDeleteTrigger.toggle()
+        casManager.saveModel(newModel)
     }
     
     //MARK: Play sound function

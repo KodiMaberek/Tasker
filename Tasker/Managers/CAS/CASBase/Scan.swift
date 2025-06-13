@@ -5,8 +5,6 @@
 //  Created by Rodion Akhmedov on 5/6/25.
 //
 
-import Foundation
-
 protocol ScanState {
     associatedtype Input
     associatedtype Output

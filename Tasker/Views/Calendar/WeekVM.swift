@@ -21,7 +21,7 @@ final class WeekVM {
     }
     
     var today: Date {
-        dateManager.today
+        dateManager.currentTime
     }
     
     var indexForWeek: Int {
@@ -66,6 +66,6 @@ final class WeekVM {
     }
     
     func dateToString() -> String {
-        dateManager.dateToString(date: selectedDate, format: nil)
+        dateManager.dateToString(for: selectedDate, format: nil, useForWeekView: true)
     }
 }

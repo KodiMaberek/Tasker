@@ -77,6 +77,14 @@ struct TaskView: View {
                 SaveButton()
                 
             }
+            .taskDeleteDialog(
+                isPresented: $vm.confirmationDialogIsPresented,
+                task: vm.mainModel,
+                message: vm.messageForDelete,
+                isSingleTask: vm.singleTask,
+                onDelete: vm.deleteButtonTapped
+            )
+            .sensoryFeedback(.success, trigger: vm.taskDoneTrigger)
             .sensoryFeedback(.selection, trigger: vm.notificationDate)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.playButtonTrigger)
             .sensoryFeedback(.impact(flexibility: .soft), trigger: vm.isRecording)
@@ -94,9 +102,9 @@ struct TaskView: View {
     private func CustomTabBar() -> some View {
         HStack(alignment: .center) {
             Button {
-                dismissButton()
+                    vm.deleteTaskButtonTapped()
             } label: {
-                Text("Cancel")
+                Text("Delete")
                     .foregroundStyle(.accentRed)
             }
             
@@ -277,7 +285,7 @@ struct TaskView: View {
                     
                     Spacer()
                     
-                    Text(vm.dateToString())
+                    Text(vm.dateForAppearence)
                         .foregroundStyle(Color.secondary)
                         .opacity(0.80)
                 }
@@ -449,23 +457,45 @@ struct TaskView: View {
     //MARK: Save button
     @ViewBuilder
     private func SaveButton() -> some View {
-        Button {
-            dismissButton()
-            vm.doneButtonTapped()
-        } label: {
-            Text("Close")
-                .foregroundStyle(.white)
-                .padding(.vertical, 15)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(
-                            colorScheme.elementColor.hexColor()
-                        )
-                )
-                .padding(.top, 8)
-                .padding(.bottom)
+        HStack {
+            TaskCheckMark(complete: vm.checkCompletedTaskForToday()) {
+                Task {
+                    dismissButton()
+                    
+                    try await Task.sleep(nanoseconds: 50_000_000)
+                    vm.checkMarkTapped()
+                }
+            }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(
+                        .backgroundTertiary
+                    )
+            )
+            
+            Button {
+                Task {
+                    dismissButton()
+                    
+                    try await Task.sleep(nanoseconds: 50_000_000)
+                    vm.saveTask()
+                }
+            } label: {
+                Text("Close")
+                    .foregroundStyle(.white)
+                    .padding(.vertical, 15)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(
+                                colorScheme.elementColor.hexColor()
+                            )
+                    )
+            }
         }
+        .padding(.top, 8)
+        .padding(.bottom)
     }
     
     //MARK: - Divider

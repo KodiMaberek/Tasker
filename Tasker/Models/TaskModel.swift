@@ -14,7 +14,6 @@ typealias MainModel = Model<TaskModel>
 
 struct TaskModel: Identifiable, Codable {
     var id: String
-    var previousUniqueID: String?
     
     var title = ""
     var info = ""

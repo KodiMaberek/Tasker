@@ -101,7 +101,7 @@ struct ListView: View {
                 Spacer()
                 
                 Image(systemName: completedTasksHidden ? "chevron.up" : "chevron.down")
-                    .foregroundStyle(.tertiary.opacity(0.6))
+                    .foregroundStyle(.labelTertiary.opacity(0.6))
                     .bold()
                     .onTapGesture {
                         completedTasksHidden.toggle()
@@ -111,7 +111,7 @@ struct ListView: View {
             .padding(.bottom, 12)
             
             
-            if completedTasksHidden {
+            if !completedTasksHidden {
                 VStack(spacing: 0) {
                     ForEach(Array(vm.completedTasks.enumerated()), id: \.element) { index, task in
                         TaskRow(task: task)
@@ -153,9 +153,9 @@ struct ListView: View {
                         }
                         
                         if value.translation.height < -10 {
-                            print("down")
+                            
                         } else if value.translation.height > 10 {
-                            print("up")
+                            
                         }
                         vm.startSwipping = false
                     }
