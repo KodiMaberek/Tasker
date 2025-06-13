@@ -506,8 +506,8 @@ struct TaskView: View {
                     )
             }
         }
-        .padding(.top, 8)
-        .padding(.bottom)
+        .padding(.top, 5)
+        .padding(.bottom, 10)
     }
     
     //MARK: - Divider

@@ -67,10 +67,15 @@ struct WeekView: View {
                         Button {
                             vm.selectedDateButtonTapped(day)
                         } label: {
-                            Text("\(day, format: .dateTime.day())")
-                                .font(.system(size: 17, weight: vm.calendar.isDateInToday(day) ? .semibold : .regular, design: .default))
-                                .foregroundStyle(!vm.calendar.isDateInToday(day) ? Color.quaternary.opacity(0.4) : Color.primary)
-                                .frame(maxWidth: .infinity)
+                            ZStack {
+                                SegmentedCircleView(date: day)
+                                    .frame(width: 40, height: 40)
+                                
+                                Text("\(day, format: .dateTime.day())")
+                                    .font(.system(size: 17, weight: vm.calendar.isDateInToday(day) ? .semibold : .regular, design: .default))
+                                    .foregroundStyle(!vm.calendar.isDateInToday(day) ? Color.quaternary.opacity(0.4) : Color.primary)
+                                    .frame(maxWidth: .infinity)
+                            }
                         }
                     }
                 }

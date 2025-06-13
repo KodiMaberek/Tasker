@@ -86,3 +86,61 @@ struct DayOfWeek: Codable, Hashable, Identifiable {
     var name: String
     var value: Bool
 }
+
+
+extension TaskModel {
+    //MARK: - Check for visible
+    func isScheduledForDate(_ date: Double, calendar: Calendar = Calendar.current) -> Bool {
+            let taskNotificationDate = self.notificationDate
+            
+            let dateAsDate = Date(timeIntervalSince1970: date)
+            let taskNotificationDateAsDate = Date(timeIntervalSince1970: taskNotificationDate)
+            
+            guard dateAsDate >= calendar.startOfDay(for: taskNotificationDateAsDate) else {
+                return false
+            }
+            
+            if let endDate = self.endDate {
+                let taskEndDate = Date(timeIntervalSince1970: endDate)
+                guard dateAsDate <= taskEndDate else {
+                    return false
+                }
+            }
+            
+            switch self.repeatTask {
+            case .never:
+                return taskNotificationDate >= date &&
+                taskNotificationDate < date + 86400
+                
+            case .daily:
+                return true
+                
+            case .weekly:
+                let taskWeekday = calendar.component(.weekday, from: taskNotificationDateAsDate)
+                let selectedWeekday = calendar.component(.weekday, from: dateAsDate)
+                return taskWeekday == selectedWeekday
+                
+            case .monthly:
+                let taskDay = calendar.component(.day, from: taskNotificationDateAsDate)
+                let selectedDay = calendar.component(.day, from: dateAsDate)
+                return taskDay == selectedDay
+                
+            case .yearly:
+                let taskMonth = calendar.component(.month, from: taskNotificationDateAsDate)
+                let taskDay = calendar.component(.day, from: taskNotificationDateAsDate)
+                let selectedMonth = calendar.component(.month, from: dateAsDate)
+                let selectedDay = calendar.component(.day, from: dateAsDate)
+                return taskMonth == selectedMonth && taskDay == selectedDay
+                
+            case .dayOfWeek:
+                let selectedWeekday = calendar.component(.weekday, from: dateAsDate)
+                let dayIndex = selectedWeekday - 1
+                
+                guard dayIndex >= 0 && dayIndex < self.dayOfWeek.count else {
+                    return false
+                }
+                
+                return self.dayOfWeek[dayIndex].value
+        }
+    }
+}

@@ -9,6 +9,7 @@ import Foundation
 
 protocol CASManagerProtocol {
     var models: [MainModel] { get }
+    var taskUpdateTrigger: Bool { get }
     
     func saveModel(_ task: MainModel)
     func saveAudio(url: URL) -> String?

@@ -16,9 +16,9 @@ final class CASManager: CASManagerProtocol {
     var localDirectory: URL
     
     var models: [MainModel] = []
+    var taskUpdateTrigger = false
     
     init() {
-        print("init cas")
         let localDirectory = CASManager.createMainDirectory()!
         self.localDirectory = localDirectory
         
@@ -36,6 +36,7 @@ final class CASManager: CASManagerProtocol {
             try cas.saveJsonModel(task)
             indexForDelete(task)
             models.append(task)
+            taskUpdateTrigger.toggle()
         } catch {
             print("Couldn't save daat inside CAS")
         }
@@ -83,6 +84,7 @@ final class CASManager: CASManagerProtocol {
         do {
             try cas.deleteModel(task)
             indexForDelete(task)
+            taskUpdateTrigger.toggle()
         } catch {
             print("Couldn't delete data: \(error)")
         }
