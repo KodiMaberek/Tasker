@@ -45,7 +45,6 @@ final class DateManager: DateManagerProtocol {
     
     //MARK: - Init
     init() {
-        print("init Date manager")
         calendar.firstWeekday = firstDay
         initializeWeek()
     }
@@ -164,9 +163,9 @@ final class DateManager: DateManagerProtocol {
         switch hour {
         case 0..<9:
             return dateAt(currentTime, hour: 9)
-        case 9..<21:
+        case 9..<18:
             return dateAt(currentTime, hour: hour + 1)
-        case 21...22:
+        case 18...21:
             return dateAt(currentTime, hour: 21)
         default:
             let tomorrow = calendar.date(byAdding: .day, value: 1, to: currentTime)!
@@ -230,5 +229,4 @@ final class DateManager: DateManagerProtocol {
             }
         }
     }
-    
 }

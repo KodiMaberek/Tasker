@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SegmentedCircleView: View {
-    @Environment(\.colorScheme) var colorScheme
+    var colorScheme: ColorScheme = .dark
+    
     @State private var vm = SegmentedCircleVM()
     
     var date: Date
@@ -91,7 +92,7 @@ struct SegmentedCircleView: View {
             )
         }
         .stroke(
-            segmentColor.opacity(isCompleted ? 0.9 : 0.4),
+            segmentColor.opacity(vm.useTaskColors ? isCompleted ? 0.7 : 0.3 : isCompleted ? 1.0 : 0.3),
             style: StrokeStyle(lineWidth: 3, lineCap: .round)
         )
     }

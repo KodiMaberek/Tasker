@@ -103,9 +103,9 @@ struct ListView: View {
                 Image(systemName: completedTasksHidden ? "chevron.up" : "chevron.down")
                     .foregroundStyle(.labelTertiary.opacity(0.6))
                     .bold()
-                    .onTapGesture {
-                        completedTasksHidden.toggle()
-                    }
+            }
+            .onTapGesture {
+                completedTasksHidden.toggle()
             }
             .padding(.top, 18)
             .padding(.bottom, 12)

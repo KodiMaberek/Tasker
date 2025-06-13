@@ -24,14 +24,10 @@ final class PlayerManager: PlayerManagerProtocol, Sendable {
     var currentTime: TimeInterval = 0.0
     var totalTime: TimeInterval = 0.0
     
-    init() {
-        print("init player manager")
-    }
     func playAudioFromData(_ audio: Data, task: TaskModel) async {
         let audioSession = AVAudioSession.sharedInstance()
         self.task = task
         
-        //        guard player != nil else {
         do {
             try audioSession.setCategory(.playAndRecord, mode: .default, options: [.allowAirPlay, .allowBluetooth, .allowBluetoothA2DP, .defaultToSpeaker, .duckOthers])
             try audioSession.overrideOutputAudioPort(.speaker)

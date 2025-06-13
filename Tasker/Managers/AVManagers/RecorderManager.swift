@@ -34,9 +34,6 @@ final class RecorderManager: RecorderManagerProtocol, @unchecked Sendable {
     
     var fileName: URL?
     
-    init() {
-        print("init recorder manager")
-    }
     
     //MARK: Start recording
     func startRecording() async {
