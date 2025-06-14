@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Managers
+import Models
 
 @Observable
 final class WeekVM {

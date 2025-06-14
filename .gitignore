@@ -1,2 +1,9 @@
 *.xcuserstate
 *.xcuserdatad/
+
+### Tuist ###
+graph.dot
+Derived/
+Tuist/.build
+*.xcworkspace
+*.xcodopeproj

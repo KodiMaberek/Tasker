@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import Models
+import TaskView
+import UIComponents
 
 struct TaskRow: View {
     @Environment(\.colorScheme) var colorTheme

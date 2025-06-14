@@ -5,6 +5,8 @@
 //  Created by Rodion Akhmedov on 6/12/25.
 //
 import Foundation
+import Models
+import Managers
 
 @Observable
 final class SegmentedCircleVM {

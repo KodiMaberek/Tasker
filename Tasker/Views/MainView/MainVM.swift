@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import Managers
+import Models
 
 @MainActor
 @Observable

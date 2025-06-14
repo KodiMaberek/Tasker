@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TaskView
 
 struct MainView: View {
     @Environment(\.colorScheme) var colorScheme

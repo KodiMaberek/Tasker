@@ -7,6 +7,8 @@
 
 import Foundation
 import SwiftUI
+import Models
+import Managers
 
 @Observable
 final class ListVM {
