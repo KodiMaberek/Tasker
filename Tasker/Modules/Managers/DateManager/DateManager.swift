@@ -141,10 +141,23 @@ final class DateManager: DateManagerProtocol {
     
     func combineDateAndTime(timeComponents: DateComponents) -> Date {
         var dateComponents = calendar.dateComponents([.year, .month, .day], from: selectedDate)
+        
+        let now = currentTime
+        let isToday = calendar.isDate(selectedDate, inSameDayAs: now)
+        let currentHour = calendar.component(.hour, from: now)
+        
+        if isToday && currentHour >= 22 {
+            if let nextDay = calendar.date(byAdding: .day, value: 1, to: selectedDate) {
+                dateComponents = calendar.dateComponents([.year, .month, .day], from: nextDay)
+            }
+        }
+        
         dateComponents.hour = timeComponents.hour
         dateComponents.minute = timeComponents.minute
+        
         return calendar.date(from: dateComponents)!
     }
+
     
     func getDefaultNotificationTime() -> Date {
         func dateAt(_ date: Date, hour: Int, minute: Int = 0, second: Int = 0) -> Date {
