@@ -6,9 +6,8 @@
 //
 
 import SwiftUI
-import UIComponents
 
-struct RecordButton: View {
+public struct RecordButton: View {
     @Environment(\.colorScheme) var colorScheme
     
     @Binding var isRecording: Bool
@@ -19,7 +18,15 @@ struct RecordButton: View {
     
     var action: () -> Void
     
-    var body: some View {
+    public init(isRecording: Binding<Bool>, progress: Double, countOfSec: Double, animationAmount: Float, action: @escaping () -> Void) {
+        self._isRecording = isRecording
+        self.progress = progress
+        self.countOfSec = countOfSec
+        self.animationAmount = animationAmount
+        self.action = action
+    }
+    
+    public var body: some View {
         Button {
             action()
             UIImpactFeedbackGenerator(style: .medium).impactOccurred()

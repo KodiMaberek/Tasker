@@ -8,7 +8,14 @@
 import Foundation
 
 final class DependenciesManager: DependenciesManagerProtocol {
-    lazy var casManager: CASManagerProtocol = CASManager()
+    lazy var casManager: CASManagerProtocol = {
+#if targetEnvironment(simulator)
+        return MockCas()
+#else
+        return CASManager()
+#endif
+    }()
+    
     lazy var playerManager: PlayerManagerProtocol = PlayerManager()
     lazy var recorderManager: RecorderManagerProtocol = RecorderManager()
     lazy var dateManager: DateManagerProtocol = DateManager()

@@ -7,12 +7,6 @@
 
 import Foundation
 
-//public typealias MainModel = Model<TaskModel>
-//
-//public func mockModel() -> MainModel {
-//    MainModel.initial(TaskModel(id: UUID().uuidString, title: "New task", info: "", createDate: Date.now.timeIntervalSince1970))
-//}
-
 struct Commit: Codable {
     var parent: [String]
     var blob: String?

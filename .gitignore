@@ -5,6 +5,6 @@
 graph.dot
 Derived/
 Tuist/.build
+*.xcodeproj
 *.xcworkspace
-*.xcodopeproj
 *.DS_Store

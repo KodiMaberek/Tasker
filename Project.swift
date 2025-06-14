@@ -23,7 +23,7 @@ let project = Project(
                 .target(name: "Models"),
                 .target(name: "UIComponents"),
                 .target(name: "Managers"),
-                .target(name: "TaskView")
+                .target(name: "Views")
             ],
             settings: .settings(
                 base: .init().merging(
@@ -40,11 +40,46 @@ let project = Project(
         .module(name: "UIComponents", dependencies: [.target(name: "Models")]),
         .module(name: "Managers", dependencies: [.target(name: "Models")]),
         .module(
+            name: "Views",
+            dependencies: [
+                .target(name: "Models"),
+                .target(name: "Managers"),
+                .target(name: "UIComponents")
+            ]
+        ),
+        .moduleView(
+            name: "Calendar",
+            dependencies: [
+                .target(name: "Models"),
+                .target(name: "Managers"),
+            ]
+        ),
+        .moduleView(
             name: "TaskView",
             dependencies: [
                 .target(name: "Models"),
                 .target(name: "Managers"),
                 .target(name: "UIComponents")
+            ]
+        ),
+        .moduleView(
+            name: "ListView",
+            dependencies: [
+                .target(name: "Models"),
+                .target(name: "Managers"),
+                .target(name: "UIComponents"),
+                .target(name: "TaskView")
+            ]
+        ),
+        .moduleView(
+            name: "MainView",
+            dependencies: [
+                .target(name: "Models"),
+                .target(name: "Managers"),
+                .target(name: "UIComponents"),
+                .target(name: "Calendar"),
+                .target(name: "ListView"),
+                .target(name: "TaskView"),
             ]
         )
     ],
@@ -76,6 +111,21 @@ extension Target {
             infoPlist: .default,
             sources: ["Tasker/Modules/\(name)/**"],
             resources: .resources(resources),
+            dependencies: dependencies,
+            settings: .settings(defaultSettings: .recommended)
+        )
+    }
+    
+    static func moduleView(name: String, dependencies: [TargetDependency]) -> ProjectDescription.Target {
+        
+        return .target(
+            name: name,
+            destinations: App.destinations,
+            product: .framework,
+            bundleId: App.bundleId + "." + name,
+            deploymentTargets: App.deploymentTargets,
+            infoPlist: .default,
+            sources: ["Tasker/Modules/Views/\(name)/**"],
             dependencies: dependencies,
             settings: .settings(defaultSettings: .recommended)
         )

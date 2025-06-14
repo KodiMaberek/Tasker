@@ -22,6 +22,7 @@ struct ScanIterator<S: ScanState, I: IteratorProtocol>: IteratorProtocol where I
         self.state = state
         self.iterator = iterator
     }
+    
     mutating func next() -> S.Output? {
         if let value = self.state.pop() {
             return value
@@ -45,6 +46,7 @@ struct ScanSequence<F: Factory, B: Sequence>: Sequence where B.Element == F.Elem
         self.factory = factory
         self.base = base
     }
+    
     func makeIterator() -> ScanIterator<F.Element, B.Iterator> {
         ScanIterator(factory(), base.makeIterator())
     }

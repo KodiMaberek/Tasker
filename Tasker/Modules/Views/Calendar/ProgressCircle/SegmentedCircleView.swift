@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIComponents
 
 struct SegmentedCircleView: View {
     var colorScheme: ColorScheme = .dark

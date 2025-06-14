@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct WeekView: View {
+public struct WeekView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = WeekVM()
@@ -20,7 +20,9 @@ struct WeekView: View {
         style: .circular
     )
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         VStack {
             ZStack {
                 HStack {

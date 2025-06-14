@@ -6,16 +6,21 @@
 //
 
 import SwiftUI
+import UIComponents
+import Calendar
+import ListView
 import TaskView
 
-struct MainView: View {
+public struct MainView: View {
     @Environment(\.colorScheme) var colorScheme
     
     @State private var vm = MainVM()
     
     @State var showingAlert = false
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         NavigationStack {
             ZStack {
                 Color(colorScheme.backgroundColor.hexColor())

@@ -8,13 +8,15 @@
 import SwiftUI
 import UIComponents
 
-struct ListView: View {
+public struct ListView: View {
     @Environment(\.colorScheme) var colorScheme
     @AppStorage("completedTasksHidden") var completedTasksHidden = false
     
     @State private var vm = ListVM()
     
-    var body: some View {
+    public init() {}
+    
+    public var body: some View {
         GeometryReader { screenGeometry in
             ScrollView {
                 VStack(spacing: 0) {
@@ -170,7 +172,6 @@ struct ListView: View {
 #Preview {
     ListView()
 }
-
 
 struct ContentHeightPreferenceKey: PreferenceKey {
     static var defaultValue: CGFloat = 0
