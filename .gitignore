@@ -1,0 +1,10 @@
+*.xcuserstate
+*.xcuserdatad/
+
+### Tuist ###
+graph.dot
+Derived/
+Tuist/.build
+*.xcodeproj
+*.xcworkspace
+*.DS_Store
