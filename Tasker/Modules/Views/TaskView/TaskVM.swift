@@ -38,6 +38,8 @@ final class TaskVM {
     var sliderValue = 0.0
     var isDragging = false
     
+    var pause = false
+    
     //MARK: Confirmation dialog
     var confirmationDialogIsPresented = false
     var messageForDelete = ""
@@ -59,6 +61,11 @@ final class TaskVM {
     }
     
     // Playing
+    
+    var isPlaying: Bool {
+        playerManager.isPlaying
+    }
+    
     var currentProgressTime: TimeInterval {
         playerManager.currentTime
     }
@@ -205,40 +212,62 @@ final class TaskVM {
     //MARK: Playing function
     func playButtonTapped(task: TaskModel) async {
         playButtonTrigger.toggle()
+        pause = false
         
-        guard playerManager.isPlaying == false else {
-            stopToPlay()
+        guard isPlaying == false else {
+            pauseAudio()
             return
         }
-        var data: Data?
         
-        if let audio = task.audio {
-            data = casManager.getData(audio)
-            
-            if let data = data {
-                await playerManager.playAudioFromData(data, task: task)
-            }
+        if let data = getDataFromAudio() {
+            await playerManager.playAudioFromData(data, task: task)
         }
     }
     
-    private func stopToPlay() {
-        playerManager.stopToPlay()
-    }
     
     func seekAudio(_ time: TimeInterval) {
         playerManager.seekAudio(time)
     }
     
     func currentTimeString() -> String {
-        let minutes = Int(currentProgressTime) / 60
-        let seconds = Int(currentProgressTime) % 60
+        var minutes = Int(currentProgressTime) / 60
+        var seconds = Int(currentProgressTime) % 60
+        
+        guard playerManager.isPlaying || pause == true else {
+            if isPlaying == false {
+                if let data = getDataFromAudio() {
+                    let totalTime = playerManager.returnTotalTime(data, task: task)
+                    
+                    minutes = Int(totalTime) / 60
+                    seconds = Int(totalTime) % 60
+                    
+                    return String(format: "%02d:%02d", minutes, seconds)
+                } else {
+                    return "00:00"
+                }
+            } else {
+                return String(format: "%02d:%02d", minutes, seconds)
+            }
+        }
         
         return String(format: "%02d:%02d", minutes, seconds)
     }
     
-    func checkIsPlaying() -> Bool {
-        playerManager.isPlaying
+    private func getDataFromAudio() -> Data? {
+        var data: Data?
+        
+        if let audio = task.audio {
+            data = casManager.getData(audio)
+        }
+        
+        return data
     }
+    
+    private func pauseAudio() {
+        pause = true
+        playerManager.pauseAudio()
+    }
+  
     
     //MARK: - Record functions
     func recordButtonTapped() async {

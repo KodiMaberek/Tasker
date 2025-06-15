@@ -7,7 +7,6 @@
 
 import SwiftUI
 import Models
-import Managers
 import UIComponents
 
 public struct TaskView: View {
@@ -136,7 +135,7 @@ public struct TaskView: View {
     @ViewBuilder
     private func VoicePlaying() -> some View {
         HStack(spacing: 12) {
-            Image(systemName: vm.checkIsPlaying() ? "pause" : "play")
+            Image(systemName: vm.isPlaying ? "pause" : "play")
                 .frame(width: 21, height: 21)
                 .onTapGesture {
                     Task {
@@ -171,13 +170,15 @@ public struct TaskView: View {
             Text(vm.currentTimeString())
                 .font(.system(size: 17, weight: .regular, design: .default))
                 .foregroundStyle(.labelPrimary)
+                .monospacedDigit()
+                .contentTransition(.numericText())
         }
         .padding(.vertical, 11)
         .padding(.horizontal, 16)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    .labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    .backgroundTertiary
                 )
         )
         .animation(.default, value: vm.currentProgressTime)
@@ -201,7 +202,7 @@ public struct TaskView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    .labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    .backgroundTertiary
                 )
         )
     }
@@ -242,7 +243,7 @@ public struct TaskView: View {
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(
-                    .labelTertiary.opacity(colorScheme == .dark ? 0.08 : 0.04)
+                    .backgroundTertiary
                 )
         )
     }
@@ -452,7 +453,7 @@ public struct TaskView: View {
                                 .frame(width: 28, height: 28)
                                 .overlay(
                                     Circle()
-                                        .stroke(Color.separatorPrimary.opacity(0.24), lineWidth: vm.task.taskColor.id == color.id ? 1.5 : 0.3)
+                                        .stroke(.separatorPrimary, lineWidth: vm.task.taskColor.id == color.id ? 1.5 : 0.3)
                                         .shadow(radius: 8, y: 4)
                                 )
                         }
@@ -513,32 +514,33 @@ public struct TaskView: View {
         .padding(.bottom, 10)
     }
     
-    //MARK: - Divider
-    @ViewBuilder
-    private func CustomDivider() -> some View {
-        RoundedRectangle(cornerRadius: 1)
-            .fill(
-                Color.nonOpaque.opacity(0.34)
-            )
-            .frame(height: 1)
-            .padding(.leading, 16)
-    }
-    
     //MARK: - Created Date
     @ViewBuilder
     private func CreatedDate() -> some View {
         HStack(spacing: 4) {
             Image(systemName: "calendar")
-                .foregroundStyle(.labelTertiary).opacity(0.6)
-            
-            Text("Created:")
-                .foregroundStyle(.labelTertiary).opacity(0.6)
-            
-            Text(Date(timeIntervalSince1970:vm.task.createDate).formatted(.dateTime.month().day().hour().minute().year()))
                 .foregroundStyle(.labelTertiary)
             
+            Text("Created:")
+                .foregroundStyle(.labelTertiary)
+            
+            Text(Date(timeIntervalSince1970:vm.task.createDate).formatted(.dateTime.month().day().hour().minute().year()))
+                .foregroundStyle(.labelSecondary)
         }
     }
+    
+    //MARK: - Divider
+    @ViewBuilder
+    private func CustomDivider() -> some View {
+        RoundedRectangle(cornerRadius: 1)
+            .fill(
+                .separatorPrimary
+            )
+            .frame(height: 1)
+            .padding(.leading, 16)
+    }
+    
+    
 }
 
 #Preview {

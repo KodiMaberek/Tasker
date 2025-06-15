@@ -22,50 +22,48 @@
 		22A6E68097CEFB5DA3EAD0A1 /* Models.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; };
 		22C330796C49A0238B517EC6 /* Managers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B433101A485A4942EDF6A /* Managers.framework */; };
 		242C139351327C81D1674982 /* BlockSet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 663FC6A52281AEEEA95BBCC0 /* BlockSet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		260747C9252D225312848F08 /* Views.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9317CEECFB2E5CD31F833D36 /* Views.framework */; };
 		273B63D50F6B82A1DFB389E6 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFEB63CBC2D87C9EEA5622 /* MainVM.swift */; };
 		275BED7090F35DC4EC256B91 /* CASManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B09DB0DD9F1D533A2DD6E4B /* CASManager.swift */; };
 		2987CC6205C1A2C9F838BD86 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E08784C5CAF12416996C92 /* MainView.swift */; };
 		2BC4CE0E311359D49CA6BA06 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD2500A657643F2C6CDCFD8A /* ListView.swift */; };
+		2BFDBD0DBF8D92A0F398E399 /* ListView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8DAA18B6B3774CD17174041F /* ListView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2D7F35D6096B74406A2FA388 /* RecorderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922B12058996F5E73108F4C5 /* RecorderManager.swift */; };
 		2DCB7AC2AFB856A10E45A9D0 /* EqualizerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49095761EC3003D703A1C213 /* EqualizerView.swift */; };
 		30BF1A3E520F353D877395D0 /* TaskView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD95E99B77C6D3B79F69C066 /* TaskView.framework */; };
 		32261FD460CEFEF086554A40 /* DateManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5B20ED7C4DECB104ED0DDF /* DateManagerProtocol.swift */; };
 		33CA0F488601EC506CA5176B /* Managers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B433101A485A4942EDF6A /* Managers.framework */; };
 		368B7951614DD0EB289765D2 /* TaskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0EABA7C0824ABEF0DC5DA14 /* TaskManager.swift */; };
-		3861420A9929461E000E2E2B /* UIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E698AA9763EE6E632AFE6A /* UIComponents.framework */; };
 		394989826EFD609B15AF282C /* СASManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F265B1CB486AEDC72B026CF6 /* СASManagerProtocol.swift */; };
 		3C823E5D6BC70E41A147D38F /* TaskModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32C00E6603F7E343FC631F80 /* TaskModel.swift */; };
-		3F61F21FD936533917C6BC46 /* Models.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; };
 		46FD31982562E77E15BAE4D2 /* UIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E698AA9763EE6E632AFE6A /* UIComponents.framework */; };
 		4DC315FC514DCD4AC2DB63D2 /* SegmentedCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9DCA89B57EC872DC0D1DE9C /* SegmentedCircleView.swift */; };
 		4E88BAA64745DC7365B66B8A /* MultiCas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724FCFBEC4D6AF27DD9C42E /* MultiCas.swift */; };
 		5037ABF14C308E4C991486A5 /* Models.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; };
+		50EA0CC8D1E9B56A60ABC0E3 /* MainView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9F8752BABE808A0D18E66B49 /* MainView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		576CE9B875F9809729A6D2A1 /* BlockSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663FC6A52281AEEEA95BBCC0 /* BlockSet.framework */; };
 		5BB71EDDAB245B471FF04402 /* TaskView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA86C32FFA0C77C9E10DBE3F /* TaskView.swift */; };
 		5CC254C67F30BFF5D35216C9 /* RecorderManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98BF269F78AB581B06BD1F8C /* RecorderManagerProtocol.swift */; };
 		60C9069298F4C2B259AD1CDC /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C92A8986EF9A82EF4903D2 /* WeekView.swift */; };
 		6163C83685F4B70C0F5D2801 /* Models.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; };
-		6345F3A0968B50EE2494EE0F /* Managers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B433101A485A4942EDF6A /* Managers.framework */; };
 		636E9CA696686BE0A28F6EB0 /* UIComponents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 53E698AA9763EE6E632AFE6A /* UIComponents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		64906AA4A999F849E9ABCD72 /* UIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53E698AA9763EE6E632AFE6A /* UIComponents.framework */; };
 		64F556045EC6E4FF62DEF061 /* MainVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BCFEB63CBC2D87C9EEA5622 /* MainVM.swift */; };
 		665F8AE0AB694850E08F5F93 /* WeekVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3B484890124B8DAB84C4E0 /* WeekVM.swift */; };
+		68D40995374028D1C0174A06 /* MainView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F8752BABE808A0D18E66B49 /* MainView.framework */; };
 		6DFBE7C95753879FD297DDB8 /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DB9AC9F3C9A5B61BBEE74F5 /* RecordButton.swift */; };
 		7136EA7111E044052AF244DB /* SegmentedCircleVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF8C8DBC06C7719955C5A02D /* SegmentedCircleVM.swift */; };
 		761B2CFA4230C447F35A3561 /* Scan.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF667318371852090845E53 /* Scan.swift */; };
 		79B39C67F5B32754D78CE369 /* DateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09FD880E038AC92B82CEF3A3 /* DateManager.swift */; };
-		79F814342B6755D30E85AC1C /* BlockSet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 663FC6A52281AEEEA95BBCC0 /* BlockSet.framework */; };
 		7B6AD0447F7B3CD6616745E8 /* Models.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		7C24436E50002538AEBC51FD /* WeekView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7C92A8986EF9A82EF4903D2 /* WeekView.swift */; };
 		7CDF99BF7F16D10A0402CCEB /* PeriodModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9876FDC92EC7217054ABB9 /* PeriodModel.swift */; };
 		7DC21CE2CB7DF53726F5B6B6 /* Managers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B433101A485A4942EDF6A /* Managers.framework */; };
 		85D79FE13195DCA857C176AB /* Calendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1311C35C202BDDED36A4032F /* Calendar.framework */; };
 		86264EF28341CC653CCF5D12 /* PermissionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82A4113CB8AABA02282AACC9 /* PermissionManager.swift */; };
+		86CB410CAF7245C575A3BB60 /* TaskView.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FD95E99B77C6D3B79F69C066 /* TaskView.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8864200388059AA711D8437D /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6E9794D66C81F43E9D9C26 /* TaskRow.swift */; };
 		88D4DE7EBDB9BBB2EC59AE97 /* MockCas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02445ED02F44E6647BDB252B /* MockCas.swift */; };
 		88D83E518997C1A1D46BB988 /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A6E9794D66C81F43E9D9C26 /* TaskRow.swift */; };
-		8ABD3A8CECE9224D2F395A61 /* Views.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9317CEECFB2E5CD31F833D36 /* Views.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8AF007724FB69B6B3068A151 /* WeekVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A3B484890124B8DAB84C4E0 /* WeekVM.swift */; };
 		8B3F77F11315147E590C08B0 /* Models.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C343BC23DAE15E6D4350C5D9 /* Models.framework */; };
 		8B4365D70F343C36E3E0CE7D /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4162C3C807FEBEFB5735D96 /* PlayerManager.swift */; };
@@ -92,6 +90,7 @@
 		B55CC524AAFF734C03CB8683 /* Managers.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C65B433101A485A4942EDF6A /* Managers.framework */; };
 		B5F5B51961034C036C067F20 /* TaskDeleteDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DB7E8BB63BB659AC28C631C /* TaskDeleteDialog.swift */; };
 		B775B4D41EF55B9B0412D3CC /* TaskView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FD95E99B77C6D3B79F69C066 /* TaskView.framework */; };
+		C2AA5E1672DC93354F59C4D2 /* Calendar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1311C35C202BDDED36A4032F /* Calendar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CA064740EF282F988483A886 /* SharedUI.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE9BD7476BA91C046BD6DC2F /* SharedUI.swift */; };
 		CD36B75C506CA3BFD15B10CE /* DependenciesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A02B633BBAEF8963AF13B86 /* DependenciesManager.swift */; };
 		D030730F1001EFF22878196D /* Mutable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A121B5A19CD4D6D9A61C2D89 /* Mutable.swift */; };
@@ -133,13 +132,6 @@
 			remoteGlobalIDString = 0F65B76577D8670525CB5FBD;
 			remoteInfo = UIComponents;
 		};
-		3284E46C9839CFAA46047C3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D961E4FD4267C4AD02473A8F;
-			remoteInfo = BlockSet;
-		};
 		383D7A5052C88AD376C298B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
@@ -153,6 +145,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = F2D115302EFD31305A04690E;
 			remoteInfo = Models;
+		};
+		693F43A5A555ACD8A05CCE5A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C845CF45964278B0F251F60F;
+			remoteInfo = MainView;
 		};
 		6F146B46EFA8AE102FA3D432 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -182,20 +181,6 @@
 			remoteGlobalIDString = BB6D80BDB0090E9315654F4B;
 			remoteInfo = Managers;
 		};
-		8B64872DCFE3CA7968124FCB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 500A086CABAA2A2D03927F91;
-			remoteInfo = Views;
-		};
-		8C802DF265F2F20990C121F7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = BB6D80BDB0090E9315654F4B;
-			remoteInfo = Managers;
-		};
 		8F59DA787407C83D7936ACE4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
@@ -217,13 +202,6 @@
 			remoteGlobalIDString = 0F65B76577D8670525CB5FBD;
 			remoteInfo = UIComponents;
 		};
-		B990F01B4907E73275D37B5F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F2D115302EFD31305A04690E;
-			remoteInfo = Models;
-		};
 		BAC1D3CF9C5CD4F9D011B217 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
@@ -244,13 +222,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D961E4FD4267C4AD02473A8F;
 			remoteInfo = BlockSet;
-		};
-		D0FC8EE5D66CA54B0FAD8AED /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B55CA35701698CCD371B68FA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0F65B76577D8670525CB5FBD;
-			remoteInfo = UIComponents;
 		};
 		D680B216CC6608C7522B069E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -364,10 +335,13 @@
 			dstSubfolderSpec = 10;
 			files = (
 				242C139351327C81D1674982 /* BlockSet.framework in Embed Frameworks */,
+				C2AA5E1672DC93354F59C4D2 /* Calendar.framework in Embed Frameworks */,
+				2BFDBD0DBF8D92A0F398E399 /* ListView.framework in Embed Frameworks */,
+				50EA0CC8D1E9B56A60ABC0E3 /* MainView.framework in Embed Frameworks */,
 				D19404A7BA81F36E23168052 /* Managers.framework in Embed Frameworks */,
 				7B6AD0447F7B3CD6616745E8 /* Models.framework in Embed Frameworks */,
+				86CB410CAF7245C575A3BB60 /* TaskView.framework in Embed Frameworks */,
 				636E9CA696686BE0A28F6EB0 /* UIComponents.framework in Embed Frameworks */,
-				8ABD3A8CECE9224D2F395A61 /* Views.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -529,11 +503,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79F814342B6755D30E85AC1C /* BlockSet.framework in Frameworks */,
-				6345F3A0968B50EE2494EE0F /* Managers.framework in Frameworks */,
-				3F61F21FD936533917C6BC46 /* Models.framework in Frameworks */,
-				3861420A9929461E000E2E2B /* UIComponents.framework in Frameworks */,
-				260747C9252D225312848F08 /* Views.framework in Frameworks */,
+				68D40995374028D1C0174A06 /* MainView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,11 +1034,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				C0892FBDABB25A19108FBB2A /* PBXTargetDependency */,
-				6C1E85516A7F620FD7C415CF /* PBXTargetDependency */,
-				F67F4C5E90E017ACA9CBB0A1 /* PBXTargetDependency */,
-				5A61328E5E5FBC4CF1EB4D71 /* PBXTargetDependency */,
-				866546C1560ADFA026379CFE /* PBXTargetDependency */,
+				CAE6DD9B8F2FA6CEFF9392AA /* PBXTargetDependency */,
 			);
 			name = Tasker;
 			packageProductDependencies = (
@@ -1533,35 +1499,17 @@
 			target = BB6D80BDB0090E9315654F4B /* Managers */;
 			targetProxy = EDFBE4A56B9A222DA7C3A649 /* PBXContainerItemProxy */;
 		};
-		5A61328E5E5FBC4CF1EB4D71 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = UIComponents;
-			target = 0F65B76577D8670525CB5FBD /* UIComponents */;
-			targetProxy = D0FC8EE5D66CA54B0FAD8AED /* PBXContainerItemProxy */;
-		};
 		5F544D9310533D5265980106 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Models;
 			target = F2D115302EFD31305A04690E /* Models */;
 			targetProxy = 383D7A5052C88AD376C298B0 /* PBXContainerItemProxy */;
 		};
-		6C1E85516A7F620FD7C415CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Managers;
-			target = BB6D80BDB0090E9315654F4B /* Managers */;
-			targetProxy = 8C802DF265F2F20990C121F7 /* PBXContainerItemProxy */;
-		};
 		70130500F20E71B7FB1A0002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Models;
 			target = F2D115302EFD31305A04690E /* Models */;
 			targetProxy = FBBECAF82C75C6AD00A92191 /* PBXContainerItemProxy */;
-		};
-		866546C1560ADFA026379CFE /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Views;
-			target = 500A086CABAA2A2D03927F91 /* Views */;
-			targetProxy = 8B64872DCFE3CA7968124FCB /* PBXContainerItemProxy */;
 		};
 		9D1CAF517B9F65483B8A940D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1587,17 +1535,17 @@
 			target = BA5C070A948A05ED50AB267E /* ListView */;
 			targetProxy = 0929359D25EBFA8D0CA198C6 /* PBXContainerItemProxy */;
 		};
-		C0892FBDABB25A19108FBB2A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = BlockSet;
-			target = D961E4FD4267C4AD02473A8F /* BlockSet */;
-			targetProxy = 3284E46C9839CFAA46047C3B /* PBXContainerItemProxy */;
-		};
 		C5F4350C7247D07D3397B489 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Calendar;
 			target = 167005510B5A6A1192D20950 /* Calendar */;
 			targetProxy = BAC1D3CF9C5CD4F9D011B217 /* PBXContainerItemProxy */;
+		};
+		CAE6DD9B8F2FA6CEFF9392AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MainView;
+			target = C845CF45964278B0F251F60F /* MainView */;
+			targetProxy = 693F43A5A555ACD8A05CCE5A /* PBXContainerItemProxy */;
 		};
 		CE7697F3D2D9EFD34D655A36 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1616,12 +1564,6 @@
 			name = Models;
 			target = F2D115302EFD31305A04690E /* Models */;
 			targetProxy = 59B3C8D7533ADACF0BC8E6A7 /* PBXContainerItemProxy */;
-		};
-		F67F4C5E90E017ACA9CBB0A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Models;
-			target = F2D115302EFD31305A04690E /* Models */;
-			targetProxy = B990F01B4907E73275D37B5F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

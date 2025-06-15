@@ -32,8 +32,8 @@ public struct EqualizerView: View {
                         )
                     )
                     .frame(
-                        width: 6,
-                        height: heightForBar(at: index)
+                        maxWidth: .infinity,
+                        maxHeight: heightForBar(at: index)
                     )
                     .animation(
                         .easeInOut(duration: 0.1),

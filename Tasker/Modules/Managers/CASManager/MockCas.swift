@@ -17,7 +17,7 @@ final class MockCas: CASManagerProtocol {
     
     var localDirectory: URL
     
-    var models: [MainModel] = [mockModel(), mockModel()]
+    var models: [MainModel] = []
     var taskUpdateTrigger = false
     
     init() {
@@ -28,7 +28,10 @@ final class MockCas: CASManagerProtocol {
         let iCas = FileCas(FileManager.default.url(forUbiquityContainerIdentifier: remoteDirectory) ?? localDirectory)
         
         cas = MultiCas(local: localCas, remote: iCas)
-//        models = fetchModels()
+        models = fetchModels()
+        if models.isEmpty {
+            models.append(mockModel())
+        }
     }
     
     //MARK: Actions for work with CAS

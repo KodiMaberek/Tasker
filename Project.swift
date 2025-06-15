@@ -10,7 +10,14 @@ let project = Project(
             product: .app,
             bundleId: App.bundleId,
             deploymentTargets: .iOS("17.0"),
-            infoPlist: .extendingDefault(with: ["UILaunchStoryboardName": "LaunchScreen"]),//.file(path: "Tasker/Resources/Info.plist"),
+            infoPlist: .extendingDefault(
+                with: [
+                    "UILaunchStoryboardName": "LaunchScreen",
+                    "NSUserNotificationsUsageDescription" : "Notifications may include alerts, sounds, and icon badges. You can configurate this in Setting.",
+                    "NSMicrophoneUsageDescription": "This app use microphone for recording audio"
+                ]
+            ),
+            //.file(path: "Tasker/Resources/Info.plist"),
             sources: [.glob(
                 "Tasker/**",
                 excluding: [
@@ -19,11 +26,7 @@ let project = Project(
             )],
             resources: [.glob(pattern: "Tasker/Resources/**", excluding: ["Tasker/Resources/Info.plist"])],
             dependencies: [
-                .target(name: "BlockSet"),
-                .target(name: "Models"),
-                .target(name: "UIComponents"),
-                .target(name: "Managers"),
-                .target(name: "Views")
+                .target(name: "MainView")
             ],
             settings: .settings(
                 base: .init().merging(
